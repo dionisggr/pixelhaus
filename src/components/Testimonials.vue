@@ -1,42 +1,36 @@
 <template>
-  <div class="relative">
-    <!-- ... -->
-  
-    <section class="py-16">
-      <div class="container mx-auto" style="maxWidth: 1500px">
-        <h2 class="text-4xl text-center font-extrabold mb-12 text-gray-800">
-          Testimonials & Reviews
-        </h2>
-        <div class="overflow-hidden py-2 relative h-[fit-content] w-[calc(100%/3*3)]">
-          <div class="flex gap-8 animate-scroll">
-            <div
-              v-for="testimonial in testimonials"
-              class="bg-white rounded-lg shadow-md p-6 transform transition-transform duration-300 hover:scale-105 cursor-pointer"
-              style="minWidth: 350px"
-            >
-              <div class="flex items-center mb-4">
-                <img :src="testimonial.image" alt="User Image" class="w-16 h-16 rounded-full mr-4" />
-                <p class="text-xl font-bold text-gray-700">
-                  {{ testimonial.name }}
-                </p>
-              </div>
-              <p class="text-gray-600 leading-relaxed">
-                {{ testimonial.content }}
+  <section class="py-16 mt-12">
+    <div class="container mx-auto" style="maxwidth: 1500px">
+      <h2 class="text-4xl text-center font-extrabold mb-12 text-gray-800">
+        Testimonials & Reviews
+      </h2>
+      <div
+        class="overflow-hidden py-2 relative h-[fit-content] w-[calc(100%/3*3)]"
+      >
+        <div class="flex gap-8 animate-scroll">
+          <div
+            v-for="testimonial in testimonials"
+            class="bg-white rounded-lg shadow-md p-6 transform transition-transform duration-300 hover:scale-105 cursor-pointer w-full"
+            style="min-width: 400px"
+          >
+            <div class="flex items-center mb-4">
+              <img
+                :src="testimonial.image"
+                alt="User Image"
+                class="w-16 h-16 rounded-full mr-4"
+              />
+              <p class="text-xl font-bold text-gray-700">
+                {{ testimonial.name }}
               </p>
             </div>
+            <p class="text-gray-600 leading-relaxed">
+              {{ testimonial.content }}
+            </p>
           </div>
         </div>
       </div>
-    </section>
-  
-    <section class="bg-white py-16 shadow-md rounded-lg">
-      <!-- ... -->
-    </section>
-  
-    <footer class="bg-white p-4 shadow-md absolute bottom-0 w-full">
-      <!-- ... -->
-    </footer>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
