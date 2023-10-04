@@ -1,0 +1,443 @@
+<template>
+  <div class="min-w-screen min-h-screen bg-gray-100 py-12">
+    <!-- Breadcrumbs -->
+    <div class="px-8 mb-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Checkout
+      </h1>
+      <div class="mt-2 ml-32 text-gray-500">
+        <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a> /
+        <span class="text-gray-700">Checkout</span>
+      </div>
+    </div>
+
+    <!-- Main Checkout Section -->
+    <div
+      class="max-w-6xl mx-auto bg-white border rounded-xl shadow-md px-8 py-10"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <!-- Left - Cart Summary -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">Cart Items</h2>
+          <div
+            v-for="item in cartItems"
+            :key="item.id"
+            class="mb-6 border-b-2 border-gray-200 pb-4"
+          >
+            <div class="flex items-center">
+              <div class="relative">
+                <img
+                  :src="item.thumbnail"
+                  alt="item.name"
+                  class="w-24 h-24 object-cover rounded-md shadow"
+                />
+                <span
+                  class="absolute bottom-0 right-0 bg-indigo-500 text-white text-sm rounded-full h-6 w-6 flex items-center justify-center"
+                >
+                  x{{ item.quantity }}
+                </span>
+              </div>
+              <div class="ml-4 flex-1">
+                <h6 class="font-semibold text-gray-700">{{ item.name }}</h6>
+                <p class="text-gray-500">
+                  {{ item.material }}, {{ item.size }} ({{ item.dimensions }})
+                </p>
+                <span class="font-semibold text-gray-700 text-lg"
+                  >${{ item.cost.toFixed(2) }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Discount -->
+          <div class="flex items-center mb-6">
+            <div class="flex-grow mr-4">
+              <label
+                for="discountCode"
+                class="block text-sm font-medium text-gray-700"
+                >Discount code</label
+              >
+              <input
+                v-model="discountCode"
+                id="discountCode"
+                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+            <button
+              @click="applyDiscount"
+              class="py-2 mt-6 px-5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md transition duration-300"
+            >
+              Apply
+            </button>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="border-t-2 border-gray-200 pt-6 text-gray-800">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-gray-600 font-medium">Subtotal</span>
+              <span class="font-semibold text-lg pl-3">
+                ${{ subtotal.toFixed(2) }}
+              </span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-gray-600 font-medium">Tax (GST 10%)</span>
+              <span class="font-semibold text-lg pl-3">
+                ${{ taxes.toFixed(2) }}
+              </span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-gray-600 font-medium">Shipping</span>
+              <span class="font-semibold text-lg pl-3">
+                ${{ shippingCosts[shippingSpeed].toFixed(2) }}
+              </span>
+            </div>
+            <div
+              class="flex justify-between items-center font-bold border-t pt-4 text-xl"
+            >
+              <span class="text-gray-600">Total</span>
+              <span class="font-semibold pl-3">
+                <span class="text-gray-400 text-sm mr-1">USD</span> ${{
+                  total.toFixed(2)
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right - Billing & Shipping -->
+        <div>
+          <!-- User Information -->
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
+              Billing & Shipping Info
+            </h2>
+
+            <div class="mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mb-4">
+                  <label
+                    for="userFirstName"
+                    class="block text-sm font-medium text-gray-700"
+                    >First Name</label
+                  >
+                  <input
+                    v-model="user.firstName"
+                    id="userFirstName"
+                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    placeholder="First Name"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="userLastName"
+                    class="block text-sm font-medium text-gray-700"
+                    >Last Name</label
+                  >
+                  <input
+                    v-model="user.lastName"
+                    id="userLastName"
+                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    placeholder="Last Name"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="userPhone"
+                    class="block text-sm font-medium text-gray-700"
+                    >Email</label
+                  >
+                  <input
+                    v-model="user.phone"
+                    id="userPhone"
+                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    placeholder="name@example.com"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="userPhone"
+                    class="block text-sm font-medium text-gray-700"
+                    >Phone (Optional)</label
+                  >
+                  <input
+                    v-model="user.phone"
+                    id="userPhone"
+                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    placeholder="(123) 456-7890"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="userAddress"
+                class="block text-sm font-medium text-gray-700"
+                >Billing Address</label
+              >
+              <textarea
+                v-model="user.address"
+                id="userAddress"
+                rows="3"
+                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                placeholder="123 Street, City, Country"
+              ></textarea>
+            </div>
+
+            <!-- Shipping Address with Toggle -->
+            <div class="mb-4">
+              <label
+                for="shippingAddress"
+                class="block text-sm font-medium text-gray-700"
+                >Shipping Address</label
+              >
+              <div class="flex items-center mt-2">
+                <input
+                  v-model="sameAsBilling"
+                  type="checkbox"
+                  id="sameAsBilling"
+                  class="form-checkbox"
+                />
+                <label for="sameAsBilling" class="ml-2">Same as Billing</label>
+              </div>
+              <textarea
+                v-if="!sameAsBilling"
+                v-model="shippingAddress"
+                id="shippingAddress"
+                rows="3"
+                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                placeholder="123 Street, City, Country"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Shipping Options -->
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
+              Shipping Options
+            </h2>
+
+            <label
+              for="shippingSpeed"
+              class="block text-sm font-medium text-gray-700"
+              >Choose Shipping Speed</label
+            >
+            <select
+              v-model="shippingSpeed"
+              id="shippingSpeed"
+              class="mt-1 w-full form-select px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="standard">Standard - $5.00 (5-7 days)</option>
+              <option value="express">Express - $10.00 (2-3 days)</option>
+              <option value="overnight">Overnight - $20.00 (1 day)</option>
+            </select>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
+              Payment Method
+            </h2>
+
+            <div class="flex space-x-4 mb-4">
+              <label class="flex items-center">
+                <input
+                  v-model="paymentMethod"
+                  value="card"
+                  type="radio"
+                  class="form-radio"
+                />
+                <span class="ml-2">
+                  <i class="fas fa-credit-card text-xl text-blue-500"></i>
+                </span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  v-model="paymentMethod"
+                  value="googlePay"
+                  type="radio"
+                  class="form-radio"
+                />
+                <span class="ml-2">
+                  <i class="fab fa-google-pay text-4xl text-green-500"></i>
+                </span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  v-model="paymentMethod"
+                  value="applePay"
+                  type="radio"
+                  class="form-radio"
+                />
+                <span class="ml-2">
+                  <i class="fab fa-apple-pay text-4xl text-black"></i>
+                </span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  v-model="paymentMethod"
+                  value="paypal"
+                  type="radio"
+                  class="form-radio"
+                />
+                <span class="ml-2">
+                  <i class="fab fa-paypal text-2xl text-blue-600"></i>
+                </span>
+              </label>
+            </div>
+
+            <!-- Card Details -->
+            <div v-if="paymentMethod === 'card'">
+              <div class="mb-4">
+                <label
+                  for="cardName"
+                  class="block text-sm font-medium text-gray-700"
+                  >Name on Card</label
+                >
+                <input
+                  id="cardName"
+                  class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  placeholder="Full Name"
+                />
+              </div>
+
+              <div class="mb-4">
+                <label
+                  for="expiryDate"
+                  class="block text-sm font-medium text-gray-700"
+                  >Expiry Date</label
+                >
+                <input
+                  id="expiryDate"
+                  class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  placeholder="MM/YY"
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="cvc" class="block text-sm font-medium text-gray-700"
+                  >CVC</label
+                >
+                <input
+                  id="cvc"
+                  class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  placeholder="123"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Place Order Button -->
+          <div class="flex justify-end">
+            <button
+              @click="startTransaction"
+              class="py-2 px-6 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md transition duration-300"
+            >
+              Place Order
+            </button>
+          </div>
+
+          <!-- Modal with Loading Spinner -->
+          <div
+            v-if="isLoading"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          >
+            <div class="bg-white p-8 rounded-lg">
+              <div class="flex flex-col items-center">
+                <div class="loader"></div>
+                <span class="mt-3 text-lg">Processing your payment...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    cartItems: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      user: {
+        contact: '',
+        address: '',
+      },
+      isLoading: false,
+      sameAsBilling: false,
+      shippingAddress: '',
+      discountCode: '',
+      shippingSpeed: 'standard',
+      paymentMethod: 'card',
+      shippingCosts: {
+        standard: 5.0,
+        express: 10.0,
+        overnight: 20.0,
+      },
+    };
+  },
+  computed: {
+    subtotal() {
+      return this.cartItems.reduce(
+        (acc, item) => acc + item.cost * item.quantity,
+        0
+      );
+    },
+    taxes() {
+      return this.subtotal * 0.1; // Assuming a GST of 10%
+    },
+    total() {
+      return (
+        this.subtotal + this.taxes + this.shippingCosts[this.shippingSpeed]
+      );
+    },
+  },
+
+  methods: {
+    applyDiscount() {
+      // Logic for applying discount using the discountCode
+    },
+    placeOrder() {
+      // Logic for placing the order
+    },
+    startTransaction() {
+      this.isLoading = true;
+      window.addEventListener('beforeunload', this.preventNavigation);
+      this.placeOrder().finally(() => {
+        this.isLoading = false;
+        window.removeEventListener('beforeunload', this.preventNavigation);
+      });
+    },
+    preventNavigation(event) {
+      event.preventDefault();
+      event.returnValue = '';
+    },
+  },
+};
+</script>
+
+<style scoped>
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #000;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>

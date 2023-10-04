@@ -2,7 +2,7 @@
   <section class="py-16 mt-12">
     <div class="container mx-auto" style="maxwidth: 1500px">
       <h2 class="text-4xl text-center font-extrabold mb-12 text-gray-800">
-        Testimonials & Reviews
+        Testimonials
       </h2>
       <div
         class="overflow-hidden py-2 relative h-[fit-content] w-[calc(100%/3*3)]"
@@ -10,8 +10,8 @@
         <div class="flex gap-8 animate-scroll">
           <div
             v-for="testimonial in testimonials"
-            class="bg-white rounded-lg shadow-md p-6 transform transition-transform duration-300 hover:scale-105 cursor-pointer w-full"
-            style="min-width: 400px"
+            class="bg-white rounded-lg shadow-md p-6 transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+            style="min-width: 375px"
           >
             <div class="flex items-center mb-4">
               <img
