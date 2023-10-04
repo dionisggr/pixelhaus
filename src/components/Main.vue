@@ -81,13 +81,15 @@
               </div>
             </div>
             <hr class="my-4" />
-            <a
-              href="#"
-              class="block w-full text-center text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-full text-sm"
-              @click="goTo('notifications')"
-            >
-              See All
-            </a>
+            <div class="flex justify-center">
+              <a
+                href="#"
+                class="inline-block whitespace-nowrap w-1/2 text-center text-white bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-sm"
+                @click="goTo('notifications')"
+              >
+                See All
+              </a>
+            </div>
           </div>
 
           <!-- Shopping Cart -->
@@ -148,7 +150,7 @@
             <a
               href="#"
               @click="selectedNavItem = 'checkout'"
-              class="block w-1/2 mx-auto text-center text-white bg-blue-500 hover:bg-blue-600 mt-6 p-1.5 rounded-full text-sm"
+              class="block w-1/2 mx-auto text-center text-white bg-blue-600 hover:bg-blue-700 mt-6 p-1.5 rounded-full text-sm"
             >
               Checkout
             </a>
@@ -158,12 +160,12 @@
 
           <!-- Account -->
           <div v-if="isLoggedIn" class="relative">
-            <i
-              class="material-icons text-3xl cursor-pointer hover:text-blue-500"
+            <img
+              src="https://source.unsplash.com/random/50x50?face"
+              alt="User Thumbnail"
+              class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80"
               @click="openModal = openModal === 'account' ? null : 'account'"
-            >
-              account_circle
-            </i>
+            />
             <div
               v-if="openModal === 'account'"
               @mouseleave="openModal = null"
@@ -185,7 +187,7 @@
               <a
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
-                @click="isLoggedIn = false"
+                @click="logout"
               >
                 Logout
               </a>
@@ -441,7 +443,7 @@
       <Testimonials />
 
       <!-- FAQ -->
-      <section class="bg-white py-16 shadow-md rounded-lg">
+      <section class="bg-white py-16 shadow-md rounded-lg" id="faq">
         <div class="container mx-auto px-4 text-gray-800">
           <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
           <div class="grid grid-cols-1 gap-4 grid-flow-row w-1/2 mx-auto">
@@ -520,6 +522,9 @@
     <!-- Orders -->
     <Orders v-if="selectedNavItem === 'orders'" :orders="cartItems" />
 
+    <!-- Our Story -->
+    <OurStory v-if="selectedNavItem === 'our-story'" />
+
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
       <div class="container mx-auto py-12 space-y-8">
@@ -532,7 +537,7 @@
               About Us
             </h3>
             <ul class="mt-4 space-y-2">
-              <li><a href="#" class="hover:text-blue-400">Our Story</a></li>
+              <li><a href="#" class="hover:text-blue-400" @click="selectedNavItem = 'our-story'">Our Story</a></li>
               <li><a href="#" class="hover:text-blue-400">Team</a></li>
               <li><a href="#" class="hover:text-blue-400">Careers</a></li>
             </ul>
@@ -544,7 +549,7 @@
               Support
             </h3>
             <ul class="mt-4 space-y-2">
-              <li><a href="#" class="hover:text-blue-400">FAQ</a></li>
+              <li><a href="#faq" class="hover:text-blue-400">FAQ</a></li>
               <li><a href="#" class="hover:text-blue-400">Contact</a></li>
               <li>
                 <a href="#" class="hover:text-blue-400">Privacy Policy</a>
@@ -600,6 +605,7 @@ import Testimonials from './Testimonials.vue';
 import Checkout from './Checkout.vue';
 import NotificationsPage from './Notifications/Page.vue';
 import Orders from './Orders.vue';
+import OurStory from './OurStory.vue';
 import data from '../data.js';
 
 export default {
@@ -608,6 +614,7 @@ export default {
     Checkout,
     NotificationsPage,
     Orders,
+    OurStory,
   },
   mounted() {
     let slideIndex = 0;
@@ -914,6 +921,11 @@ export default {
       this.timeout = setTimeout(() => {
         art.notification = null;
       }, 3000);
+    },
+    logout() {
+      this.isLoggedIn = false;
+
+      this.goTo('home');
     },
   },
 };
