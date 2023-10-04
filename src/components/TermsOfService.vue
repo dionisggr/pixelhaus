@@ -6,7 +6,7 @@
         <h1
           class="text-3xl md:text-4xl font-extrabold text-gray-700 w-full text-center"
         >
-          Contact Us
+          Terms of Service
         </h1>
       </div>
       <div class="mt-2 ml-32 text-gray-500">
