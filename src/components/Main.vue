@@ -10,24 +10,18 @@
           <i class="material-icons text-4xl pr-0 text-blue-500">border_all</i>
           <h1 class="text-2xl font-semibold">PixelHaus</h1>
         </div>
-        <div class="flex justify-between w-2/5 space-x-4">
+        <div class="flex justify-between w-1/3 space-x-4">
           <a
             href="#how-it-works"
-            class="text-gray-700 font-bold hover:text-blue-500"
+            class="text-gray-700 font-bold hover:text-blue-500 cursor-not-allowed"
           >
             How It Works
           </a>
           <a
             href="#pricing"
-            class="text-gray-700 font-bold hover:text-blue-500"
+            class="text-gray-700 font-bold hover:text-blue-500 cursor-not-allowed"
           >
             Pricing
-          </a>
-          <a
-            href="#terms-of-service"
-            class="text-gray-700 font-bold hover:text-blue-500"
-          >
-            Terms of Service
           </a>
         </div>
         <div class="flex items-center space-x-5">
@@ -528,6 +522,15 @@
     <!-- Team -->
     <Team v-if="selectedNavItem === 'team'" />
 
+    <!-- Contact -->
+    <Contact v-if="selectedNavItem === 'contact'" />
+
+    <!-- Terms of Service -->
+    <TermsOfService v-if="selectedNavItem === 'terms-of-service'" />
+
+    <!-- Privacy Policy -->
+    <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
+
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
       <div class="container mx-auto py-12 space-y-8">
@@ -540,11 +543,26 @@
               About Us
             </h3>
             <ul class="mt-4 space-y-2">
-              <li><a href="#" class="hover:text-blue-400" @click="selectedNavItem = 'our-story'">Our Story</a></li>
-              <li><a href="#" class="hover:text-blue-400" @click="selectedNavItem = 'team'">Team</a></li>
-              <li><a href="#" class="hover:text-blue-400">Careers</a></li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'our-story'"
+                  >Our Story</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'team'"
+                  >Team</a
+                >
+              </li>
             </ul>
           </div>
+
+          <!-- Support Section -->
           <div>
             <h3
               class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
@@ -552,13 +570,31 @@
               Support
             </h3>
             <ul class="mt-4 space-y-2">
-              <li><a href="#faq" class="hover:text-blue-400">FAQ</a></li>
-              <li><a href="#" class="hover:text-blue-400">Contact</a></li>
               <li>
-                <a href="#" class="hover:text-blue-400">Privacy Policy</a>
+                <a href="#" class="hover:text-blue-400" @click="goTo('contact')"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'privacy-policy'"
+                  >Privacy Policy</a
+                >
+              </li>
+              <!-- New 'Terms of Service' link -->
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'terms-of-service'"
+                  >Terms of Service</a
+                >
               </li>
             </ul>
           </div>
+
           <div>
             <h3
               class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
@@ -610,6 +646,9 @@ import NotificationsPage from './Notifications/Page.vue';
 import Orders from './Orders.vue';
 import OurStory from './OurStory.vue';
 import Team from './Team.vue';
+import Contact from './Contact.vue';
+import TermsOfService from './TermsOfService.vue';
+import PrivacyPolicy from './PrivacyPolicy.vue';
 import data from '../data.js';
 
 export default {
@@ -620,6 +659,9 @@ export default {
     Orders,
     OurStory,
     Team,
+    Contact,
+    TermsOfService,
+    PrivacyPolicy,
   },
   mounted() {
     let slideIndex = 0;

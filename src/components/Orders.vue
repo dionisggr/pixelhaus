@@ -1,18 +1,6 @@
 <template>
   <div class="min-w-screen min-h-screen bg-gray-100 py-12">
-    <!-- Header and Breadcrumbs -->
-    <div class="px-8 mb-4">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        My Orders
-      </h1>
-      <div class="mt-2 ml-32 text-gray-500">
-        <a href="#" @click="$emit('goTo', 'home')" class="hover:underline"
-          >Home</a
-        >
-        /
-        <span class="text-gray-700">My Orders</span>
-      </div>
-    </div>
+vh
 
     <div class="p-6 mx-auto w-11/12">
       <!-- Main Content -->
