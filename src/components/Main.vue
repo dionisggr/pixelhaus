@@ -525,6 +525,9 @@
     <!-- Our Story -->
     <OurStory v-if="selectedNavItem === 'our-story'" />
 
+    <!-- Team -->
+    <Team v-if="selectedNavItem === 'team'" />
+
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
       <div class="container mx-auto py-12 space-y-8">
@@ -538,7 +541,7 @@
             </h3>
             <ul class="mt-4 space-y-2">
               <li><a href="#" class="hover:text-blue-400" @click="selectedNavItem = 'our-story'">Our Story</a></li>
-              <li><a href="#" class="hover:text-blue-400">Team</a></li>
+              <li><a href="#" class="hover:text-blue-400" @click="selectedNavItem = 'team'">Team</a></li>
               <li><a href="#" class="hover:text-blue-400">Careers</a></li>
             </ul>
           </div>
@@ -606,6 +609,7 @@ import Checkout from './Checkout.vue';
 import NotificationsPage from './Notifications/Page.vue';
 import Orders from './Orders.vue';
 import OurStory from './OurStory.vue';
+import Team from './Team.vue';
 import data from '../data.js';
 
 export default {
@@ -615,6 +619,7 @@ export default {
     NotificationsPage,
     Orders,
     OurStory,
+    Team,
   },
   mounted() {
     let slideIndex = 0;
