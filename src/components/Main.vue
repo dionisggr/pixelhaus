@@ -178,6 +178,7 @@
               <a
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
+                @click="selectedNavItem = 'orders'"
               >
                 My Orders
               </a>
@@ -510,10 +511,14 @@
       @goTo="goTo"
     />
 
+    <!-- Notifications -->
     <NotificationsPage
       v-if="selectedNavItem === 'notifications'"
       :notifications="notifications"
     />
+
+    <!-- Orders -->
+    <Orders v-if="selectedNavItem === 'orders'" :orders="cartItems" />
 
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
@@ -594,6 +599,7 @@
 import Testimonials from './Testimonials.vue';
 import Checkout from './Checkout.vue';
 import NotificationsPage from './Notifications/Page.vue';
+import Orders from './Orders.vue';
 import data from '../data.js';
 
 export default {
@@ -601,6 +607,7 @@ export default {
     Testimonials,
     Checkout,
     NotificationsPage,
+    Orders,
   },
   mounted() {
     let slideIndex = 0;
