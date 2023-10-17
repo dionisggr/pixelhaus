@@ -13,7 +13,8 @@
         <div class="flex justify-between w-1/3 space-x-4">
           <a
             href="#how-it-works"
-            class="text-gray-700 font-bold hover:text-blue-500 cursor-not-allowed"
+            class="text-gray-700 font-bold hover:text-blue-500"
+            @click="selectedNavItem = 'how-it-works'"
           >
             How It Works
           </a>
@@ -469,7 +470,7 @@
           <h2
             class="text-4xl text-gray-900 font-extrabold mb-12 tracking-tighter"
           >
-            Stay In Touch!
+            Stay updated!
           </h2>
           <div class="flex justify-center space-x-12">
             <a
@@ -532,6 +533,9 @@
     <!-- Privacy Policy -->
     <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
 
+    <!-- How It Works -->
+    <HowItWorks v-if="selectedNavItem === 'how-it-works'" />
+    
     <!-- Pricing -->
     <Pricing v-if="selectedNavItem === 'pricing'" />
 
@@ -654,6 +658,7 @@ import Contact from './Contact.vue';
 import TermsOfService from './TermsOfService.vue';
 import PrivacyPolicy from './PrivacyPolicy.vue';
 import Pricing from './Pricing.vue';
+import HowItWorks from './HowItWorks.vue';
 import data from '../data.js';
 
 export default {
@@ -668,6 +673,7 @@ export default {
     TermsOfService,
     PrivacyPolicy,
     Pricing,
+    HowItWorks,
   },
   mounted() {
     let slideIndex = 0;

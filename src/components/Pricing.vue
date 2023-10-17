@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen p-10 py-12">
+  <div class="bg-gray-100 min-h-screen p-12">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -18,8 +18,8 @@
     </div>
 
     <!-- Filters -->
-    <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md mb-8">
-      <div class="grid grid-cols-3 gap-8">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md mb-6">
+      <div class="grid grid-cols-2 gap-8">
         <!-- Size filter -->
         <div>
           <label class="block text-sm font-semibold mb-2 text-gray-600"
@@ -67,40 +67,6 @@
                 :value="material"
               >
                 {{ material }}
-              </option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-            >
-              <svg
-                class="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <!-- Duration filter -->
-        <div>
-          <label class="block text-sm font-semibold mb-2 text-gray-600"
-            >Duration:</label
-          >
-          <div class="relative">
-            <select
-              v-model="selectedDuration"
-              class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 hover:border-gray-400 cursor-pointer"
-            >
-              <option value="">All Durations</option>
-              <option
-                v-for="duration in durations"
-                :key="duration"
-                :value="duration"
-              >
-                {{ duration }}
               </option>
             </select>
             <div
