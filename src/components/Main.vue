@@ -26,16 +26,27 @@
             Pricing
           </a>
         </div>
-        <div class="flex items-center space-x-5">
+        <div
+          class="flex items-center space-x-5"
+          @mouseleave="markNotificationsRead"
+        >
           <!-- Notifications -->
-          <i
-            class="material-icons text-2xl cursor-pointer hover:text-blue-500"
-            @click="
-              openModal = openModal === 'notifications' ? null : 'notifications'
-            "
-          >
-            notifications
-          </i>
+          <div class="relative">
+            <i
+              class="material-icons text-2xl cursor-pointer hover:text-blue-500"
+              @click="
+                openModal =
+                  openModal === 'notifications' ? null : 'notifications'
+              "
+            >
+              notifications
+            </i>
+            <!-- Blue Dot for Unread Notifications -->
+            <span
+              v-if="notifications.some((notification) => !notification.read)"
+              class="absolute bottom-1.5 right-0 w-2.5 h-2.5 bg-blue-500 shadow-lg rounded-full"
+            ></span>
+          </div>
           <div
             v-if="openModal === 'notifications'"
             @mouseleave="openModal = null"
@@ -50,7 +61,12 @@
               <div
                 v-for="notification in notifications"
                 :key="notification.id"
-                class="flex items-center space-x-4 mb-4 bg-gray-50 hover:bg-gray-100 rounded-lg p-3 transition"
+                class="flex items-center space-x-4 mb-4 rounded-lg p-3 transition cursor-pointer"
+                :class="
+                  notification.read
+                    ? 'bg-gray-50 hover:bg-gray-100'
+                    : 'bg-yellow-50 hover:bg-yellow-100'
+                "
               >
                 <i
                   :class="{
@@ -465,7 +481,7 @@
       </section>
 
       <!-- Follow Us -->
-      <section class="bg-gray-50 py-20 shadow-md rounded-lg">
+      <section class="bg-gray-100 py-24 rounded-lg">
         <div class="container mx-auto text-center">
           <h2
             class="text-4xl text-gray-900 font-extrabold mb-12 tracking-tighter"
@@ -535,12 +551,12 @@
 
     <!-- How It Works -->
     <HowItWorks v-if="selectedNavItem === 'how-it-works'" />
-    
+
     <!-- Pricing -->
     <Pricing v-if="selectedNavItem === 'pricing'" />
 
     <!-- Footer -->
-    <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
+    <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
       <div class="container mx-auto py-12 space-y-8">
         <!-- Top Row: Links and Newsletter -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -985,6 +1001,15 @@ export default {
       this.isLoggedIn = false;
 
       this.goTo('home');
+    },
+    markNotificationsRead() {
+      this.notifications = this.notifications.map((notification) => {
+        if (!notification.read) {
+          notification.read = true;
+        }
+
+        return notification;
+      });
     },
   },
 };
