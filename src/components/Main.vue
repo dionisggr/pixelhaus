@@ -19,7 +19,8 @@
           </a>
           <a
             href="#pricing"
-            class="text-gray-700 font-bold hover:text-blue-500 cursor-not-allowed"
+            class="text-gray-700 font-bold hover:text-blue-500"
+            @click="selectedNavItem = 'pricing'"
           >
             Pricing
           </a>
@@ -531,6 +532,9 @@
     <!-- Privacy Policy -->
     <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
 
+    <!-- Pricing -->
+    <Pricing v-if="selectedNavItem === 'pricing'" />
+
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-10 border-t border-gray-300">
       <div class="container mx-auto py-12 space-y-8">
@@ -649,6 +653,7 @@ import Team from './Team.vue';
 import Contact from './Contact.vue';
 import TermsOfService from './TermsOfService.vue';
 import PrivacyPolicy from './PrivacyPolicy.vue';
+import Pricing from './Pricing.vue';
 import data from '../data.js';
 
 export default {
@@ -662,6 +667,7 @@ export default {
     Contact,
     TermsOfService,
     PrivacyPolicy,
+    Pricing,
   },
   mounted() {
     let slideIndex = 0;
