@@ -1,6 +1,21 @@
 <template>
-  <div class="bg-white min-h-screen flex flex-col items-center py-16 px-6">
-    <h1 class="text-4xl font-extrabold mb-12">Our Story</h1>
+  <div class="min-h-screen flex flex-col items-center py-12 px-4 md:px-6 max-w-6xl mx-auto">
+    <!-- Breadcrumbs -->
+    <div class="mb-8 w-full">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Our Story
+      </h1>
+      <div class="text-center mt-2 ml-2 md:text-left text-gray-500 w-full">
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        /
+        <span class="text-gray-700">Our Story</span>
+      </div>
+    </div>
     <div
       v-for="(milestone, index) in milestones"
       :key="index"
@@ -18,23 +33,23 @@
       >
         <img
           :src="milestone.img"
-          class="h-36 w-36 object-cover rounded-lg shadow-lg"
+          class="h-24 md:h-36 w-24 md:w-36 object-cover rounded-lg shadow-lg"
           alt="Milestone Image"
         />
-        <div class="flex flex-col justify-between">
+        <div class="flex-1 flex flex-col justify-between">
           <div>
-            <h2 class="text-2xl font-semibold mb-2">{{ milestone.title }}</h2>
-            <p class="text-lg text-gray-600">{{ milestone.description }}</p>
+            <h2 class="text-xl md:text-2xl font-semibold mb-2">{{ milestone.title }}</h2>
+            <p class="text-base md:text-lg text-gray-600">{{ milestone.description }}</p>
           </div>
           <p class="text-sm text-gray-500 mt-4">{{ milestone.date }}</p>
         </div>
       </div>
       <div v-if="selectedMilestone === milestone" class="animate__animated animate__fadeIn animate__duration-2s">
-    <div class="rounded-lg p-6 mt-4">
-      <h3 class="text-xl font-semibold mb-2 animate__animated animate__slideInUp animate__fadeIn animate__duration-1.5s">More Info</h3>
-      <p class="animate__animated animate__slideInUp animate__fadeIn animate__delay-0.5s animate__duration-1.5s">{{ milestone.moreInfo }}</p>
-    </div>
-  </div>
+        <div class="rounded-lg p-4 md:p-6 mt-4">
+          <h3 class="text-lg md:text-xl font-semibold mb-2 animate__animated animate__slideInUp animate__fadeIn animate__duration-1.5s">More Info</h3>
+          <p class="animate__animated animate__slideInUp animate__fadeIn animate__delay-0.5s animate__duration-1.5s">{{ milestone.moreInfo }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
