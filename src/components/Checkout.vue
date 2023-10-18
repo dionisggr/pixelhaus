@@ -1,14 +1,15 @@
 <template>
   <div class="min-w-screen min-h-screen bg-gray-100 py-12">
     <!-- Breadcrumbs -->
-    <div class="px-8 mb-8">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        Checkout
-      </h1>
-      <div class="mt-2 ml-32 text-gray-500">
-        <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a> /
-        <span class="text-gray-700">Checkout</span>
-      </div>
+    <div class="px-4 sm:px-8 mb-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+            Checkout
+        </h1>
+        <div class="mt-2 flex justify-center md:justify-start md:ml-32 text-gray-500">
+            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-700">Checkout</span>
+        </div>
     </div>
 
     <!-- Main Checkout Section -->

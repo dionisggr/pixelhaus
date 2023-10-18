@@ -739,7 +739,7 @@
     <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
 
     <!-- How It Works -->
-    <HowItWorks v-if="selectedNavItem === 'how-it-works'" />
+    <HowItWorks v-if="selectedNavItem === 'how-it-works'" :isMobile="isMobile" />
 
     <!-- Pricing -->
     <Pricing v-if="selectedNavItem === 'pricing'" />

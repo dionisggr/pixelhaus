@@ -1,20 +1,15 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-12">
+  <div class="min-w-screen min-h-screen bg-gray-100 py-12" :class="{'mt-8': isMobile}">
     <!-- Header and Breadcrumbs -->
     <div class="px-8 mb-4">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        Notifications
-      </h1>
-      <div class="mt-2 ml-32 text-gray-500">
-        <a
-          href="#"
-          class="hover:underline text-gray-500"
-          @click="$emit('goTo', 'home')"
-          >Home</a
-        >
-        /
-        <span class="text-gray-700">Notifications</span>
-      </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+            Notifications
+        </h1>
+        <div class="mt-2 flex justify-center md:justify-start items-center space-x-2 md:ml-32 text-gray-500">
+            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
+            <span>/</span>
+            <span class="text-gray-700">Notifications</span>
+        </div>
     </div>
 
     <!-- Filters and Search -->

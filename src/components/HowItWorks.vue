@@ -1,20 +1,15 @@
 <template>
-  <div class="how-it-works p-12">
+  <div class="how-it-works" :class="isMobile ? 'p-4 py-8' : 'p-12'">
     <!-- Breadcrumbs -->
     <div class="mb-8">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        How It Works
-      </h1>
-      <div class="mt-2 ml-32 text-gray-500">
-        <a
-          href="#"
-          class="hover:underline text-gray-500"
-          @click="$emit('goTo', 'home')"
-          >Home</a
-        >
-        /
-        <span class="text-gray-700">How It Works</span>
-      </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+            How It Works
+        </h1>
+        <div class="mt-2 flex justify-center items-center space-x-2 md:ml-32 text-gray-500">
+            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
+            <span>/</span>
+            <span class="text-gray-700">How It Works</span>
+        </div>
     </div>
 
     <!-- Renting -->
@@ -54,7 +49,7 @@
 
           <!-- Alternative content when the card IS flipped -->
           <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
+            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="flipped.rent1"
           >
             <div
@@ -69,7 +64,7 @@
 
             <h4 class="font-bold mb-4">Browse & Select</h4>
 
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
               <li
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
@@ -141,7 +136,7 @@
           </p>
 
           <!-- Alternative content when the card is flipped -->
-          <ul v-else class="space-y-2 text-sm">
+          <ul v-else class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
             <li
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
@@ -213,7 +208,7 @@
           </p>
 
           <!-- Alternative content when the card is flipped -->
-          <ul v-else class="space-y-2 text-sm">
+          <ul v-else class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
             <li
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
@@ -280,7 +275,7 @@
 
           <!-- Alternative content when the card IS flipped -->
           <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
+            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="flipped.swap1"
           >
             <div
@@ -295,7 +290,7 @@
 
             <h4 class="font-bold mb-4">Pack with Care</h4>
 
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
               <li
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
@@ -374,7 +369,7 @@
 
           <!-- Alternative content when the card IS flipped -->
           <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
+            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="flipped.swap2"
           >
             <div
@@ -389,7 +384,7 @@
 
             <h4 class="font-bold mb-4">Label Swap</h4>
 
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
               <li
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
@@ -468,7 +463,7 @@
 
           <!-- Alternative content when the card IS flipped -->
           <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
+            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="flipped.swap3"
           >
             <div
@@ -483,7 +478,7 @@
 
             <h4 class="font-bold mb-4">Safe Send-off</h4>
 
-            <ul class="space-y-2 text-sm">
+            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
               <li
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
@@ -518,6 +513,12 @@
 
 <script>
 export default {
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       flipped: {
