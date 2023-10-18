@@ -274,7 +274,7 @@
               href="#pricing"
               class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
               @click="
-                selectedNavItem = 'pricing';
+                selectedNavItem = 'orders';
                 showNavSidebar = false;
               "
               >My Orders</a
@@ -334,6 +334,7 @@
           <div
             class="flex items-center space-x-4 mt-6 ml-2 hover:shadow-md active:shadow-md p-4"
             :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
+            @click="selectedNavItem = 'notifications'; showNavSidebar = false"
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -350,6 +351,7 @@
           <div
             class="flex items-center space-x-4 ml-2 hover:shadow-md active:shadow-md p-4"
             :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
+            @click="selectedNavItem = 'checkout'; showNavSidebar = false"
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -433,7 +435,7 @@
       </section>
 
       <!-- Sidebar -->
-      <section class="sidebar mt-10 container mx-auto flex mb-16 min-w-max">
+      <section class="sidebar mt-10 container mx-auto flex mb-16">
         <div
           v-if="isMobile && !isSidebarHidden"
           class="fixed inset-0 bg-black opacity-50 z-20"
@@ -549,7 +551,7 @@
             <div
               v-for="(art, i) in displayedArts"
               :key="i"
-              class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all aspect-w-40 min-w-[350px]"
+              class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all aspect-w-40"
             >
               <div
                 class="flex-shrink-0 relative aspect-content"

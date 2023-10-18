@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen px-12 mt-12">
+  <div class="bg-gray-100 min-h-screen px-4 lg:px-12 mt-12">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
