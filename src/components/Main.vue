@@ -711,6 +711,7 @@
     <Checkout
       v-if="selectedNavItem === 'checkout'"
       :cartItems="cartItems"
+      :isMobile="isMobile"
       @goTo="goTo"
     />
 

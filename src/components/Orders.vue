@@ -1,12 +1,22 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-12">
-vh
+  <div class="min-w-screen min-h-screen bg-gray-100 py-8">
+    <!-- Breadcrumbs -->
+    <div class="px-4 sm:px-8 mb-8">
+        <h1 class="text-3xl sm:text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+            My Orders
+        </h1>
+        <div class="mt-2 flex justify-center text-gray-500">
+            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-700">My Orders</span>
+        </div>
+    </div>
 
-    <div class="p-6 mx-auto w-11/12">
+    <div class="p-6 mx-auto w-full md:w-11/12 lg:w-9/12">
       <!-- Main Content -->
-      <div class="p-6 mx-auto w-3/4">
+      <div class="mx-auto w-full md:w-3/4">
         <div v-if="orders.length === 0" class="text-center py-20">
-          <p class="text-2xl font-semibold text-gray-500">No Orders Yet</p>
+          <p class="text-xl md:text-2xl font-semibold text-gray-500">No Orders Yet</p>
         </div>
         <div v-else>
           <div

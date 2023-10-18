@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-12">
+  <div class="min-w-screen min-h-screen bg-gray-100 py-12" :class="{'px-4': isMobile}">
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
         <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -362,6 +362,10 @@ export default {
     cartItems: {
       type: Array,
       required: true,
+    },
+    isMobile: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
