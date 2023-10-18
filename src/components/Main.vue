@@ -705,7 +705,7 @@
     </div>
 
     <!-- Wall Art -->
-    <WallArt v-if="selectedNavItem === 'wall-art'" />
+    <WallArt v-if="selectedNavItem === 'wall-art'" :isMobile="isMobile" />
 
     <!-- Checkout -->
     <Checkout

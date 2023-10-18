@@ -1,17 +1,14 @@
 <template>
-  <div class="p-8 max-w-7xl mx-auto">
+  <div class="p-4 md:p-8 max-w-7xl mx-auto text-gray-700">
     <!-- Breadcrumbs -->
-    <div class="px-8 mt-4 mb-8">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+    <div class="mt-4 mb-8 text-center md:text-left">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700">
         Wall Art
       </h1>
-      <div class="mt-2 ml-8 text-gray-500">
-        <a
-          href="#"
-          class="hover:underline text-gray-500"
-          @click="$emit('goTo', 'home')"
-          >Home</a
-        >
+      <div class="mt-2 text-gray-500">
+        <a href="#" class="hover:underline" @click="$emit('goTo', 'home')">
+          Home
+        </a>
         /
         <span class="text-gray-700">Checkout</span>
       </div>
@@ -19,16 +16,19 @@
 
     <div class="bg-white p-4 rounded-lg shadow-md mb-6">
       <!-- Image Container -->
-      <div class="flex space-x-6 mx-auto">
+      <div
+        class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto"
+      >
         <!-- Main Image -->
         <div
-          class="flex-grow relative group cursor-pointer"
+          class="flex-grow relative group cursor-pointer mb-4 md:mb-0"
           @click="toggleExpand"
         >
+          <!-- Adjusted for bigger size on mobile -->
           <img
             :src="mainImage"
             alt="Main Art Image"
-            class="rounded-lg shadow-md object-contain w-full h-full transition-transform duration-300 hover:scale-105"
+            class="rounded-lg shadow-md object-cover md:object-contain w-screen h-56 md:w-full md:h-auto transition-transform duration-300 hover:scale-105"
           />
           <div
             class="bg-gray-800 bg-opacity-50 absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -37,14 +37,25 @@
           </div>
         </div>
 
-        <!-- Carousel Images -->
-        <div class="space-y-4">
+        <!-- Carousel Images for Desktop -->
+        <div class="hidden md:block space-y-4">
           <img
             v-for="(image, index) in carouselImages"
             :key="index"
             :src="image"
             alt="Secondary Art Image"
             class="w-60 h-auto rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+          />
+        </div>
+
+        <!-- Carousel Images for Mobile - Thumbnails -->
+        <div class="flex space-x-2 md:hidden overflow-x-scroll">
+          <img
+            v-for="(image, index) in carouselImages"
+            :key="index"
+            :src="image"
+            alt="Secondary Art Image"
+            class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
         </div>
       </div>
@@ -55,16 +66,17 @@
       class="bg-white p-6 rounded-lg shadow-sm mx-auto hover:shadow-md transition-shadow duration-300"
     >
       <!-- Title and Description -->
-      <h2 class="text-4xl text-gray-700 font-bold mb-4">{{ wallArt.title }}</h2>
+      <h2 class="text-2xl md:text-4xl text-gray-700 font-bold mb-4">
+        {{ wallArt.title }}
+      </h2>
       <p class="text-gray-600 text-lg mb-6 leading-relaxed">
         {{ wallArt.description }}
       </p>
 
       <!-- Filtering Options -->
-      <div class="grid grid-cols-3 gap-6 mb-6 py-4">
-        <!-- Size -->
-        <div class="mx-auto">
-          <h3 class="text-lg font-medium mb-2 text-center mr-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 py-4">
+        <div class="flex flex-col items-center">
+          <h3 class="text-lg font-medium mb-2 text-center">
             <i class="fas fa-expand-arrows-alt mr-2"></i>Size
           </h3>
           <div class="flex space-x-2">
@@ -130,15 +142,17 @@
       </div>
 
       <!-- Cost Section -->
-      <div class="mt-8 border-t pt-6 my-4">
+      <div class="mt-8 border-t pt-6 my-4 mx-4 md:w-1/2 md:mx-auto">
         <div
-          class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between w-1/2 mx-auto"
+          class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between"
         >
-          <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-3 mb-4 md:mb-0">
             <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
-            <h3 class="text-lg font-medium">Approximate Cost</h3>
+            <h3 class="text-xl font-medium">Approximate Cost</h3>
           </div>
-          <p class="text-gray-700 text-3xl font-semibold">
+          <p
+            class="text-gray-700 text-2xl md:text-3xl font-semibold flex items-baseline"
+          >
             ${{ getDollarPortion(approximateCost) }}.<sup class="text-base">{{
               getCentsPortion(approximateCost)
             }}</sup>
@@ -152,6 +166,12 @@
 
 <script>
 export default {
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       mainImage: 'https://source.unsplash.com/random/1100x580?art',
