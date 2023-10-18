@@ -1,8 +1,12 @@
 <template>
   <div class="relative">
     <!-- Header -->
-    <header class="bg-white p-6 shadow-md text-gray-700">
+    <header
+      class="bg-white shadow-md text-gray-700"
+      :class="isMobile ? 'p-4' : 'p-6'"
+    >
       <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo and Title -->
         <div
           class="flex items-center space-x-4 cursor-pointer"
           @click="goTo('home')"
@@ -10,23 +14,32 @@
           <i class="material-icons text-4xl pr-0 text-blue-500">border_all</i>
           <h1 class="text-2xl font-semibold">PixelHaus</h1>
         </div>
-        <div class="flex justify-between w-1/3 space-x-4">
+
+        <!-- Nav Links (Visible on large screens) -->
+        <div class="justify-between w-1/3 space-x-4" :class="isMobile ? 'hidden' : 'flex'">
           <a
             href="#how-it-works"
             class="text-gray-700 font-bold hover:text-blue-500"
             @click="selectedNavItem = 'how-it-works'"
+            >How It Works</a
           >
-            How It Works
-          </a>
           <a
             href="#pricing"
             class="text-gray-700 font-bold hover:text-blue-500"
             @click="selectedNavItem = 'pricing'"
+            >Pricing</a
           >
-            Pricing
-          </a>
         </div>
-        <div class="flex items-center space-x-5">
+
+        <!-- Hamburger Menu (Visible on small screens) -->
+        <div v-if="isMobile" class="lg:hidden flex items-center space-x-5">
+          <i
+            class="material-icons text-2xl cursor-pointer hover:text-blue-500"
+            @click="showNavSidebar = !showNavSidebar"
+            >menu</i
+          >
+        </div>
+        <div v-else class="flex items-center space-x-5">
           <!-- Notifications -->
           <div class="relative">
             <i
@@ -220,6 +233,132 @@
           </div>
         </div>
       </div>
+
+      <!-- Overlay to fade the rest of the viewport -->
+      <div
+        v-if="showNavSidebar"
+        class="overlay"
+        @click="showNavSidebar = false"
+      ></div>
+
+      <transition name="slide-right">
+        <!-- Sidebar Navigation (Mobile & Tablet) -->
+        <div
+          v-if="showNavSidebar"
+          class="absolute top-0 right-0 w-64 h-full bg-white shadow-lg rounded-lg z-20 p-2 lg:hidden transition-all duration-300"
+        >
+          <!-- Header of the sidebar with title and close button -->
+          <div
+            class="flex justify-between items-center mb-6 border-b-2 p-2 pb-3"
+          >
+            <span class="text-lg font-bold">PixelHaus</span>
+            <i
+              class="material-icons text-lg cursor-pointer hover:text-blue-500 transition-colors duration-300"
+              @click="showNavSidebar = !showNavSidebar"
+              >close</i
+            >
+          </div>
+
+          <!-- Navigation Links -->
+          <nav v-if="isLoggedIn" class="space-y-3">
+            <a
+              href="#how-it-works"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                showNavSidebar = false;
+              "
+              >My Profile</a
+            >
+            <a
+              href="#pricing"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                selectedNavItem = 'pricing';
+                showNavSidebar = false;
+              "
+              >My Orders</a
+            >
+            <a
+              href="#sign-in"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                selectedNavItem = 'upload';
+                showNavSidebar = false;
+              "
+              >Upload (Admin)</a
+            >
+            <a
+              href="#sign-in"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                isLoggedIn = false;
+                selectedNavItem = 'home';
+                showNavSidebar = false;
+              "
+              >Logout</a
+            >
+          </nav>
+          <nav v-else class="space-y-3 mt-10">
+            <a
+              href="#how-it-works"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                selectedNavItem = 'how-it-works';
+                showNavSidebar = false;
+              "
+              >How It Works</a
+            >
+            <a
+              href="#pricing"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                selectedNavItem = 'pricing';
+                showNavSidebar = false;
+              "
+              >Pricing</a
+            >
+            <a
+              href="#sign-in"
+              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+              @click="
+                isLoggedIn = true;
+                selectedNavItem = 'home';
+                showNavSidebar = false;
+              "
+              >Sign In</a
+            >
+          </nav>
+
+          <!-- Notifications -->
+          <div
+            class="flex items-center space-x-4 mt-6 ml-2 hover:shadow-md active:shadow-md p-4"
+            :class="{'opacity-50 cursor-not-allowed': !isLoggedIn}"
+          >
+            <i
+              class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
+              @click="
+                openModal =
+                  openModal === 'notifications' ? null : 'notifications'
+              "
+              >notifications</i
+            >
+            <span class="font-medium">Notifications</span>
+          </div>
+
+          <!-- Cart -->
+          <div
+            class="flex items-center space-x-4 ml-2 hover:shadow-md active:shadow-md p-4"
+            :class="{'opacity-50 cursor-not-allowed': !isLoggedIn}"
+          >
+            <i
+              class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
+              @click="openModal = openModal === 'cart' ? null : 'cart'"
+              >shopping_cart</i
+            >
+            <span class="font-medium">Cart</span>
+          </div>
+        </div>
+      </transition>
     </header>
 
     <!-- Home -->
@@ -373,7 +512,10 @@
               :key="i"
               class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all aspect-w-40 min-w-[350px]"
             >
-              <div class="flex-shrink-0 relative aspect-content" @click="selectedNavItem = 'wall-art'">
+              <div
+                class="flex-shrink-0 relative aspect-content"
+                @click="selectedNavItem = 'wall-art'"
+              >
                 <img
                   :src="art.image"
                   :alt="art.title"
@@ -524,7 +666,7 @@
 
     <!-- Wall Art -->
     <WallArt v-if="selectedNavItem === 'wall-art'" />
-    
+
     <!-- Checkout -->
     <Checkout
       v-if="selectedNavItem === 'checkout'"
@@ -952,6 +1094,7 @@ export default {
         { name: 'Puerto Rico', icon: 'beach_access', color: 'yellow' },
       ],
       isMobile: false,
+      showNavSidebar: false,
     };
   },
   computed: {
@@ -1025,7 +1168,7 @@ export default {
       this.goTo('home');
     },
     markNotificationsRead() {
-      this.openModal = null
+      this.openModal = null;
       this.notifications = this.notifications.map((notification) => {
         if (!notification.read) {
           notification.read = true;
@@ -1036,7 +1179,7 @@ export default {
     },
     checkWindowSize() {
       this.isMobile = window.innerWidth < 768;
-    }
+    },
   },
 };
 </script>
@@ -1073,11 +1216,37 @@ export default {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to {
   opacity: 0;
 }
 
+/* Initial State */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide-right-enter-to {
+  transform: translateX(0%);
+}
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+
+
 .material-icons.large-icon {
   font-size: 50px; /* Further adjust the size */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  backdrop-filter: blur(4px);
 }
 </style>
