@@ -26,10 +26,7 @@
             Pricing
           </a>
         </div>
-        <div
-          class="flex items-center space-x-5"
-          @mouseleave="markNotificationsRead"
-        >
+        <div class="flex items-center space-x-5">
           <!-- Notifications -->
           <div class="relative">
             <i
@@ -49,7 +46,7 @@
           </div>
           <div
             v-if="openModal === 'notifications'"
-            @mouseleave="openModal = null"
+            @mouseleave="markNotificationsRead"
             class="absolute top-12 right-10 w-96 bg-white rounded-lg shadow-md z-20 p-4 border-l border-r border-gray-300"
           >
             <div class="border-b-2 border-gray-200 pb-2 mb-4">
@@ -195,6 +192,13 @@
                 @click="selectedNavItem = 'orders'"
               >
                 My Orders
+              </a>
+              <a
+                href="#"
+                class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
+                @click="selectedNavItem = 'upload'"
+              >
+                Upload (Admin)
               </a>
               <a
                 href="#"
@@ -369,7 +373,7 @@
               :key="i"
               class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all aspect-w-40 min-w-[350px]"
             >
-              <div class="flex-shrink-0 relative aspect-content">
+              <div class="flex-shrink-0 relative aspect-content" @click="selectedNavItem = 'wall-art'">
                 <img
                   :src="art.image"
                   :alt="art.title"
@@ -481,7 +485,7 @@
       </section>
 
       <!-- Follow Us -->
-      <section class="bg-gray-100 py-24 rounded-lg">
+      <section class="bg-gray-100 py-20 rounded-lg">
         <div class="container mx-auto text-center">
           <h2
             class="text-4xl text-gray-900 font-extrabold mb-12 tracking-tighter"
@@ -518,6 +522,9 @@
       </section>
     </div>
 
+    <!-- Wall Art -->
+    <WallArt v-if="selectedNavItem === 'wall-art'" />
+    
     <!-- Checkout -->
     <Checkout
       v-if="selectedNavItem === 'checkout'"
@@ -554,6 +561,9 @@
 
     <!-- Pricing -->
     <Pricing v-if="selectedNavItem === 'pricing'" />
+
+    <!-- Upload -->
+    <Upload v-if="selectedNavItem === 'upload'" />
 
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
@@ -664,6 +674,7 @@
 </template>
 
 <script>
+import WallArt from './WallArt.vue';
 import Testimonials from './Testimonials.vue';
 import Checkout from './Checkout.vue';
 import NotificationsPage from './Notifications/Page.vue';
@@ -675,10 +686,12 @@ import TermsOfService from './TermsOfService.vue';
 import PrivacyPolicy from './PrivacyPolicy.vue';
 import Pricing from './Pricing.vue';
 import HowItWorks from './HowItWorks.vue';
+import Upload from './Upload.vue';
 import data from '../data.js';
 
 export default {
   components: {
+    WallArt,
     Testimonials,
     Checkout,
     NotificationsPage,
@@ -690,6 +703,7 @@ export default {
     PrivacyPolicy,
     Pricing,
     HowItWorks,
+    Upload,
   },
   mounted() {
     let slideIndex = 0;
@@ -1003,6 +1017,7 @@ export default {
       this.goTo('home');
     },
     markNotificationsRead() {
+      this.openModal = null
       this.notifications = this.notifications.map((notification) => {
         if (!notification.read) {
           notification.read = true;
