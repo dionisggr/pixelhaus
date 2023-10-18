@@ -11,7 +11,7 @@
           <div
             v-for="testimonial in testimonials"
             class="bg-white rounded-lg shadow-md p-6 transform transition-transform duration-300 hover:scale-105 cursor-pointer"
-            style="min-width: 375px"
+            :style="isMobile ? 'min-width: 300px' : 'min-width: 375px'"
           >
             <div class="flex items-center mb-4">
               <img
@@ -37,6 +37,12 @@
 import data from '../data.js';
 
 export default {
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   mounted() {
     let slideIndex = 0;
 

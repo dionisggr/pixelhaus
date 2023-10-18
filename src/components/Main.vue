@@ -3,7 +3,7 @@
     <!-- Header -->
     <header
       class="bg-white shadow-md text-gray-700"
-      :class="isMobile ? 'p-4' : 'p-6'"
+      :class="[isMobile ? 'p-4' : 'p-6', { 'sticky top-0 z-50': isMobile}]"
     >
       <div class="container mx-auto flex justify-between items-center">
         <!-- Logo and Title -->
@@ -16,7 +16,10 @@
         </div>
 
         <!-- Nav Links (Visible on large screens) -->
-        <div class="justify-between w-1/3 space-x-4" :class="isMobile ? 'hidden' : 'flex'">
+        <div
+          class="justify-between w-1/3 space-x-4"
+          :class="isMobile ? 'hidden' : 'flex'"
+        >
           <a
             href="#how-it-works"
             class="text-gray-700 font-bold hover:text-blue-500"
@@ -245,7 +248,7 @@
         <!-- Sidebar Navigation (Mobile & Tablet) -->
         <div
           v-if="showNavSidebar"
-          class="absolute top-0 right-0 w-64 h-full bg-white shadow-lg rounded-lg z-20 p-2 lg:hidden transition-all duration-300"
+          class="fixed top-0 right-0 w-64 h-full bg-white shadow-lg rounded-lg z-20 p-2 lg:hidden transition-all duration-300"
         >
           <!-- Header of the sidebar with title and close button -->
           <div
@@ -264,9 +267,7 @@
             <a
               href="#how-it-works"
               class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
-              @click="
-                showNavSidebar = false;
-              "
+              @click="showNavSidebar = false"
               >My Profile</a
             >
             <a
@@ -332,7 +333,7 @@
           <!-- Notifications -->
           <div
             class="flex items-center space-x-4 mt-6 ml-2 hover:shadow-md active:shadow-md p-4"
-            :class="{'opacity-50 cursor-not-allowed': !isLoggedIn}"
+            :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -348,7 +349,7 @@
           <!-- Cart -->
           <div
             class="flex items-center space-x-4 ml-2 hover:shadow-md active:shadow-md p-4"
-            :class="{'opacity-50 cursor-not-allowed': !isLoggedIn}"
+            :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -362,13 +363,13 @@
     </header>
 
     <!-- Home -->
-    <div class="home" v-if="selectedNavItem === 'home'">
+    <div class="home px-3" v-if="selectedNavItem === 'home'">
       <!-- Hero Section -->
-      <section class="relative mt-6">
+      <section class="relative" :class="isMobile ? 'mt-3' : 'mt-6'">
         <div class="container mx-auto">
           <div
-            class="bg-white p-6 rounded-xl overflow-hidden shadow-md relative"
-            style="height: 70vh"
+            class="bg-white p-5 rounded-xl overflow-hidden shadow-md relative"
+            :style="isMobile ? 'height: 60vh' : 'height: 70vh'"
           >
             <div class="slide-show h-full overflow-hidden relative">
               <div
@@ -409,11 +410,12 @@
         <div class="text-center mb-4 text-gray-700">
           <h2 class="text-2xl font-bold">Search Artworks</h2>
           <p class="text-sm text-gray-700 leading-relaxed">
-            Use the search bar below to find the wall arts you love.
+            Find for the wall arts you love.
           </p>
         </div>
         <div
-          class="relative flex items-center w-3/4 mx-auto bg-white p-4 rounded-full shadow-md"
+          class="relative flex items-center mx-auto bg-white p-4 rounded-full shadow-md"
+          :class="isMobile ? 'w-full' : 'w-3/4'"
         >
           <i
             class="material-icons text-4xl absolute left-6 top-1/2 transform -translate-y-1/2"
@@ -431,15 +433,22 @@
       </section>
 
       <!-- Sidebar -->
-      <section class="sidebar mt-10 container mx-auto flex mb-16">
+      <section class="sidebar mt-10 container mx-auto flex mb-16 min-w-max">
+        <div
+          v-if="isMobile && !isSidebarHidden"
+          class="fixed inset-0 bg-black opacity-50 z-20"
+          @click="toggleSidebar"
+        ></div>
+
         <aside
-          :class="[
-            'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8',
-            {
-              'w-1/4 p-6': !isSidebarHidden,
-              'w-fit fixed top-12 z-10 p-3 ml-0': isSidebarHidden,
-            },
-          ]"
+          :class="{
+            'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8 p-6':
+              !isMobile,
+            'w-1/4': !isMobile && !isSidebarHidden,
+            'fixed top-20 z-20 p-4 pt-6 pr-6': !isMobile && isSidebarHidden,
+            'fixed top-20 z-20 p-4 pt-6 pr-6 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
+              isMobile && !isSidebarHidden,
+          }"
           style="font-family: 'Poppins', sans-serif; height: fit-content"
         >
           <div class="w-full flex justify-between items-baseline">
@@ -453,7 +462,10 @@
               class="text-lg text-gray-700 flex items-center"
               @click="toggleSidebar"
             >
-              <i class="material-icons text-2xl font-bold">
+              <i
+                v-if="!isMobile || (isMobile && !isSidebarHidden)"
+                class="material-icons text-2xl font-bold"
+              >
                 {{ isSidebarHidden ? 'menu' : 'arrow_back' }}
               </i>
             </button>
@@ -492,10 +504,37 @@
         </aside>
 
         <!-- Inventory Section -->
-        <div class="flex-grow grid grid-cols-1 gap-6" id="inventory-section">
+        <div class="flex-grow grid grid-cols-1 gap-6 px-4" id="inventory-section">
+          <!-- Dropdown header -->
+          <div
+            v-if="isSidebarHidden && isMobile"
+            class="w-5/6 mx-auto flex items-center justify-between bg-white border rounded-lg shadow-md p-2 cursor-pointer hover:shadow-lg"
+            @click="isSidebarHidden = !isSidebarHidden"
+          >
+            <h2
+              class="text-2xl p-2 font-bold text-center uppercase bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
+            >
+              {{ selectedCategory }}
+            </h2>
+            <svg
+              class="h-6 w-6 transform transition-transform duration-300"
+              :class="{ 'rotate-180': !isSidebarHidden }"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
           <h2
-            v-if="isSidebarHidden"
-            class="text-2xl font-bold mb-4 border-b pb-2 text-center uppercase w-full bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
+            v-else
+            class="text-3xl p-2 font-bold text-center uppercase bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
           >
             {{ selectedCategory }}
           </h2>
@@ -598,33 +637,34 @@
       </section>
 
       <!-- Testimonials -->
-      <Testimonials />
+      <Testimonials :isMobile="isMobile" />
 
       <!-- FAQ -->
       <section class="bg-white py-16 shadow-md rounded-lg" id="faq">
-        <div class="container mx-auto px-4 text-gray-800">
-          <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
-          <div class="grid grid-cols-1 gap-4 grid-flow-row w-1/2 mx-auto">
-            <div
-              v-for="{ question, answer } in faq"
-              class="faq-item bg-gray-50 p-6 rounded-lg hover:bg-gray-100 transition duration-300 shadow-md hover:shadow-xl transform hover:scale-105 cursor-pointer flex flex-col"
-              @click="toggleAnswer($event)"
+    <div class="container mx-auto px-4 text-gray-800">
+      <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
+      <!-- Adjust grid layout for responsiveness -->
+      <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:w-1/2 xl:grid-cols-1 gap-4 grid-flow-row mx-auto">
+        <div
+          v-for="{ question, answer } in faq"
+          class="faq-item bg-gray-50 p-6 rounded-lg hover:bg-gray-100 transition duration-300 shadow-md hover:shadow-xl transform hover:scale-105 cursor-pointer flex flex-col"
+          @click="toggleAnswer($event)"
+        >
+          <div class="flex justify-between items-center">
+            <h3
+              class="text-xl font-semibold text-gray-700 hover:text-gray-800"
             >
-              <div class="flex justify-between items-center">
-                <h3
-                  class="text-xl font-semibold text-gray-700 hover:text-gray-800"
-                >
-                  {{ question }}
-                </h3>
-                <i class="material-icons toggle-icon">add</i>
-              </div>
-              <p class="text-gray-700 answer hidden mt-4">
-                {{ answer }}
-              </p>
-            </div>
+              {{ question }}
+            </h3>
+            <i class="material-icons toggle-icon">add</i>
           </div>
+          <p class="text-gray-700 answer hidden mt-4">
+            {{ answer }}
+          </p>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
       <!-- Follow Us -->
       <section class="bg-gray-100 py-20 rounded-lg">
@@ -634,7 +674,7 @@
           >
             Stay updated!
           </h2>
-          <div class="flex justify-center space-x-12">
+          <div class="flex justify-center space-x-8 md:space-x-12 flex-wrap">
             <a
               href="#"
               class="text-blue-500 hover:text-blue-600 text-5xl transition duration-300 ease-in-out transform hover:scale-125"
@@ -707,111 +747,118 @@
     <!-- Upload -->
     <Upload v-if="selectedNavItem === 'upload'" />
 
-    <!-- Footer -->
-    <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
-      <div class="container mx-auto py-12 space-y-8">
-        <!-- Top Row: Links and Newsletter -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
-            >
-              About Us
-            </h3>
-            <ul class="mt-4 space-y-2">
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-blue-400"
-                  @click="selectedNavItem = 'our-story'"
-                  >Our Story</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-blue-400"
-                  @click="selectedNavItem = 'team'"
-                  >Team</a
-                >
-              </li>
-            </ul>
-          </div>
+<!-- Footer -->
 
-          <!-- Support Section -->
-          <div>
-            <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+<footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
+  <div class="container mx-auto px-4 pt-12 pb-6 space-y-8 md:space-y-0">
+    <!-- Top Row: Links and Newsletter -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+      <!-- About Us Section -->
+      <div>
+        <h3
+          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+        >
+          About Us
+        </h3>
+        <ul class="mt-4 space-y-2">
+          <li>
+            <a
+              href="#"
+              class="hover:text-blue-400"
+              @click="selectedNavItem = 'our-story'"
             >
-              Support
-            </h3>
-            <ul class="mt-4 space-y-2">
-              <li>
-                <a href="#" class="hover:text-blue-400" @click="goTo('contact')"
-                  >Contact</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-blue-400"
-                  @click="selectedNavItem = 'privacy-policy'"
-                  >Privacy Policy</a
-                >
-              </li>
-              <!-- New 'Terms of Service' link -->
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-blue-400"
-                  @click="selectedNavItem = 'terms-of-service'"
-                  >Terms of Service</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+              Our Story
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="hover:text-blue-400"
+              @click="selectedNavItem = 'team'"
             >
-              Newsletter
-            </h3>
-            <form class="mt-4">
-              <input
-                type="email"
-                placeholder="Email Address"
-                class="w-full p-2 rounded-md text-gray-700 border border-gray-300"
-              />
-              <button
-                type="submit"
-                class="mt-2 w-full bg-blue-500 hover:bg-blue-600 rounded-md text-white p-2"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Bottom Row: Social Links and Copyright -->
-        <div class="flex justify-between items-center">
-          <div class="flex space-x-4">
-            <a href="#" class="text-gray-700 hover:text-blue-400">
-              <i class="fab fa-facebook-f"></i>
+              Team
             </a>
-            <a href="#" class="text-gray-700 hover:text-blue-400">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="text-gray-700 hover:text-blue-400">
-              <i class="fab fa-instagram"></i>
-            </a>
-          </div>
-          <div class="text-sm text-gray-700">
-            &copy; 2023 PixelHaus. All rights reserved.
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
-    </footer>
+
+      <!-- Support Section -->
+      <div>
+        <h3
+          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+        >
+          Support
+        </h3>
+        <ul class="mt-4 space-y-2">
+          <li>
+            <a href="#" class="hover:text-blue-400" @click="goTo('contact')">
+              Contact
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="hover:text-blue-400"
+              @click="selectedNavItem = 'privacy-policy'"
+            >
+              Privacy Policy
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="hover:text-blue-400"
+              @click="selectedNavItem = 'terms-of-service'"
+            >
+              Terms of Service
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Section -->
+      <div>
+        <h3
+          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+        >
+          Newsletter
+        </h3>
+        <form class="mt-4">
+          <input
+            type="email"
+            placeholder="Email Address"
+            class="w-full p-2 rounded-md text-gray-700 border border-gray-300"
+          />
+          <button
+            type="submit"
+            class="mt-2 w-full bg-blue-500 hover:bg-blue-600 rounded-md text-white p-2"
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Row: Social Links and Copyright -->
+    <div class="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-0">
+      <div class="flex space-x-4 mb-4 md:mb-0">
+        <a href="#" class="text-gray-700 hover:text-blue-400">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="text-gray-700 hover:text-blue-400">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="text-gray-700 hover:text-blue-400">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+      <div class="text-sm text-gray-700 font-semibold mt-6">
+        &copy; 2023 PixelHaus. All rights reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+
   </div>
 </template>
 
@@ -1179,6 +1226,10 @@ export default {
     },
     checkWindowSize() {
       this.isMobile = window.innerWidth < 768;
+
+      if (this.isMobile) {
+        this.isSidebarHidden = true;
+      }
     },
   },
 };
@@ -1216,7 +1267,8 @@ export default {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -1232,8 +1284,6 @@ export default {
 .slide-right-leave-to {
   transform: translateX(100%);
 }
-
-
 
 .material-icons.large-icon {
   font-size: 50px; /* Further adjust the size */
