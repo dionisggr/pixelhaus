@@ -1,20 +1,51 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-12" :class="{'mt-8': isMobile}">
+  <div
+    class="min-w-screen min-h-screen bg-gray-100 py-12 w-full max-w-6xl mx-auto"
+    :class="{ 'px-4': isMobile }"
+  >
     <!-- Header and Breadcrumbs -->
-    <div class="px-8 mb-4">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-            Notifications
-        </h1>
-        <div class="mt-2 flex justify-center md:justify-start items-center space-x-2 md:ml-32 text-gray-500">
-            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
-            <span>/</span>
-            <span class="text-gray-700">Notifications</span>
-        </div>
+    <div v-if="isMobile" class="px-8 mb-4">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Notifications
+      </h1>
+      <div
+        class="mt-2 flex justify-center items-center space-x-2 text-gray-500"
+      >
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        <span>/</span>
+        <span class="text-gray-700">Notifications</span>
+      </div>
+    </div>
+    <div v-else class="mb-4">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Notifications
+      </h1>
+      <div
+        class="mt-2 flex md:justify-start items-center space-x-2 text-gray-500"
+      >
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        <span>/</span>
+        <span class="text-gray-700">Notifications</span>
+      </div>
     </div>
 
     <!-- Filters and Search -->
-    <div class="mb-2 p-4 bg-white rounded-lg shadow-md w-3/4 mx-auto">
-      <div class="flex justify-between items-center">
+    <div
+      class="mb-2 p-4 bg-white rounded-lg shadow-md w-full max-w-6xl mx-auto"
+    >
+      <div
+        class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+      >
         <div class="flex space-x-4">
           <button
             class="text-sm px-6 py-2 rounded-full transition duration-300 ease-in-out"
@@ -37,11 +68,11 @@
             This Month
           </button>
         </div>
-        <div class="flex space-x-4">
+        <div class="flex w-full md:w-auto mt-4 md:mt-0 space-x-4">
           <input
             type="text"
             placeholder="Search Notifications..."
-            class="p-2 w-64 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            class="p-2 w-full md:w-64 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
         </div>
       </div>
@@ -50,14 +81,14 @@
     <!-- Mark All as Read Button -->
     <button
       @click="markAllAsRead"
-      class="ml-auto mr-48 mb-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 flex items-center"
+      class="ml-auto mr-4 mb-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 flex items-center justify-center w-fit"
     >
       <i class="material-icons mr-2" style="font-size: 20px">done_all</i>
       Mark All as Read
     </button>
 
     <!-- Main Content -->
-    <div class="p-6 mx-auto w-3/4">
+    <div class="p-6 w-full md:w-4/5 mx-auto">
       <div v-if="notifications.length === 0" class="text-center py-20">
         <p class="text-2xl font-semibold text-gray-500">No Notifications Yet</p>
       </div>
@@ -142,18 +173,22 @@
 
 <script>
 export default {
+  props: {
+    notifications: {
+      type: Array,
+      required: true,
+    },
+    isMobile: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedFilter: '',
       openedId: null,
       visibleCount: 10,
     };
-  },
-  props: {
-    notifications: {
-      type: Array,
-      required: true,
-    },
   },
   computed: {
     displayedNotifications() {
@@ -165,16 +200,16 @@ export default {
   },
   methods: {
     markAllAsRead() {
-    this.notifications.forEach((notification) => {
-      notification.read = true;
-    });
-  },
-  markAsRead(id) {
-    const notification = this.notifications.find((n) => n.id === id);
-    if (notification) {
-      notification.read = true;
-    }
-  },
+      this.notifications.forEach((notification) => {
+        notification.read = true;
+      });
+    },
+    markAsRead(id) {
+      const notification = this.notifications.find((n) => n.id === id);
+      if (notification) {
+        notification.read = true;
+      }
+    },
     iconType(type) {
       return type === 'order'
         ? 'material-icons text-blue-500'

@@ -718,6 +718,7 @@
     <NotificationsPage
       v-if="selectedNavItem === 'notifications'"
       :notifications="notifications"
+      :isMobile="isMobile"
     />
 
     <!-- Orders -->

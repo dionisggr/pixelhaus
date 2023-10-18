@@ -1,15 +1,20 @@
 <template>
-  <div class="how-it-works" :class="isMobile ? 'p-4 py-8' : 'p-12'">
+  <div class="how-it-works" :class="isMobile ? 'p-4' : 'p-12'">
     <!-- Breadcrumbs -->
     <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-            How It Works
-        </h1>
-        <div class="mt-2 flex justify-center items-center space-x-2 md:ml-32 text-gray-500">
-            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
-            <span>/</span>
-            <span class="text-gray-700">How It Works</span>
-        </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        How It Works
+      </h1>
+      <div class="mt-2 ml-32 text-gray-500">
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        /
+        <span class="text-gray-700">How It Works</span>
+      </div>
     </div>
 
     <!-- Renting -->
