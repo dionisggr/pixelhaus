@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-gray-100 min-h-screen p-12">
+  <div class="bg-gray-100 min-h-screen p-4 md:p-12">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         Pricing
       </h1>
-      <div class="mt-2 ml-32 text-gray-500">
+      <div class="mt-2 text-center md:text-left md:ml-32 text-gray-500">
         <a
           href="#"
           class="hover:underline text-gray-500"
@@ -18,13 +18,13 @@
     </div>
 
     <!-- Filters -->
-    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md mb-6">
-      <div class="grid grid-cols-2 gap-8">
+    <div class="max-w-3xl mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <!-- Size filter -->
         <div>
-          <label class="block text-sm font-semibold mb-2 text-gray-600"
-            >Size:</label
-          >
+          <label class="block text-sm font-semibold mb-2 text-gray-600">
+            Size:
+          </label>
           <div class="relative">
             <select
               v-model="selectedSize"
@@ -52,9 +52,9 @@
         </div>
         <!-- Material filter -->
         <div>
-          <label class="block text-sm font-semibold mb-2 text-gray-600"
-            >Material:</label
-          >
+          <label class="block text-sm font-semibold mb-2 text-gray-600">
+            Material:
+          </label>
           <div class="relative">
             <select
               v-model="selectedMaterial"
@@ -91,10 +91,10 @@
     <div
       v-for="category in filteredData"
       :key="category.name"
-      class="bg-white p-6 rounded-lg shadow-md mb-8"
+      class="bg-white p-4 md:p-6 rounded-lg shadow-md mb-8"
     >
       <h2 class="text-2xl font-bold mb-6 text-gray-700">{{ category.name }}</h2>
-      <div class="grid grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           v-for="material in materials"
           :key="material"
@@ -116,13 +116,13 @@
           <table class="min-w-full">
             <tbody class="relative min-h-[500px]">
               <tr>
-                <th class="py-2 px-4 border-b border-gray-300 font-medium">
+                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
                   Size
                 </th>
-                <th class="py-2 px-4 border-b border-gray-300 font-medium">
+                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
                   3-Month
                 </th>
-                <th class="py-2 px-4 border-b border-gray-300 font-medium">
+                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
                   6-Month
                 </th>
               </tr>
@@ -136,15 +136,15 @@
                 :class="index % 2 ? 'bg-gray-100' : ''"
               >
                 <td
-                  class="py-2 px-4 border-b border-gray-300 font-medium text-center"
+                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium w-1/3 text-sm text-center"
                 >
                   {{ item.size }}
                 </td>
-                <td class="py-2 px-4 border-b border-gray-300 text-center">
+                <td class="py-2 px-2 md:px-4 border-b border-gray-300 text-center">
                   ${{ item['3months'] }}
                   <span class="text-xs text-gray-500">/ month</span>
                 </td>
-                <td class="py-2 px-4 border-b border-gray-300 text-center">
+                <td class="py-2 px-2 md:px-4 border-b border-gray-300 text-center">
                   ${{ item['6months'] }}
                   <span class="text-xs text-gray-500">/ month</span>
                 </td>
@@ -163,6 +163,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
