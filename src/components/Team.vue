@@ -1,52 +1,64 @@
 <template>
-  <div class="bg-white min-h-screen flex flex-col items-center py-16 px-6">
-    <h1 class="text-4xl font-extrabold mb-16">Meet The Team</h1>
+  <div class="bg-gray-100 min-h-screen flex flex-col items-center py-12 mt-4 sm:py-8 px-4 sm:px-8 max-w-6xl mx-auto">
+        <!-- Breadcrumbs -->
+        <div class="mb-8 w-full">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Our Story
+      </h1>
+      <div class="text-center mt-2 md:text-left text-gray-500 w-full">
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        /
+        <span class="text-gray-700">Our Story</span>
+      </div>
+    </div>
     <div
       v-for="(member, index) in teamMembers"
       :key="index"
-      class="w-full max-w-4xl mb-12 cursor-pointer transform transition-transform duration-300"
+      class="w-full max-w-3xl my-10 sm:mb-8 md:mb-12 cursor-pointer transform transition-transform duration-300"
       @click="toggleMember(member)"
     >
       <div
         :class="{
-          'flex items-center space-x-8': true,
+          'flex sm:items-center space-x-4 sm:space-x-6 md:space-x-8 flex-col sm:flex-row': true,
           'opacity-40': selectedMember === member,
         }"
         class="hover:border-blue-500 hover:border-4 rounded-lg duration-500 group transition-all"
       >
         <div
           :class="{
-            'flex items-center animate__animated custom-fadeInLeft duration-700':
-              selectedMember !== member,
-            'flex flex-col items-center animate__animated custom-fadeInLeftSmall duration-400':
-              selectedMember === member,
+            'flex items-center animate__animated custom-fadeInLeft duration-700 sm:order-1': selectedMember !== member,
+            'flex flex-col items-center animate__animated custom-fadeInLeftSmall duration-400 sm:order-0': selectedMember === member,
           }"
         >
           <img
             :src="member.img"
             :class="{
-              'transition-all duration-500 ease-in-out h-72 w-72 object-cover rounded-full shadow-lg':
+              'transition-all duration-500 ease-in-out h-48 w-48 sm:h-56 sm:w-56 md:h-72 md:w-72 object-cover rounded-full shadow-lg':
                 selectedMember !== member,
-              'transition-all duration-500 ease-in-out h-20 w-20 object-cover rounded-full':
+              'transition-all duration-500 ease-in-out h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 object-cover rounded-full':
                 selectedMember === member,
             }"
             alt="Member Image"
           />
-          <div v-if="selectedMember !== member" class="ml-8">
-            <h2 class="text-3xl font-semibold mb-4">{{ member.name }}</h2>
-            <p class="text-lg text-gray-600">{{ member.role }}</p>
+          <div v-if="selectedMember !== member" class="ml-3 sm:ml-6 md:ml-8">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold mb-1 sm:mb-2 md:mb-4">{{ member.name }}</h2>
+            <p class="text-sm sm:text-base md:text-lg text-gray-600">{{ member.role }}</p>
           </div>
           <div v-else>
-            <h2 class="text-xl font-semibold mb-2">{{ member.name }}</h2>
-            <p class="text-sm text-gray-400">{{ member.role }}</p>
+            <h2 class="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">{{ member.name }}</h2>
+            <p class="text-xs sm:text-sm text-gray-400">{{ member.role }}</p>
           </div>
         </div>
         <div
           v-if="selectedMember === member"
-          class="animate__animated custom-fadeInRight duration-700 ml-auto"
+          class="animate__animated custom-fadeInRight duration-700 sm:ml-auto"
         >
-          <div class="rounded-lg p-8">
-            <h3 class="text-2xl font-semibold mb-4">Bio</h3>
+          <div class="rounded-lg p-3 sm:p-6 md:p-8 space-y-2" :class="{'text-sm': isMobile}">
             <p>{{ member.bio }}</p>
             <p>{{ member.moreBio }}</p>
           </div>
@@ -58,6 +70,12 @@
 
 <script>
 export default {
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       teamMembers: [

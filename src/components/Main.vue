@@ -726,7 +726,7 @@
     <Orders v-if="selectedNavItem === 'orders'" :orders="cartItems" />
 
     <!-- Our Story -->
-    <OurStory v-if="selectedNavItem === 'our-story'" />
+    <OurStory v-if="selectedNavItem === 'our-story'" :isMobile="isMobile" />
 
     <!-- Team -->
     <Team v-if="selectedNavItem === 'team'" />
