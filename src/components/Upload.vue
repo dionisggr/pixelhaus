@@ -20,11 +20,11 @@
         <div
           v-for="(image, index) in images"
           :key="index"
-          class="relative group rounded-lg p-4 transition duration-300 ease-in-out hover:shadow-lg"
+          class="relative group rounded-xl p-4 transition duration-300 ease-in-out hover:shadow-lg"
         >
           <!-- Delete button -->
           <button
-            @click="removeImage(index)"
+            @click="triggerRemove(index)"
             class="absolute top-2 right-2 bg-red-500 text-white text-xs p-1 px-2 rounded-full transition duration-300 ease-in-out transform hover:bg-red-600 opacity-0 group-hover:opacity-100"
           >
             <i class="fas fa-times"></i>
@@ -91,12 +91,16 @@
     </div>
   </div>
 
-  <!-- Confirmation Modal -->
+  <!-- Confirmation Modal with Blurred Background -->
   <div
     v-if="showModal"
     class="fixed inset-0 flex items-center justify-center z-50"
   >
-    <div class="bg-white p-4 rounded shadow-lg w-1/2">
+    <!-- Blurred Background Overlay -->
+    <div class="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
+
+    <!-- Modal Content -->
+    <div class="bg-white p-4 rounded shadow-lg w-1/2 z-10">
       <h3 class="text-xl mb-4">Confirm Deletion</h3>
       <p>Are you sure you want to remove this image?</p>
       <div class="mt-4 flex justify-end space-x-2">

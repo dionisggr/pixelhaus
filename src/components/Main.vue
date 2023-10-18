@@ -286,7 +286,7 @@
           <input
             type="text"
             placeholder="Search for wall arts..."
-            class="rounded-full p-2 pl-16 w-full border-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            class="rounded-full p-2 pl-16 w-full border-2 border-gray-200 focus:outline-none focus:border-blue-500"
           />
         </div>
       </section>
@@ -727,6 +727,13 @@ export default {
     this.displayedArts.forEach((art) => (art.isAdded = false));
     this.checkShowMoreButton();
   },
+  created() {
+    this.checkWindowSize();
+    window.addEventListener('resize', this.checkWindowSize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkWindowSize);
+  },
   data() {
     return {
       selectedNavItem: 'home',
@@ -944,6 +951,7 @@ export default {
         { name: 'Culture', icon: 'public', color: 'blue' },
         { name: 'Puerto Rico', icon: 'beach_access', color: 'yellow' },
       ],
+      isMobile: false,
     };
   },
   computed: {
@@ -1026,6 +1034,9 @@ export default {
         return notification;
       });
     },
+    checkWindowSize() {
+      this.isMobile = window.innerWidth < 768;
+    }
   },
 };
 </script>
