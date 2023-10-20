@@ -3,7 +3,7 @@
     <!-- Header -->
     <header
       class="bg-white shadow-md text-gray-700"
-      :class="[isMobile ? 'p-4' : 'p-6', { 'sticky top-0 z-50': isMobile}]"
+      :class="[isMobile ? 'p-4' : 'p-6', { 'sticky top-0 z-50': isMobile }]"
     >
       <div class="container mx-auto flex justify-between items-center">
         <!-- Logo and Title -->
@@ -334,7 +334,10 @@
           <div
             class="flex items-center space-x-4 mt-6 ml-2 hover:shadow-md active:shadow-md p-4"
             :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
-            @click="selectedNavItem = 'notifications'; showNavSidebar = false"
+            @click="
+              selectedNavItem = 'notifications';
+              showNavSidebar = false;
+            "
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -351,7 +354,10 @@
           <div
             class="flex items-center space-x-4 ml-2 hover:shadow-md active:shadow-md p-4"
             :class="{ 'opacity-50 cursor-not-allowed': !isLoggedIn }"
-            @click="selectedNavItem = 'checkout'; showNavSidebar = false"
+            @click="
+              selectedNavItem = 'checkout';
+              showNavSidebar = false;
+            "
           >
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500 transition-colors duration-300"
@@ -506,7 +512,10 @@
         </aside>
 
         <!-- Inventory Section -->
-        <div class="flex-grow grid grid-cols-1 gap-6 px-4" id="inventory-section">
+        <div
+          class="flex-grow grid grid-cols-1 gap-6 px-4"
+          id="inventory-section"
+        >
           <!-- Dropdown header -->
           <div
             v-if="isSidebarHidden && isMobile"
@@ -548,81 +557,197 @@
                 isSidebarHidden,
             }"
           >
+            <!-- Wall Art Preview -->
             <div
               v-for="(art, i) in displayedArts"
               :key="i"
-              class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all aspect-w-40"
+              class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-500 aspect-w-40"
             >
-              <div
-                class="flex-shrink-0 relative aspect-content"
-                @click="selectedNavItem = 'wall-art'"
-              >
-                <img
-                  :src="art.image"
-                  :alt="art.title"
-                  class="w-full object-cover cursor-pointer"
-                />
-                <img
-                  :src="art.hoverImage"
-                  :alt="art.title"
-                  class="w-full object-cover cursor-pointer opacity-0 group-hover:opacity-100 absolute top-0 left-0 transition-opacity"
-                />
-              </div>
-
-              <div class="p-3 pb-3.5 flex flex-col space-y-1">
-                <div class="flex justify-between items-center text-gray-700">
-                  <h3 class="text-lg font-semibold">{{ art.title }}</h3>
-                  <button
-                    @click="toggleItem(art.id)"
-                    :class="[
-                      art.isAdded
-                        ? 'bg-red-500 hover:bg-red-600'
-                        : 'bg-blue-500 hover:bg-blue-600',
-                      'text-white rounded-full p-2 transition-all',
-                    ]"
-                  >
-                    <svg
-                      v-if="!art.isAdded"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="add h-4 w-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                    <svg
-                      v-else
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="remove h-4 w-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 12h12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <p class="text-sm text-gray-700">
-                  {{ art.description }}
-                </p>
-              </div>
-              <transition name="fade" mode="out-in">
+              <transition name="flip" mode="out-in">
+                <!-- Front Side -->
                 <div
-                  v-if="art.notification"
-                  class="absolute top-0 right-0 mt-4 mr-4 px-2 bg-gray-900 bg-opacity-75 text-xs text-white p-1 rounded-full shadow-lg"
+                  v-if="!art.flipped"
+                  class="flex-shrink-0 relative aspect-content"
+                  @click="selectedNavItem = 'wall-art'"
                 >
-                  {{ art.notification }}
+                  <!-- Main Image -->
+                  <img
+                    :src="art.images[0]"
+                    :alt="art.title"
+                    class="w-full object-cover cursor-pointer"
+                  />
+                  <!-- Hover Image -->
+                  <img
+                    :src="art.images[1]"
+                    :alt="art.title"
+                    class="w-full object-cover cursor-pointer opacity-0 group-hover:opacity-100 absolute top-0 left-0 transition-opacity"
+                  />
+
+                  <!-- Art Details -->
+                  <div class="p-3 pb-3.5 flex flex-col space-y-1">
+                    <div
+                      class="flex justify-between items-center text-gray-700"
+                    >
+                      <h3 class="text-lg font-semibold">{{ art.title }}</h3>
+                      <button
+                        @click.stop="toggleItem(art.id)"
+                        :class="[
+                          art.isAdded
+                            ? 'bg-red-500 hover:bg-red-600'
+                            : 'bg-blue-500 hover:bg-blue-600',
+                          'text-white rounded-full p-2 transition-all',
+                        ]"
+                      >
+                        <!-- Add Icon -->
+                        <svg
+                          v-if="!art.isAdded"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="add h-4 w-4 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                        <!-- Remove Icon -->
+                        <svg
+                          v-else
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="remove h-4 w-4 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M6 12h12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="text-sm text-gray-700">{{ art.description }}</p>
+                  </div>
+
+                  <!-- Notification Transition -->
+                  <transition name="fade" mode="out-in">
+                    <div
+                      v-if="art.notification"
+                      class="absolute top-0 right-0 mt-4 mr-4 px-2 bg-gray-900 bg-opacity-75 text-xs text-white p-1 rounded-full shadow-lg"
+                    >
+                      {{ art.notification }}
+                    </div>
+                  </transition>
+                </div>
+
+                <!-- Back Side -->
+                <div v-else class="p-4 flex flex-col space-y-3">
+                  <!-- Art Title with Thumbnail and Back Button -->
+                  <div class="flex items-center space-x-3 mb-2">
+                    <img
+                      :src="art.images[0]"
+                      alt="Thumbnail"
+                      class="w-10 h-10 object-cover rounded-lg shadow-sm"
+                    />
+                    <div class="flex-grow">
+                      <h4 class="font-semibold text-gray-700">
+                        {{ art.title }}
+                      </h4>
+                    </div>
+                    <button
+                      @click="toggleItem(art.id)"
+                      class="bg-gray-200 hover:bg-gray-300 p-2 rounded-full transition-colors duration-300"
+                    >
+                      <i class="fas fa-arrow-left"></i>
+                    </button>
+                  </div>
+
+                  <!-- Material Selection -->
+                  <div class="flex items-center justify-between space-y-1">
+                    <label class="text-sm font-medium flex items-center">
+                      <i class="fas fa-paint-brush mr-1 text-xs"></i>Material
+                    </label>
+                    <div class="flex space-x-1">
+                      <button
+                        v-for="material in ['Canvas', 'Poster']"
+                        :key="material"
+                        @click="art.selected.material = material"
+                        :class="[
+                          material === art.selected.material
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-700',
+                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
+                        ]"
+                      >
+                        {{ material }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Size Selection -->
+                  <div class="flex items-center justify-between space-y-1">
+                    <label class="text-sm font-medium flex items-center">
+                      <i class="fas fa-expand-arrows-alt mr-1 text-xs"></i>Size
+                    </label>
+                    <div class="flex space-x-1">
+                      <button
+                        v-for="size in ['Small', 'Medium', 'Large']"
+                        :key="size"
+                        @click="art.selected.size = size"
+                        :class="[
+                          size === art.selected.size
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-700',
+                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
+                        ]"
+                      >
+                        {{ size }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Duration Selection -->
+                  <div class="flex items-center justify-between space-y-1">
+                    <label class="text-sm font-medium flex items-center">
+                      <i class="fas fa-clock mr-1 text-xs"></i>Duration
+                    </label>
+                    <div class="flex space-x-1">
+                      <button
+                        v-for="duration in ['3-Months', '6-Months']"
+                        :key="duration"
+                        @click="art.selected.duration = duration"
+                        :class="[
+                          duration === art.selected.duration
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-700',
+                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
+                        ]"
+                      >
+                        {{ duration }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Add to Cart Button -->
+                  <button
+                    @click="addToCart(art)"
+                    :disabled="
+                      !(
+                        art.selected.material &&
+                        art.selected.size &&
+                        art.selected.duration
+                      )
+                    "
+                    class="mt-2 bg-blue-500 text-white text-sm w-full py-1 rounded hover:bg-blue-600 transition-all"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </transition>
             </div>
@@ -643,30 +768,32 @@
 
       <!-- FAQ -->
       <section class="bg-white py-16 shadow-md rounded-lg" id="faq">
-    <div class="container mx-auto px-4 text-gray-800">
-      <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
-      <!-- Adjust grid layout for responsiveness -->
-      <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:w-1/2 xl:grid-cols-1 gap-4 grid-flow-row mx-auto">
-        <div
-          v-for="{ question, answer } in faq"
-          class="faq-item bg-gray-50 p-6 rounded-lg hover:bg-gray-100 transition duration-300 shadow-md hover:shadow-xl transform hover:scale-105 cursor-pointer flex flex-col"
-          @click="toggleAnswer($event)"
-        >
-          <div class="flex justify-between items-center">
-            <h3
-              class="text-xl font-semibold text-gray-700 hover:text-gray-800"
+        <div class="container mx-auto px-4 text-gray-800">
+          <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
+          <!-- Adjust grid layout for responsiveness -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:w-1/2 xl:grid-cols-1 gap-4 grid-flow-row mx-auto"
+          >
+            <div
+              v-for="{ question, answer } in faq"
+              class="faq-item bg-gray-50 p-6 rounded-lg hover:bg-gray-100 transition duration-300 shadow-md hover:shadow-xl transform hover:scale-105 cursor-pointer flex flex-col"
+              @click="toggleAnswer($event)"
             >
-              {{ question }}
-            </h3>
-            <i class="material-icons toggle-icon">add</i>
+              <div class="flex justify-between items-center">
+                <h3
+                  class="text-xl font-semibold text-gray-700 hover:text-gray-800"
+                >
+                  {{ question }}
+                </h3>
+                <i class="material-icons toggle-icon">add</i>
+              </div>
+              <p class="text-gray-700 answer hidden mt-4">
+                {{ answer }}
+              </p>
+            </div>
           </div>
-          <p class="text-gray-700 answer hidden mt-4">
-            {{ answer }}
-          </p>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
       <!-- Follow Us -->
       <section class="bg-gray-100 py-20 rounded-lg">
@@ -743,126 +870,134 @@
     <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
 
     <!-- How It Works -->
-    <HowItWorks v-if="selectedNavItem === 'how-it-works'" :isMobile="isMobile" />
+    <HowItWorks
+      v-if="selectedNavItem === 'how-it-works'"
+      :isMobile="isMobile"
+    />
 
     <!-- Pricing -->
     <Pricing v-if="selectedNavItem === 'pricing'" />
 
     <!-- Upload -->
-    <Upload v-if="selectedNavItem === 'upload'" />
+    <Upload v-if="selectedNavItem === 'upload'" :isMobile="isMobile" />
 
-<!-- Footer -->
+    <!-- Footer -->
 
-<footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
-  <div class="container mx-auto px-4 pt-12 pb-6 space-y-8 md:space-y-0">
-    <!-- Top Row: Links and Newsletter -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-      <!-- About Us Section -->
-      <div>
-        <h3
-          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+    <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
+      <div class="container mx-auto px-4 pt-12 pb-6 space-y-8 md:space-y-0">
+        <!-- Top Row: Links and Newsletter -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+          <!-- About Us Section -->
+          <div>
+            <h3
+              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+            >
+              About Us
+            </h3>
+            <ul class="mt-4 space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'our-story'"
+                >
+                  Our Story
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'team'"
+                >
+                  Team
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support Section -->
+          <div>
+            <h3
+              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+            >
+              Support
+            </h3>
+            <ul class="mt-4 space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="goTo('contact')"
+                >
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'privacy-policy'"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="hover:text-blue-400"
+                  @click="selectedNavItem = 'terms-of-service'"
+                >
+                  Terms of Service
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Newsletter Section -->
+          <div>
+            <h3
+              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+            >
+              Newsletter
+            </h3>
+            <form class="mt-4">
+              <input
+                type="email"
+                placeholder="Email Address"
+                class="w-full p-2 rounded-md text-gray-700 border border-gray-300"
+              />
+              <button
+                type="submit"
+                class="mt-2 w-full bg-blue-500 hover:bg-blue-600 rounded-md text-white p-2"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Social Links and Copyright -->
+        <div
+          class="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-0"
         >
-          About Us
-        </h3>
-        <ul class="mt-4 space-y-2">
-          <li>
-            <a
-              href="#"
-              class="hover:text-blue-400"
-              @click="selectedNavItem = 'our-story'"
-            >
-              Our Story
+          <div class="flex space-x-4 mb-4 md:mb-0">
+            <a href="#" class="text-gray-700 hover:text-blue-400">
+              <i class="fab fa-facebook-f"></i>
             </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="hover:text-blue-400"
-              @click="selectedNavItem = 'team'"
-            >
-              Team
+            <a href="#" class="text-gray-700 hover:text-blue-400">
+              <i class="fab fa-twitter"></i>
             </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Support Section -->
-      <div>
-        <h3
-          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
-        >
-          Support
-        </h3>
-        <ul class="mt-4 space-y-2">
-          <li>
-            <a href="#" class="hover:text-blue-400" @click="goTo('contact')">
-              Contact
+            <a href="#" class="text-gray-700 hover:text-blue-400">
+              <i class="fab fa-instagram"></i>
             </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="hover:text-blue-400"
-              @click="selectedNavItem = 'privacy-policy'"
-            >
-              Privacy Policy
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="hover:text-blue-400"
-              @click="selectedNavItem = 'terms-of-service'"
-            >
-              Terms of Service
-            </a>
-          </li>
-        </ul>
+          </div>
+          <div class="text-sm text-gray-700 font-semibold mt-6">
+            &copy; 2023 PixelHaus. All rights reserved.
+          </div>
+        </div>
       </div>
-
-      <!-- Newsletter Section -->
-      <div>
-        <h3
-          class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
-        >
-          Newsletter
-        </h3>
-        <form class="mt-4">
-          <input
-            type="email"
-            placeholder="Email Address"
-            class="w-full p-2 rounded-md text-gray-700 border border-gray-300"
-          />
-          <button
-            type="submit"
-            class="mt-2 w-full bg-blue-500 hover:bg-blue-600 rounded-md text-white p-2"
-          >
-            Subscribe
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Bottom Row: Social Links and Copyright -->
-    <div class="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-0">
-      <div class="flex space-x-4 mb-4 md:mb-0">
-        <a href="#" class="text-gray-700 hover:text-blue-400">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" class="text-gray-700 hover:text-blue-400">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#" class="text-gray-700 hover:text-blue-400">
-          <i class="fab fa-instagram"></i>
-        </a>
-      </div>
-      <div class="text-sm text-gray-700 font-semibold mt-6">
-        &copy; 2023 PixelHaus. All rights reserved.
-      </div>
-    </div>
-  </div>
-</footer>
-
+    </footer>
   </div>
 </template>
 
@@ -880,6 +1015,7 @@ import PrivacyPolicy from './PrivacyPolicy.vue';
 import Pricing from './Pricing.vue';
 import HowItWorks from './HowItWorks.vue';
 import Upload from './Upload.vue';
+import service from '../service.js';
 import data from '../data.js';
 
 export default {
@@ -898,8 +1034,10 @@ export default {
     HowItWorks,
     Upload,
   },
-  mounted() {
+  async mounted() {
     let slideIndex = 0;
+    let arts = [];
+    let categories = [];
 
     function showSlides() {
       let slides = document.getElementsByClassName('slide');
@@ -913,10 +1051,44 @@ export default {
       slides[slideIndex - 1].style.display = 'block';
       setTimeout(showSlides, 2000);
     }
+
+    if (import.meta.env.VITE_ENV === 'production') {
+      arts = await service.getProducts();
+    } else {
+      arts = data.arts;
+    }
+
+    arts = arts.map((art) => ({
+      ...art,
+      isAdded: false,
+      flipped: false,
+      selected: {
+        material: 'Canvas',
+        size: 'Large',
+        duration: '6-Months',
+      },
+    }));
+
+    arts.reduce((obj, { tags }) => {
+      tags.forEach((tag) => {
+        if (!obj[tag]) {
+          categories.push({
+            name: tag,
+            ...this.sidebar[tag],
+          });
+
+          obj[tag] = 1;
+        }
+      });
+
+      return obj;
+    }, {});
+
+    this.arts = arts;
+    this.displayedArts = arts.slice(0, this.itemsToShow);
+    this.categories = categories;
+
     showSlides();
-
-    this.displayedArts = this.arts.slice(0, this.itemsToShow);
-
     this.displayedArts.forEach((art) => (art.isAdded = false));
     this.checkShowMoreButton();
   },
@@ -929,8 +1101,10 @@ export default {
   },
   data() {
     return {
+      arts: [],
       selectedNavItem: 'home',
       displayedArts: [],
+      selectedArt: null,
       showMoreButton: true,
       itemsToShow: 9,
       step: 12,
@@ -1134,16 +1308,16 @@ export default {
           quantity: 1,
         },
       ],
-      categories: [
-        { name: 'Popular', icon: 'star', color: 'blue' },
-        { name: 'New', icon: 'new_releases', color: 'green' },
-        { name: 'Abstract', icon: 'palette', color: 'purple' },
-        { name: 'Nature', icon: 'landscape', color: 'green' },
-        { name: 'Parenting', icon: 'family_restroom', color: 'red' },
-        { name: 'For Kids', icon: 'child_care', color: 'pink' },
-        { name: 'Culture', icon: 'public', color: 'blue' },
-        { name: 'Puerto Rico', icon: 'beach_access', color: 'yellow' },
-      ],
+      sidebar: {
+        Popular: { icon: 'star', color: 'blue' },
+        New: { icon: 'new_releases', color: 'green' },
+        Abstract: { icon: 'palette', color: 'purple' },
+        Nature: { icon: 'landscape', color: 'green' },
+        Parenting: { icon: 'family_restroom', color: 'red' },
+        Culture: { icon: 'public', color: 'blue' },
+        'For Kids': { icon: 'child_care', color: 'pink' },
+        'Puerto Rico': { icon: 'beach_access', color: 'yellow' },
+      },
       isMobile: false,
       showNavSidebar: false,
     };
@@ -1151,9 +1325,6 @@ export default {
   computed: {
     testimonials() {
       return data.testimonials;
-    },
-    arts() {
-      return data.arts;
     },
     faq() {
       return data.faq;
@@ -1202,6 +1373,7 @@ export default {
     toggleItem(id) {
       const art = this.displayedArts.find((item) => item.id === id);
       art.isAdded = !art.isAdded;
+      art.flipped = !art.flipped;
 
       art.notification = art.isAdded
         ? 'Item added to cart'
@@ -1302,5 +1474,16 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
   backdrop-filter: blur(4px);
+}
+
+.flip-enter-active,
+.flip-leave-active {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.flip-enter,
+.flip-leave-to {
+  transform: rotateY(180deg);
 }
 </style>

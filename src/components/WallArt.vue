@@ -63,12 +63,21 @@
 
     <!-- Details Card -->
     <div
-      class="bg-white p-6 rounded-lg shadow-sm mx-auto hover:shadow-md transition-shadow duration-300"
+      class="bg-white p-6 rounded-lg shadow-sm mx-auto hover:shadow-md transition-shadow duration-300 relative"
     >
       <!-- Title and Description -->
       <h2 class="text-2xl md:text-4xl text-gray-700 font-bold mb-4">
         {{ wallArt.title }}
       </h2>
+      <div v-if="isAdmin" class="mb-4 absolute right-4 top-4">
+        <button
+          @click="delete"
+          class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+        >
+          Delete
+        </button>
+      </div>
+
       <p class="text-gray-600 text-lg mb-6 leading-relaxed">
         {{ wallArt.description }}
       </p>
@@ -161,6 +170,24 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="showModal"
+      class="fixed inset-0 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-4">Confirm Deletion</h3>
+        <p>Are you sure you want to delete this wall art?</p>
+        <div class="flex justify-end space-x-4 mt-4">
+          <button @click="showModal = false" class="px-4 py-2">Cancel</button>
+          <button
+            @click="confirmDelete"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -168,6 +195,10 @@
 export default {
   props: {
     isMobile: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
       type: Boolean,
       default: false,
     },
@@ -193,6 +224,7 @@ export default {
       durations: ['3-Months', '6-Months'],
       selectedDuration: '3-months',
       approximateCost: 150.0,
+      showModal: false,
     };
   },
   methods: {
@@ -205,6 +237,15 @@ export default {
     getCentsPortion(value) {
       const cents = Math.round((value - Math.floor(value)) * 100);
       return cents.toString().padStart(2, '0'); // Convert it to a two-digit string
+    },
+    delete() {
+      this.showModal = true;
+    },
+    confirmDelete() {
+      // Here, you would typically make an API call or some other action to delete the wall art
+      // For now, we'll just close the modal and emit a placeholder event
+      this.$emit('deleted');
+      this.showModal = false;
     },
   },
 };
