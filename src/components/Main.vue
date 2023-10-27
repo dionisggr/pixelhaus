@@ -371,50 +371,80 @@
     </header>
 
     <!-- Home -->
-    <div class="home px-3" v-if="selectedNavItem === 'home'">
+    <div id="home" class="home px-3" v-if="selectedNavItem === 'home'">
       <!-- Hero Section -->
-      <section class="relative" :class="isMobile ? 'mt-3' : 'mt-6'">
+      <section class="relative" :class="isMobile ? 'mt-2' : 'mt-6'">
         <div class="container mx-auto">
           <div
-            class="bg-white p-5 rounded-xl overflow-hidden shadow-md relative"
-            :style="isMobile ? 'height: 60vh' : 'height: 70vh'"
+            class="bg-white p-3 md:p-5 rounded-xl overflow-hidden shadow-md relative"
+            :style="isMobile ? 'height: 55vh' : 'height: 70vh'"
           >
             <div class="slide-show h-full overflow-hidden relative">
               <div
                 class="slide-container flex transition-transform duration-500 ease-in-out h-full"
               >
+              <div class="w-full overflow-hidden rounded-xl">
                 <img
-                  src="https://source.unsplash.com/random/640x360?art"
-                  alt="Art 1"
-                  class="rounded-xl w-full object-cover slide h-full"
+                  :src="randomArts?.[0].images[0]"
+                  :alt="randomArts?.[0].title"
+                  class="rounded-xl w-full object-contain slide h-full"
+                  style="transform: scale(3.5)"
                 />
                 <img
-                  src="https://source.unsplash.com/random/641x361?painting"
-                  alt="Art 2"
-                  class="rounded-xl w-full object-cover slide h-full"
+                  :src="randomArts?.[1].images[0]"
+                  :alt="randomArts?.[1].title"
+                  class="rounded-xl w-full object-contain slide h-full"
+                  style="transform: scale(3.5)"
                 />
                 <img
-                  src="https://source.unsplash.com/random/642x362?sculpture"
-                  alt="Art 3"
-                  class="rounded-xl w-full object-cover slide h-full"
+                  :src="randomArts?.[2].images[0]"
+                  :alt="randomArts?.[2].title"
+                  class="rounded-xl w-full object-contain slide h-full"
+                  style="transform: scale(3.5)"
+                />
+                <img
+                  :src="randomArts?.[3].images[0]"
+                  :alt="randomArts?.[3].title"
+                  class="rounded-xl w-full object-contain slide h-full"
+                  style="transform: scale(3.5)"
+                />
+                <img
+                  :src="randomArts?.[4].images[0]"
+                  :alt="randomArts?.[4].title"
+                  class="rounded-xl w-full object-contain slide h-full"
+                  style="transform: scale(3.5)"
                 />
               </div>
-            </div>
-            <div
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg"
-            >
-              <button
-                class="bg-gray-800 bg-opacity-60 text-white rounded-full px-6 py-2 hover:bg-blue-600 transition-all transform block mx-auto"
+              </div>
+              <!-- CTA Overlay with Gradient -->
+              <div
+                class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black to-transparent flex flex-col justify-center items-center px-2 rounded-xl"
               >
-                Get Started
-              </button>
+                <h2
+                  class="text-2xl font-semibold text-white mb-2 md:text-3xl animate__animated animate__fadeInDown"
+                >
+                  Discover Modern Art
+                </h2>
+                <p
+                  class="text-md text-white mb-3 opacity-80 md:text-lg animate__animated animate__fadeInUp"
+                >
+                  Experience creativity like never before.
+                </p>
+                <!-- Enhanced CTA Button -->
+                <a
+                  href="#search-bar"
+                  class="mt-8 py-2 px-5 md:py-3 md:px-8 rounded-lg text-white bg-blue-500 hover:bg-indigo-700 transition duration-300 ease-in-out shadow-lg transform hover:scale-105"
+                >
+                  Explore Collection
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Search Bar -->
-      <section class="mt-12 container mx-auto">
+      <section id="search-bar" class="mt-12 container mx-auto">
         <div class="text-center mb-4 text-gray-700">
           <h2 class="text-2xl font-bold">Search Artworks</h2>
           <p class="text-sm text-gray-700 leading-relaxed">
@@ -435,40 +465,48 @@
           <input
             type="text"
             placeholder="Search for wall arts..."
+            v-model="searchTerm"
             class="rounded-full p-2 pl-16 w-full border-2 border-gray-200 focus:outline-none focus:border-blue-500"
           />
         </div>
       </section>
 
       <!-- Sidebar -->
-      <section class="sidebar mt-10 container mx-auto flex mb-16">
+      <section
+        class="sidebar container mx-auto mb-16 items-start"
+        :class="[{ flex: !isMobile }, isMobile ? 'mt-4' : 'mt-10']"
+      >
         <div
           v-if="isMobile && !isSidebarHidden"
-          class="fixed inset-0 bg-black opacity-50 z-20"
+          class="fixed inset-0 bg-gray-800 opacity-50 z-20"
           @click="toggleSidebar"
         ></div>
 
         <aside
           :class="{
-            'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8 p-6':
+            'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8':
               !isMobile,
-            'w-1/4': !isMobile && !isSidebarHidden,
-            'fixed top-20 z-20 p-4 pt-6 pr-6': !isMobile && isSidebarHidden,
-            'fixed top-20 z-20 p-4 pt-6 pr-6 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
+            'fixed top-20 z-20 p-2': !isMobile && isSidebarHidden,
+            'fixed top-20 z-20 p-4 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
               isMobile && !isSidebarHidden,
+            'pb-2 p-6': !isMobile && !isSidebarHidden,
           }"
           style="font-family: 'Poppins', sans-serif; height: fit-content"
+          :style="
+            !isMobile && !isSidebarHidden && 'width: 25%; min-width: 275px;'
+          "
         >
           <div class="w-full flex justify-between items-baseline">
             <h2
               v-if="!isSidebarHidden"
-              class="text-2xl font-semibold mb-4 border-b pb-2 text-center uppercase w-full bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
+              class="text-2xl font-semibold mb-4 border-b pb-2 text-center w-full bg-clip-text text-transparent text-blue-500 uppercase text-shadow-md"
             >
               Categories
             </h2>
             <button
-              class="text-lg text-gray-700 flex items-center"
               @click="toggleSidebar"
+              class="flex items-center dark:bg-gray-800 p-2 rounded-full dark:hover:bg-gray-700 transition-colors"
+              :class="!isSidebarHidden && 'ml-4 bg-gray-100 hover:bg-gray-200'"
             >
               <i
                 v-if="!isMobile || (isMobile && !isSidebarHidden)"
@@ -485,7 +523,7 @@
               :key="name"
               @click="selectCategory(name)"
               :class="[
-                'flex items-center mb-3 text-gray-800 transition-all cursor-pointer p-2 rounded transform uppercase pl-2',
+                'flex items-center mb-3 text-gray-700 transition-all cursor-pointer p-2 rounded transform uppercase pl-2',
                 selectedCategory === name
                   ? [
                       'bg-gray-200 shadow-md',
@@ -523,7 +561,7 @@
             @click="isSidebarHidden = !isSidebarHidden"
           >
             <h2
-              class="text-2xl p-2 font-bold text-center uppercase bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
+              class="text-2xl px-2 font-bold text-center uppercase bg-clip-text text-transparent text-blue-500 text-shadow-md"
             >
               {{ selectedCategory }}
             </h2>
@@ -545,7 +583,7 @@
           </div>
           <h2
             v-else
-            class="text-3xl p-2 font-bold text-center uppercase bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-shadow-md"
+            class="text-3xl font-bold text-center uppercase bg-clip-text text-transparent text-blue-500 text-shadow-md text-semibold"
           >
             {{ selectedCategory }}
           </h2>
@@ -561,30 +599,39 @@
             <div
               v-for="(art, i) in displayedArts"
               :key="i"
-              class="group relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-500 aspect-w-40"
+              class="group w-full max-w-lg relative art-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-500"
             >
-              <transition name="flip" mode="out-in">
+              <transition name="fade-slide" mode="out-in">
                 <!-- Front Side -->
                 <div
                   v-if="!art.flipped"
-                  class="flex-shrink-0 relative aspect-content"
-                  @click="selectedNavItem = 'wall-art'"
+                  class="image-preview flex-shrink-0 relative aspect-content"
+                  :Style="
+                    isMobile &&
+                    'min-height: 370px; margin-top: calc(-3.7vw * 4);'
+                  "
+                  @click="
+                    selectedNavItem = 'wall-art';
+                    selectedArt = art;
+                  "
                 >
                   <!-- Main Image -->
                   <img
                     :src="art.images[0]"
                     :alt="art.title"
-                    class="w-full object-cover cursor-pointer"
+                    class="main-image w-full cursor-pointer"
                   />
                   <!-- Hover Image -->
                   <img
                     :src="art.images[1]"
                     :alt="art.title"
-                    class="w-full object-cover cursor-pointer opacity-0 group-hover:opacity-100 absolute top-0 left-0 transition-opacity"
+                    class="hover-image w-full cursor-pointer opacity-0 group-hover:opacity-100 absolute top-0 transition-opacity py-4"
                   />
 
                   <!-- Art Details -->
-                  <div class="p-3 pb-3.5 flex flex-col space-y-1">
+                  <div
+                    class="p-3 pb-3.5 flex flex-col space-y-1 absolute bottom-0 bg-white"
+                  >
                     <div
                       class="flex justify-between items-center text-gray-700"
                     >
@@ -632,7 +679,9 @@
                         </svg>
                       </button>
                     </div>
-                    <p class="text-sm text-gray-700">{{ art.description }}</p>
+                    <p class="text-sm text-gray-700 two-line-ellipsis w-10/12">
+                      {{ art.description || loremText }}
+                    </p>
                   </div>
 
                   <!-- Notification Transition -->
@@ -647,90 +696,76 @@
                 </div>
 
                 <!-- Back Side -->
-                <div v-else class="p-4 flex flex-col space-y-3">
+                <div
+                  v-else
+                  class="p-4 flex flex-col space-y-4 justify-center h-full max-w-screen-md mx-auto"
+                >
                   <!-- Art Title with Thumbnail and Back Button -->
-                  <div class="flex items-center space-x-3 mb-2">
+                  <div class="flex items-center space-x-4 mb-4">
                     <img
                       :src="art.images[0]"
                       alt="Thumbnail"
-                      class="w-10 h-10 object-cover rounded-lg shadow-sm"
+                      class="w-16 h-16 object-cover rounded-lg shadow-md"
                     />
                     <div class="flex-grow">
-                      <h4 class="font-semibold text-gray-700">
+                      <h4 class="font-semibold text-xl text-gray-700">
                         {{ art.title }}
                       </h4>
                     </div>
                     <button
                       @click="toggleItem(art.id)"
-                      class="bg-gray-200 hover:bg-gray-300 p-2 rounded-full transition-colors duration-300"
+                      class="bg-gray-200 hover:bg-gray-300 p-3.5 rounded-full transition-colors duration-300"
                     >
                       <i class="fas fa-arrow-left"></i>
                     </button>
                   </div>
 
-                  <!-- Material Selection -->
-                  <div class="flex items-center justify-between space-y-1">
-                    <label class="text-sm font-medium flex items-center">
-                      <i class="fas fa-paint-brush mr-1 text-xs"></i>Material
-                    </label>
-                    <div class="flex space-x-1">
-                      <button
-                        v-for="material in ['Canvas', 'Poster']"
-                        :key="material"
-                        @click="art.selected.material = material"
-                        :class="[
-                          material === art.selected.material
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-700',
-                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
-                        ]"
+                  <!-- Selection Sections: Material, Size, Duration -->
+                  <div class="flex flex-col space-y-4">
+                    <div
+                      v-for="option in [
+                        {
+                          icon: 'fas fa-paint-brush',
+                          label: 'Material',
+                          values: ['Canvas', 'Poster'],
+                        },
+                        {
+                          icon: 'fas fa-expand-arrows-alt',
+                          label: 'Size',
+                          values: ['Small', 'Medium', 'Large'],
+                        },
+                        {
+                          icon: 'fas fa-clock',
+                          label: 'Duration',
+                          values: ['3-Months', '6-Months'],
+                        },
+                      ]"
+                      :key="option.label"
+                      class="flex items-center justify-between"
+                    >
+                      <label
+                        class="text-sm font-medium flex items-center space-x-2"
                       >
-                        {{ material }}
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Size Selection -->
-                  <div class="flex items-center justify-between space-y-1">
-                    <label class="text-sm font-medium flex items-center">
-                      <i class="fas fa-expand-arrows-alt mr-1 text-xs"></i>Size
-                    </label>
-                    <div class="flex space-x-1">
-                      <button
-                        v-for="size in ['Small', 'Medium', 'Large']"
-                        :key="size"
-                        @click="art.selected.size = size"
-                        :class="[
-                          size === art.selected.size
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-700',
-                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
-                        ]"
-                      >
-                        {{ size }}
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Duration Selection -->
-                  <div class="flex items-center justify-between space-y-1">
-                    <label class="text-sm font-medium flex items-center">
-                      <i class="fas fa-clock mr-1 text-xs"></i>Duration
-                    </label>
-                    <div class="flex space-x-1">
-                      <button
-                        v-for="duration in ['3-Months', '6-Months']"
-                        :key="duration"
-                        @click="art.selected.duration = duration"
-                        :class="[
-                          duration === art.selected.duration
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-700',
-                          'text-xs px-2 py-1 rounded transition-colors duration-300 hover:bg-gray-300',
-                        ]"
-                      >
-                        {{ duration }}
-                      </button>
+                        <i :class="option.icon"></i>
+                        <span>{{ option.label }}</span>
+                      </label>
+                      <div class="flex space-x-1.5">
+                        <button
+                          v-for="value in option.values"
+                          :key="value"
+                          @click="
+                            art.selected[option.label.toLowerCase()] = value
+                          "
+                          :class="[
+                            value === art.selected[option.label.toLowerCase()]
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-gray-200 text-gray-700',
+                            'text-xs px-4 py-1.5 rounded transition-colors duration-300 hover:bg-gray-300',
+                          ]"
+                        >
+                          {{ value }}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -744,9 +779,10 @@
                         art.selected.duration
                       )
                     "
-                    class="mt-2 bg-blue-500 text-white text-sm w-full py-1 rounded hover:bg-blue-600 transition-all"
+                    class="mt-4 bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-white text-medium w-1/2 mx-auto py-1.5 rounded-full transition-all duration-300 shadow-md flex justify-center items-center space-x-2"
                   >
-                    Add to Cart
+                    <i class="fas fa-cart-plus"></i>
+                    <span>Add to Cart</span>
                   </button>
                 </div>
               </transition>
@@ -768,7 +804,7 @@
 
       <!-- FAQ -->
       <section class="bg-white py-16 shadow-md rounded-lg" id="faq">
-        <div class="container mx-auto px-4 text-gray-800">
+        <div class="container mx-auto px-4 text-gray-700">
           <h2 class="text-4xl text-center font-bold mb-12">FAQ</h2>
           <!-- Adjust grid layout for responsiveness -->
           <div
@@ -799,9 +835,9 @@
       <section class="bg-gray-100 py-20 rounded-lg">
         <div class="container mx-auto text-center">
           <h2
-            class="text-4xl text-gray-900 font-extrabold mb-12 tracking-tighter"
+            class="text-4xl text-gray-700 font-extrabold mb-12 tracking-tighter"
           >
-            Stay updated!
+            Stay Updated!
           </h2>
           <div class="flex justify-center space-x-8 md:space-x-12 flex-wrap">
             <a
@@ -834,7 +870,12 @@
     </div>
 
     <!-- Wall Art -->
-    <WallArt v-if="selectedNavItem === 'wall-art'" :isMobile="isMobile" />
+    <WallArt
+      v-if="selectedNavItem === 'wall-art'"
+      :isMobile="isMobile"
+      :selectedArt="selectedArt"
+      @delete-wall-art="deleteWallArt"
+    />
 
     <!-- Checkout -->
     <Checkout
@@ -879,7 +920,12 @@
     <Pricing v-if="selectedNavItem === 'pricing'" />
 
     <!-- Upload -->
-    <Upload v-if="selectedNavItem === 'upload'" :isMobile="isMobile" />
+    <Upload
+      v-if="selectedNavItem === 'upload'"
+      :isMobile="isMobile"
+      :variants="displayedArts[0].variants"
+      :print_areas="displayedArts[0].print_areas"
+    />
 
     <!-- Footer -->
 
@@ -890,7 +936,7 @@
           <!-- About Us Section -->
           <div>
             <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+              class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2"
             >
               About Us
             </h3>
@@ -919,7 +965,7 @@
           <!-- Support Section -->
           <div>
             <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+              class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2"
             >
               Support
             </h3>
@@ -957,7 +1003,7 @@
           <!-- Newsletter Section -->
           <div>
             <h3
-              class="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-2"
+              class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2"
             >
               Newsletter
             </h3>
@@ -1037,7 +1083,6 @@ export default {
   async mounted() {
     let slideIndex = 0;
     let arts = [];
-    let categories = [];
 
     function showSlides() {
       let slides = document.getElementsByClassName('slide');
@@ -1048,8 +1093,11 @@ export default {
       if (slideIndex > slides.length) {
         slideIndex = 1;
       }
-      slides[slideIndex - 1].style.display = 'block';
-      setTimeout(showSlides, 2000);
+
+      if (slides[slideIndex - 1]) {
+        slides[slideIndex - 1].style.display = 'block';
+        setTimeout(showSlides, 2000);
+      }
     }
 
     if (import.meta.env.VITE_ENV === 'production') {
@@ -1072,11 +1120,6 @@ export default {
     arts.reduce((obj, { tags }) => {
       tags.forEach((tag) => {
         if (!obj[tag]) {
-          categories.push({
-            name: tag,
-            ...this.sidebar[tag],
-          });
-
           obj[tag] = 1;
         }
       });
@@ -1086,7 +1129,11 @@ export default {
 
     this.arts = arts;
     this.displayedArts = arts.slice(0, this.itemsToShow);
-    this.categories = categories;
+    this.randomArts = arts.sort(() => Math.random() - 0.5).slice(0, 5);
+    this.categories = Object.keys(this.sidebar).map((category) => ({
+      name: category,
+      ...this.sidebar[category],
+    }));
 
     showSlides();
     this.displayedArts.forEach((art) => (art.isAdded = false));
@@ -1311,15 +1358,27 @@ export default {
       sidebar: {
         Popular: { icon: 'star', color: 'blue' },
         New: { icon: 'new_releases', color: 'green' },
-        Abstract: { icon: 'palette', color: 'purple' },
-        Nature: { icon: 'landscape', color: 'green' },
-        Parenting: { icon: 'family_restroom', color: 'red' },
-        Culture: { icon: 'public', color: 'blue' },
-        'For Kids': { icon: 'child_care', color: 'pink' },
+        Landscape: { icon: 'landscape', color: 'gray' },
+        // Abstract: { icon: 'palette', color: 'purple' },
+        // Nature: { icon: 'landscape', color: 'green' },
+        // Parenting: { icon: 'family_restroom', color: 'red' },
+        // Culture: { icon: 'public', color: 'blue' },
+        Water: { icon: 'waves', color: 'blue' },
+        Sunflower: { icon: 'nature', color: 'yellow' },
+        Food: { icon: 'fastfood', color: 'red' },
+        Motherhood: { icon: 'pregnant_woman', color: 'green' },
+        Woman: { icon: 'female', color: 'pink' },
+        'Self Love': { icon: 'favorite', color: 'pink' },
+        Sunset: { icon: 'brightness_3', color: 'blue' },
+        Jibaro: { icon: 'music_note', color: 'green' },
         'Puerto Rico': { icon: 'beach_access', color: 'yellow' },
+        'Tropical Paradise': { icon: 'umbrella', color: 'blue' },
       },
       isMobile: false,
       showNavSidebar: false,
+      searchTerm: '',
+      loremText:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.',
     };
   },
   computed: {
@@ -1346,6 +1405,17 @@ export default {
     },
     selectCategory(category) {
       this.selectedCategory = category;
+      this.filterDisplayedArts();
+    },
+    filterDisplayedArts() {
+      if (['Popular', 'New'].includes(this.selectedCategory)) {
+        this.displayedArts = this.arts.slice(0, this.itemsToShow);
+      } else {
+        this.displayedArts = this.arts
+          .filter((art) => art.tags.includes(this.selectedCategory))
+          .slice(0, this.itemsToShow);
+      }
+      this.checkShowMoreButton();
     },
     toggleSidebar() {
       this.isSidebarHidden = !this.isSidebarHidden;
@@ -1407,11 +1477,33 @@ export default {
         this.isSidebarHidden = true;
       }
     },
+    async deleteWallArt() {
+      if (import.meta.env.VITE_ENV === 'production') {
+        await service.deleteProduct(this.selectedArt.id);
+      }
+
+      this.arts = this.arts.filter((art) => art.id !== this.selectedArt.id);
+      this.displayedArts = this.displayedArts.filter(
+        (art) => art.id !== this.selectedArt.id
+      );
+      this.selectedNavItem = 'home';
+    },
+  },
+  watch: {
+    searchTerm() {
+      if (this.searchTerm) {
+        this.displayedArts = this.arts.filter((art) =>
+          art.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
+      } else {
+        this.displayedArts = this.arts.slice(0, this.itemsToShow);
+      }
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .art-item:hover .art-hover {
   display: block;
 }
@@ -1476,14 +1568,40 @@ export default {
   backdrop-filter: blur(4px);
 }
 
-.flip-enter-active,
-.flip-leave-active {
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+/* Slide and fade combination */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
-.flip-enter,
-.flip-leave-to {
-  transform: rotateY(180deg);
+
+.fade-slide-enter,
+.fade-slide-leave-to {
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.two-line-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: calc(1.5em * 2);
+}
+
+.image-preview {
+  height: 23.5vw;
+  max-height: 400px;
+}
+
+.main-image {
+  transform: scaleX(1.21);
+  transform-origin: center bottom;
+  object-fit: cover;
+  margin-top: calc(-0.9vw * 4);
+}
+
+.hover-image {
+  transform: scaleY(0.7);
+  margin-top: -1.1vw;
 }
 </style>

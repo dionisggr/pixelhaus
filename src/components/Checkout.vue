@@ -1,25 +1,41 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-12" :class="{'px-4': isMobile}">
+  <div
+    class="min-w-screen min-h-screen bg-gray-100 py-12"
+    :class="{ 'px-4': isMobile }"
+  >
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-            Checkout
-        </h1>
-        <div class="mt-2 flex justify-center md:justify-start md:ml-32 text-gray-500">
-            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
-            <span class="mx-2">/</span>
-            <span class="text-gray-700">Checkout</span>
-        </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
+        Checkout
+      </h1>
+      <div
+        class="mt-2 flex justify-center md:justify-start md:ml-32 text-gray-500"
+      >
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        <span class="mx-2">/</span>
+        <span class="text-gray-700">Checkout</span>
+      </div>
     </div>
 
     <!-- Main Checkout Section -->
     <div
-      class="max-w-6xl mx-auto bg-white border rounded-xl shadow-md px-8 py-10"
+      class="max-w-6xl mx-auto bg-white border rounded-xl shadow-md px-4 sm:px-8 py-6"
     >
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
         <!-- Left - Cart Summary -->
         <div>
-          <h2 class="text-xl font-semibold mb-4 text-gray-700">Cart Items</h2>
+          <h2
+            class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2"
+          >
+            <i class="fas fa-shopping-cart"></i>
+            <!-- Cart Icon -->
+            <span>Cart Items</span>
+          </h2>
           <div
             v-for="item in cartItems"
             :key="item.id"
@@ -106,16 +122,20 @@
         </div>
 
         <!-- Right - Billing & Shipping -->
-        <div>
+        <div class="space-y-16">
           <!-- User Information -->
-          <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
-              Billing & Shipping Info
+          <div class="mb-6">
+            <h2
+              class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
+            >
+              <i class="fas fa-address-card"></i>
+              <!-- User Info Icon -->
+              <span>Billing & Shipping Info</span>
             </h2>
 
             <div class="mb-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="mb-4">
+                <div>
                   <label
                     for="userFirstName"
                     class="block text-sm font-medium text-gray-700"
@@ -128,7 +148,7 @@
                     placeholder="First Name"
                   />
                 </div>
-                <div class="mb-4">
+                <div>
                   <label
                     for="userLastName"
                     class="block text-sm font-medium text-gray-700"
@@ -141,7 +161,7 @@
                     placeholder="Last Name"
                   />
                 </div>
-                <div class="mb-4">
+                <div>
                   <label
                     for="userPhone"
                     class="block text-sm font-medium text-gray-700"
@@ -154,7 +174,7 @@
                     placeholder="name@example.com"
                   />
                 </div>
-                <div class="mb-4">
+                <div>
                   <label
                     for="userPhone"
                     class="block text-sm font-medium text-gray-700"
@@ -170,10 +190,10 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mt-8">
               <label
                 for="userAddress"
-                class="block text-sm font-medium text-gray-700"
+                class="block font-semibold text-gray-700"
                 >Billing Address</label
               >
               <textarea
@@ -186,10 +206,10 @@
             </div>
 
             <!-- Shipping Address with Toggle -->
-            <div class="mb-4">
+            <div class="my-4">
               <label
                 for="shippingAddress"
-                class="block text-sm font-medium text-gray-700"
+                class="block font-semibold text-gray-700"
                 >Shipping Address</label
               >
               <div class="flex items-center mt-2">
@@ -213,9 +233,13 @@
           </div>
 
           <!-- Shipping Options -->
-          <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
-              Shipping Options
+          <div class="mb-6">
+            <h2
+              class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
+            >
+              <i class="fas fa-shipping-fast"></i>
+              <!-- Shipping Icon -->
+              <span>Shipping Options</span>
             </h2>
 
             <label
@@ -235,9 +259,13 @@
           </div>
 
           <!-- Payment Options -->
-          <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">
-              Payment Method
+          <div class="mb-6">
+            <h2
+              class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
+            >
+              <i class="fas fa-wallet"></i>
+              <!-- Payment Icon -->
+              <span>Payment Method</span>
             </h2>
 
             <div class="flex space-x-4 mb-4">

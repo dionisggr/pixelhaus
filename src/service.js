@@ -1,68 +1,48 @@
-const BASE_URL = 'https://api.printify.com/v1';
-const { VITE_PRINTIFY_SHOP_ID, VITE_PRINTIFY_API_TOKEN } = import.meta.env;
+const { VITE_API_KEY, VITE_API_URL_DEV: BASE_URL } = import.meta.env;
 
-async function fetchWithToken(endpoint, options) {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
+async function getProducts() {
+  const response = await fetch(`${BASE_URL}/products`, {
     headers: {
-      Authorization: `Bearer ${VITE_PRINTIFY_API_TOKEN}`,
+      Authorization: 'Bearer' + VITE_API_KEY,
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) {
-    throw new Error(`Network response was not ok: ${response.statusText}`);
-  }
-  return response.json();
+
+  return await response.json();
 }
 
-async function getProducts() {
-  const endpoint = `/shops/${VITE_PRINTIFY_SHOP_ID}/products.json`;
-  const { data } = await fetchWithToken(endpoint);
+async function createProduct(data) {
+  const response = await fetch(`${BASE_URL}/products`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
-  return data.map(({ id, description, tags, images, updated_at }) => {
-    images = images.map(({ src }) => src);
+  return await response.json();
+}
 
-    return {
-      id,
-      description,
-      tags,
-      images,
-      updated_at,
-      isAdded: false,
-      flipped: false,
-      selected: {
-        material: 'Canvas',
-        size: 'Large',
-        duration: '6-Months',
-      },
-    };
+
+async function deleteProduct(id) {
+  await fetch(`${BASE_URL}/products/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer' + VITE_API_KEY },
   });
 }
 
-async function updateProduct(productData) {
-  const endpoint = `/shops/${VITE_PRINTIFY_SHOP_ID}/products/${productData.id}.json`;
-  const options = {
-    method: 'PUT',
-    body: JSON.stringify(productData),
-  };
-
-  return await fetchWithToken(endpoint, options);
-}
-
-async function createProduct(productData) {
-  const endpoint = `/shops/${VITE_PRINTIFY_SHOP_ID}/products.json`;
-  const options = {
+async function uploadImage(data) {
+  const response = await fetch(`${BASE_URL}/upload`, {
     method: 'POST',
-    body: JSON.stringify(productData),
-  };
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
-  return await fetchWithToken(endpoint, options);
+  return await response.json();
 }
 
-async function deleteProduct(productId) {
-  const endpoint = `/shops/${VITE_PRINTIFY_SHOP_ID}/products/${productId}.json`;
-
-  return await fetchWithToken(endpoint, { method: 'DELETE' });
-}
-
-export default { getProducts, updateProduct, createProduct, deleteProduct };
+export default { getProducts, createProduct, deleteProduct, uploadImage };

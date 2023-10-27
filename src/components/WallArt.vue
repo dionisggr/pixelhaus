@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 md:p-8 max-w-7xl mx-auto text-gray-700">
+  <div class="p-4 md:p-8 max-w-6xl mx-auto text-gray-700">
     <!-- Breadcrumbs -->
-    <div class="mt-4 mb-8 text-center md:text-left">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700">
+    <div class="mt-4 mb-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         Wall Art
       </h1>
-      <div class="mt-2 text-gray-500">
+      <div class="mt-2 text-gray-500" :class="isMobile && 'text-center'">
         <a href="#" class="hover:underline" @click="$emit('goTo', 'home')">
           Home
         </a>
@@ -17,44 +17,54 @@
     <div class="bg-white p-4 rounded-lg shadow-md mb-6">
       <!-- Image Container -->
       <div
-        class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto"
+        class="relative min-w-fit flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto overflow-hidden"
       >
         <!-- Main Image -->
         <div
-          class="flex-grow relative group cursor-pointer mb-4 md:mb-0"
+          class="main-image flex-grow relative group cursor-pointer mb-4 md:mb-0 -mt-12 sm:-mt-24 lg:-mt-32 xl:-mt-36"
+          :class="{'mb-12': isMobile}"
           @click="toggleExpand"
+          style="transform: scaleY(0.75)"
+          :style="
+            mainImage === selectedArt?.images?.[0] &&
+            'transform: scaleX(1.2); transform-origin: center bottom;'
+          "
         >
-          <!-- Adjusted for bigger size on mobile -->
-          <img
-            :src="mainImage"
-            alt="Main Art Image"
-            class="rounded-lg shadow-md object-cover md:object-contain w-screen h-56 md:w-full md:h-auto transition-transform duration-300 hover:scale-105"
-          />
+          <div class="image-container" style="max-height: 715px;">
+            <img
+              :src="mainImage"
+              alt="Main Art Image"
+              class="rounded-lg shadow-md object-cover md:object-contain w-screen md:w-full md:h-auto transition-transform duration-300 hover:scale-105"
+              :class="{'h-56': !isMobile}"
+            />
+          </div>
           <div
-            class="bg-gray-800 bg-opacity-50 absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            class="bg-gray-800 w-10/12 mx-auto bg-opacity-10 absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
-            <span class="text-white text-xl font-bold">Expand</span>
+            <span class="text-white text-xl font-bold mt-20">Expand</span>
           </div>
         </div>
 
         <!-- Carousel Images for Desktop -->
-        <div class="hidden md:block space-y-4">
+        <div class="hidden md:block space-y-4 bg-white z-10">
           <img
-            v-for="(image, index) in carouselImages"
+            v-for="(image, index) in selectedArt.images.slice(0, 3)"
             :key="index"
             :src="image"
             alt="Secondary Art Image"
+            @click="setMainImage(image)"
             class="w-60 h-auto rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
         </div>
 
         <!-- Carousel Images for Mobile - Thumbnails -->
-        <div class="flex space-x-2 md:hidden overflow-x-scroll">
+        <div class="flex justify-center space-x-2 md:hidden overflow-x-scroll mx-auto bg-white absolute bottom-0 w-full">
           <img
-            v-for="(image, index) in carouselImages"
+            v-for="(image, index) in selectedArt.images.slice(0, 3)"
             :key="index"
             :src="image"
             alt="Secondary Art Image"
+            @click="setMainImage(image)"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
         </div>
@@ -69,15 +79,6 @@
       <h2 class="text-2xl md:text-4xl text-gray-700 font-bold mb-4">
         {{ wallArt.title }}
       </h2>
-      <div v-if="isAdmin" class="mb-4 absolute right-4 top-4">
-        <button
-          @click="delete"
-          class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
-        >
-          Delete
-        </button>
-      </div>
-
       <p class="text-gray-600 text-lg mb-6 leading-relaxed">
         {{ wallArt.description }}
       </p>
@@ -85,7 +86,7 @@
       <!-- Filtering Options -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 py-4">
         <div class="flex flex-col items-center">
-          <h3 class="text-lg font-medium mb-2 text-center">
+          <h3 class="text-lg font-medium mb-2">
             <i class="fas fa-expand-arrows-alt mr-2"></i>Size
           </h3>
           <div class="flex space-x-2">
@@ -172,6 +173,11 @@
     </div>
     <div
       v-if="showModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40"
+    ></div>
+
+    <div
+      v-if="showModal"
       class="fixed inset-0 flex items-center justify-center z-50"
     >
       <div class="bg-white p-6 rounded-lg shadow-md">
@@ -200,20 +206,19 @@ export default {
     },
     isAdmin: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    selectedArt: {
+      type: Object,
+      default: () => ({}),
     },
   },
   data() {
     return {
-      mainImage: 'https://source.unsplash.com/random/1100x580?art',
-      carouselImages: [
-        'https://source.unsplash.com/random/640x348?art',
-        'https://source.unsplash.com/random/641x349?painting',
-        'https://source.unsplash.com/random/642x350?sculpture',
-        'https://source.unsplash.com/random/643x351?drawing',
-      ],
+      mainImage: this.selectedArt.images[0],
+      carouselImages: this.selectedArt.images.slice(0, 4),
       wallArt: {
-        title: 'Stunning AI Art',
+        title: this.selectedArt.title,
         description:
           'This is a beautiful AI generated art. It brings vibrant colors and intriguing patterns to your living space.',
       },
@@ -238,17 +243,18 @@ export default {
       const cents = Math.round((value - Math.floor(value)) * 100);
       return cents.toString().padStart(2, '0'); // Convert it to a two-digit string
     },
-    delete() {
+    openDeleteModal() {
       this.showModal = true;
     },
     confirmDelete() {
       // Here, you would typically make an API call or some other action to delete the wall art
       // For now, we'll just close the modal and emit a placeholder event
-      this.$emit('deleted');
+      this.$emit('delete-wall-art');
       this.showModal = false;
+    },
+    setMainImage(imageSrc) {
+      this.mainImage = imageSrc;
     },
   },
 };
 </script>
-
-<style scoped></style>
