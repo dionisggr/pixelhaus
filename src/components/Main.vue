@@ -591,9 +591,9 @@
                 <div
                   v-if="!art.flipped"
                   class="image-preview flex-shrink-0 relative aspect-content"
-                  :Style="
+                  :style="
                     isMobile &&
-                    'min-height: 370px; margin-top: calc(-3.7vw * 4);'
+                    'min-height: 360px; margin-top: calc(-3.7vw * 4);'
                   "
                   @click="
                     selectedNavItem = 'wall-art';
@@ -664,7 +664,7 @@
                         </svg>
                       </button>
                     </div>
-                    <p class="text-sm text-gray-700 two-line-ellipsis w-10/12">
+                    <p class="text-sm text-gray-700 two-line-ellipsis w-11/12">
                       {{ art.description || loremText }}
                     </p>
                   </div>
@@ -1587,6 +1587,7 @@ export default {
 
 .image-preview {
   height: 23.5vw;
+  min-height: 350px;
   max-height: 400px;
 }
 
@@ -1595,10 +1596,19 @@ export default {
   transform-origin: center bottom;
   object-fit: cover;
   margin-top: calc(-0.9vw * 4);
+  
 }
 
 .hover-image {
   transform: scaleY(0.7);
   margin-top: -1.1vw;
+}
+
+/* responsive */
+@media (max-width: 360px) {
+  .main-image {
+    min-height: 90%;
+    object-fit: fill;
+  }
 }
 </style>
