@@ -62,6 +62,7 @@
           </div>
           <div
             v-if="openModal === 'notifications'"
+            @mouseenter="resetTimeout"
             @mouseleave="markNotificationsRead"
             class="absolute top-12 right-10 w-96 bg-white rounded-lg shadow-md z-20 p-4 border-l border-r border-gray-300"
           >
@@ -112,7 +113,7 @@
                 class="inline-block whitespace-nowrap w-1/2 text-center text-white bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-sm"
                 @click="goTo('notifications')"
               >
-                See All
+                See All Notifications
               </a>
             </div>
           </div>
@@ -212,13 +213,6 @@
               <a
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
-                @click="selectedNavItem = 'upload'"
-              >
-                Upload (Admin)
-              </a>
-              <a
-                href="#"
-                class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
                 @click="logout"
               >
                 Logout
@@ -254,7 +248,7 @@
           <div
             class="flex justify-between items-center mb-6 border-b-2 p-2 pb-3"
           >
-            <span class="text-lg font-bold">PixelHaus</span>
+            <span class="text-lg font-bold" @click="goTo('home')">PixelHaus</span>
             <i
               class="material-icons text-lg cursor-pointer hover:text-blue-500 transition-colors duration-300"
               @click="showNavSidebar = !showNavSidebar"
@@ -278,15 +272,6 @@
                 showNavSidebar = false;
               "
               >My Orders</a
-            >
-            <a
-              href="#sign-in"
-              class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
-              @click="
-                selectedNavItem = 'upload';
-                showNavSidebar = false;
-              "
-              >Upload (Admin)</a
             >
             <a
               href="#sign-in"
@@ -433,7 +418,7 @@
                 <!-- Enhanced CTA Button -->
                 <a
                   href="#search-bar"
-                  class="mt-8 py-2 px-5 md:py-3 md:px-8 rounded-lg text-white bg-blue-500 hover:bg-indigo-700 transition duration-300 ease-in-out shadow-lg transform hover:scale-105"
+                  class="mt-8 py-2 px-5 md:py-3 md:px-8 rounded-lg text-white bg-blue-500 bg-opacity-90 hover:bg-blue-700 transition duration-300 ease-in-out shadow-lg transform hover:scale-105"
                 >
                   Explore Collection
                 </a>
@@ -487,13 +472,13 @@
             'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8':
               !isMobile,
             'fixed top-20 z-20 p-2': !isMobile && isSidebarHidden,
-            'fixed top-20 z-20 p-4 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
+            'absolute top-20 z-20 p-4 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
               isMobile && !isSidebarHidden,
             'pb-2 p-6': !isMobile && !isSidebarHidden,
           }"
-          style="font-family: 'Poppins', sans-serif; height: fit-content"
+          style="font-family: 'Poppins', sans-serif;"
           :style="
-            !isMobile && !isSidebarHidden && 'width: 25%; min-width: 275px;'
+            !isMobile && !isSidebarHidden && 'width: 25%; min-width: 275px; height: fit-content'
           "
         >
           <div class="w-full flex justify-between items-baseline">
@@ -893,7 +878,7 @@
     />
 
     <!-- Orders -->
-    <Orders v-if="selectedNavItem === 'orders'" :orders="cartItems" />
+    <Orders v-if="selectedNavItem === 'orders'" :isMobile="isMobile" :orders="cartItems" />
 
     <!-- Our Story -->
     <OurStory v-if="selectedNavItem === 'our-story'" :isMobile="isMobile" />
@@ -1396,16 +1381,23 @@ export default {
   },
   methods: {
     goTo(section) {
-      if (section === 'home') {
-        window.location.href = '/';
-      }
-
       this.openModal = null;
       this.selectedNavItem = section;
+
+      if (this.isMobile) {
+        this.showNavSidebar = false;
+      }
     },
     selectCategory(category) {
       this.selectedCategory = category;
       this.filterDisplayedArts();
+
+      if (this.isMobile) {
+        this.toggleSidebar();
+      }
+
+      // travel to the id "invetory-selection"
+      document.getElementById('search-bar').scrollIntoView();
     },
     filterDisplayedArts() {
       if (['Popular', 'New'].includes(this.selectedCategory)) {
@@ -1433,7 +1425,9 @@ export default {
     },
     showMore() {
       this.itemsToShow += this.step;
-      this.displayedArts = this.arts.slice(0, this.itemsToShow);
+      this.displayedArts = this.arts.slice(0, this.itemsToShow).filter(art => {
+        return art.tags.includes(this.selectedCategory);
+      });
 
       this.checkShowMoreButton();
     },
@@ -1460,8 +1454,11 @@ export default {
 
       this.goTo('home');
     },
+    resetTimeout() {
+      clearTimeout(this.timeout);
+    },
     markNotificationsRead() {
-      this.openModal = null;
+      this.timeout = setTimeout(() => { this.openModal = null }, 1000);
       this.notifications = this.notifications.map((notification) => {
         if (!notification.read) {
           notification.read = true;

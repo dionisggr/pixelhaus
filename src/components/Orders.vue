@@ -26,10 +26,10 @@
             class="flex flex-col space-y-4 mb-6 bg-white p-6 rounded-lg hover:bg-gray-50 transition shadow-lg cursor-pointer w-full"
           >
             <div class="flex items-center space-x-4">
-              <i class="material-icons text-2xl text-blue-400">shopping_cart</i>
+              <i class="material-icons text-2xl text-blue-500">shopping_cart</i>
               <div class="flex-grow">
                 <div class="flex justify-between items-center">
-                  <span class="block text-lg font-semibold text-gray-700">
+                  <span class="block lg:text-lg font-semibold text-gray-700">
                     Order #{{ item.id }}
                   </span>
                   <span
@@ -99,7 +99,7 @@
               <!-- Subtle Hint Section -->
               <div v-else class="flex justify-end">
                 <span class="text-xs text-gray-400 italic"
-                  >+ Click for shipping info</span
+                  >+ {{ isMobile ? 'Tap' : 'Click' }} for shipping info</span
                 >
               </div>
             </div>
@@ -114,6 +114,12 @@
 import dayjs from 'dayjs';
 
 export default {
+  props: {
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       orders: [

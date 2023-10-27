@@ -46,14 +46,14 @@
       <div
         class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
       >
-        <div class="flex space-x-4">
+        <div class="flex space-x-4" :class="{'py-2': isMobile}">
           <button
             class="text-sm px-6 py-2 rounded-full transition duration-300 ease-in-out"
             :class="{
               'bg-blue-500 text-white': selectedFilter === 'week',
               'bg-gray-200 text-gray-700': selectedFilter !== 'week',
             }"
-            @click="selectedFilter = 'week'"
+            @click="toggleFilter('week')"
           >
             This Week
           </button>
@@ -63,7 +63,7 @@
               'bg-blue-500 text-white': selectedFilter === 'month',
               'bg-gray-200 text-gray-700': selectedFilter !== 'month',
             }"
-            @click="selectedFilter = 'month'"
+            @click="toggleFilter('month')"
           >
             This Month
           </button>
@@ -81,14 +81,28 @@
     <!-- Mark All as Read Button -->
     <button
       @click="markAllAsRead"
-      class="ml-auto mr-4 mb-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 flex items-center justify-center w-fit"
+      class="ml-auto mr-4 mb-4 rounded-full bg-blue-500 hover:bg-blue-700 text-white text-sm px-4 py-1.5 flex items-center justify-center w-fit"
     >
       <i class="material-icons mr-2" style="font-size: 20px">done_all</i>
       Mark All as Read
     </button>
 
     <!-- Main Content -->
+    
     <div class="p-6 w-full md:w-4/5 mx-auto">
+          <!-- Informative Message -->
+    <div 
+      class="px-4 py-1 mb-3 w-3/4 mx-auto text-xs text-center bg-blue-100 text-blue-500 rounded-lg shadow-md"
+      v-if="isMobile"
+    >
+      Tap each for more information.
+    </div>
+    <div 
+      class="px-4 py-2 mb-4 text-center bg-blue-200 text-blue-700 rounded-lg shadow-md"
+      v-else
+    >
+      Click each for more information.
+    </div>
       <div v-if="notifications.length === 0" class="text-center py-20">
         <p class="text-2xl font-semibold text-gray-500">No Notifications Yet</p>
       </div>
@@ -109,7 +123,7 @@
             <i :class="iconType(notification.type)" class="text-2xl"></i>
             <div class="flex-grow">
               <div class="flex justify-between items-center">
-                <span class="block text-lg font-semibold text-gray-700">
+                <span class="block lg:text-lg font-semibold text-gray-700">
                   {{ notification.message }}
                 </span>
                 <span
@@ -162,7 +176,7 @@
         <button
           v-if="showMoreButton"
           @click="loadMore"
-          class="bg-blue-600 hover:bg-blue-700 text-white p-2 px-8 mt-12 rounded-full text-sm mx-auto block"
+          class="bg-blue-500 hover:bg-blue-700 text-white p-2 px-8 mt-12 rounded-full text-sm mx-auto block"
         >
           Show More
         </button>
@@ -226,6 +240,13 @@ export default {
     },
     loadMore() {
       this.visibleCount += 10;
+    },
+    toggleFilter(filter) {
+      if (this.selectedFilter === filter) {
+        this.selectedFilter = null;
+      } else {
+        this.selectedFilter = filter;
+      }
     },
   },
 };

@@ -1,11 +1,11 @@
 <template>
-  <div class="how-it-works" :class="isMobile ? 'p-4' : 'p-12'">
+  <div class="how-it-works" :class="isMobile ? 'p-4 py-10' : 'p-12'">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         How It Works
       </h1>
-      <div class="mt-2 ml-32 text-gray-500">
+      <div class="mt-2 text-center text-gray-500">
         <a
           href="#"
           class="hover:underline text-gray-500"
@@ -22,12 +22,12 @@
       <h3 class="text-3xl font-semibold mb-2 text-center border-b-2 pb-2">
         Renting
       </h3>
-      <p class="text-center text-gray-600 italic pb-4 text-sm">Click on each step to learn more</p>
+      <p class="text-center text-gray-600 italic pb-4 text-sm">{{ isMobile ? 'Tap' : 'Click' }} on each step to learn more</p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-16 items-start mt-6">
         <!-- Step 1 -->
         <div
           class="relative w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
+          style="min-height: 230px"
           @click="flipCard('rent1')"
         >
           <!-- Default content when the card is NOT flipped -->
@@ -40,15 +40,15 @@
                 'w-10 h-10': flipped.rent1,
                 'w-16 h-16': !flipped.rent1,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">search</i>
             </div>
 
             <h4 class="font-bold mb-4">Browse & Select</h4>
             <p class="text-center">
-              Explore our wide range of AI-generated wall art. Choose the
-              material, size, and duration
+              Explore our wide range of AI-generated art.
+              Choose the material, size, and duration
             </p>
           </div>
 
@@ -62,7 +62,7 @@
                 'w-10 h-10': flipped.rent1,
                 'w-16 h-16': !flipped.rent1,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">search</i>
             </div>
@@ -74,7 +74,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Discover an ever-evolving gallery
               </li>
@@ -82,7 +82,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Filter options by material, size, or style
               </li>
@@ -90,7 +90,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Preview how art would look in different settings
               </li>
@@ -127,7 +127,7 @@
         >
           <div
             :class="{ 'w-10 h-10': flipped.rent2, 'w-16 h-16': !flipped.rent2 }"
-            class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+            class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
           >
             <i class="material-icons">local_shipping</i>
           </div>
@@ -146,7 +146,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Your privacy is our priority
             </li>
@@ -154,7 +154,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Simple transactions with multi-payment options
             </li>
@@ -162,7 +162,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Track your order in real-time
             </li>
@@ -198,9 +198,9 @@
         >
           <div
             :class="{ 'w-10 h-10': flipped.rent3, 'w-16 h-16': !flipped.rent3 }"
-            class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+            class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
           >
-            <i class="material-icons">box</i>
+            <i class="material-icons">inbox</i>
           </div>
 
           <h4 class="font-bold mb-4" v-if="!flipped.rent3">
@@ -218,7 +218,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Premium packaging to ensure safe arrival
             </li>
@@ -226,7 +226,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Detailed care instructions included
             </li>
@@ -234,7 +234,7 @@
               class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
             >
               <span
-                class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
               ></span>
               Support available for any shipping queries
             </li>
@@ -266,7 +266,7 @@
                 'w-10 h-10': flipped.swap1,
                 'w-16 h-16': !flipped.swap1,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">autorenew</i>
             </div>
@@ -288,7 +288,7 @@
                 'w-10 h-10': flipped.swap1,
                 'w-16 h-16': !flipped.swap1,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">autorenew</i>
             </div>
@@ -300,7 +300,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Use the protective layers provided
               </li>
@@ -308,7 +308,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Ensure the art is free from any external materials
               </li>
@@ -316,7 +316,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Seal the box tightly for a safe journey back
               </li>
@@ -361,7 +361,7 @@
                 'w-10 h-10': flipped.swap2,
                 'w-16 h-16': !flipped.swap2,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">send</i>
             </div>
@@ -382,7 +382,7 @@
                 'w-10 h-10': flipped.swap2,
                 'w-16 h-16': !flipped.swap2,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">send</i>
             </div>
@@ -394,7 +394,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Clear, easy-to-follow return label instructions
               </li>
@@ -402,7 +402,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Need a new return label? Contact support
               </li>
@@ -410,7 +410,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Make sure the return label is clearly visible
               </li>
@@ -455,7 +455,7 @@
                 'w-10 h-10': flipped.swap3,
                 'w-16 h-16': !flipped.swap3,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">done</i>
             </div>
@@ -476,7 +476,7 @@
                 'w-10 h-10': flipped.swap3,
                 'w-16 h-16': !flipped.swap3,
               }"
-              class="bg-gray-700 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
               <i class="material-icons">done</i>
             </div>
@@ -488,7 +488,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Locate nearest drop-off point with our locator tool
               </li>
@@ -496,7 +496,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Get confirmation once the art reaches us
               </li>
@@ -504,7 +504,7 @@
                 class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <span
-                  class="w-4 h-4 bg-gray-700 rounded-full mr-3 flex-shrink-0"
+                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
                 ></span>
                 Assistance available for shipping-related inquiries
               </li>
