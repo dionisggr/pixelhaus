@@ -109,7 +109,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import 'animate.css';
 
 @keyframes custom-slideInRight {

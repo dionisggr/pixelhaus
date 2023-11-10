@@ -1,5 +1,6 @@
 const { VITE_API_KEY, VITE_API_URL_DEV, VITE_API_URL_PROD, VITE_ENV } = import.meta.env;
-const BASE_API_URL = VITE_ENV ? VITE_API_URL_PROD : VITE_API_URL_DEV;
+// const BASE_API_URL = VITE_ENV ? VITE_API_URL_PROD : VITE_API_URL_DEV;
+const BASE_API_URL = VITE_API_URL_DEV;
 
 async function getProducts() {
   const response = await fetch(`${BASE_API_URL}/products`, {

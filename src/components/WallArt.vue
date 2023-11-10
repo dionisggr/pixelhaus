@@ -17,55 +17,81 @@
     <div class="bg-white p-4 rounded-lg shadow-md mb-6">
       <!-- Image Container -->
       <div
-        class="relative min-w-fit flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto overflow-hidden"
+        class="relative min-w-fit flex flex-col items-center md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto"
       >
         <!-- Main Image -->
         <div
-          class="main-image flex-grow relative group cursor-pointer mb-4 md:mb-0 -mt-12 sm:-mt-24 lg:-mt-32 xl:-mt-36"
-          :class="{'mb-12': isMobile}"
+          class="relative group cursor-pointer mb-24 transform md:mb-0 w-full"
           @click="toggleExpand"
-          style="transform: scaleY(0.75)"
-          :style="
-            mainImage === selectedArt?.images?.[0] &&
-            'transform: scaleX(1.2); transform-origin: center bottom;'
-          "
         >
-          <div class="image-container" style="max-height: 715px;">
+          <div
+            class="flex overflow-hidden rounded-md"
+            style="max-height: 500px"
+          >
             <img
+              v-if="mainImage === carouselImages[0]"
               :src="mainImage"
               alt="Main Art Image"
-              class="rounded-lg shadow-md object-cover md:object-contain w-screen md:w-full md:h-auto transition-transform duration-300 hover:scale-105"
-              :class="{'h-56': !isMobile}"
+              class="rounded-lg object-fill shadow-md transition-transform duration-300 w-full transform md:scale-y-150"
             />
-          </div>
-          <div
-            class="bg-gray-800 w-10/12 mx-auto bg-opacity-10 absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <span class="text-white text-xl font-bold mt-20">Expand</span>
+            <Image
+              v-else
+              type="wall"
+              subtype="main"
+              :src="carouselImages[2]"
+              :selectedSize="selectedSize"
+            />
           </div>
         </div>
 
         <!-- Carousel Images for Desktop -->
-        <div class="hidden md:block space-y-4 bg-white z-10">
+        <div
+          class="hidden md:flex flex-col justify-center space-y-4 bg-white z-10"
+        >
           <img
-            v-for="(image, index) in selectedArt.images.slice(0, 3)"
-            :key="index"
-            :src="image"
+            :src="carouselImages[0]"
             alt="Secondary Art Image"
-            @click="setMainImage(image)"
-            class="w-60 h-auto rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+            @click="setMainImage(carouselImages[0])"
+            class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
+          />
+          <img
+            :src="carouselImages[1]"
+            alt="Secondary Art Image"
+            @click="setMainImage(carouselImages[1])"
+            class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
+          />
+          <Image
+            class="w-36 h-36"
+            type="wall"
+            subtype="thumbnail"
+            :src="carouselImages[0]"
+            :selectedSize="selectedSize"
+            @select-image="setMainImage"
           />
         </div>
 
         <!-- Carousel Images for Mobile - Thumbnails -->
-        <div class="flex justify-center space-x-2 md:hidden overflow-x-scroll mx-auto bg-white absolute bottom-0 w-full">
+        <div
+          class="flex justify-between space-x-4 md:hidden overflow-x-scroll mx-auto bg-white absolute bottom-0"
+        >
           <img
-            v-for="(image, index) in selectedArt.images.slice(0, 3)"
-            :key="index"
-            :src="image"
+            :src="carouselImages[0]"
             alt="Secondary Art Image"
-            @click="setMainImage(image)"
+            @click="setMainImage(carouselImages[0])"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+          />
+          <img
+            :src="carouselImages[1]"
+            alt="Secondary Art Image"
+            @click="setMainImage(carouselImages[1])"
+            class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+          />
+          <Image
+            type="wall"
+            subtype="thumbnail"
+            :src="carouselImages[0]"
+            :selectedSize="selectedSize"
+            @select-image="setMainImage"
           />
         </div>
       </div>
@@ -84,7 +110,32 @@
       </p>
 
       <!-- Filtering Options -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 py-4">
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-6 py-8 w-11/12 mx-auto border-b pb-12"
+      >
+        <!-- Category -->
+        <div class="mx-auto">
+          <h3 class="text-lg font-medium mb-2 text-center mr-2">
+            <i class="fas fa-paint-brush mr-2"></i>Category
+          </h3>
+          <div class="flex space-x-2">
+            <button
+              v-for="category in categories"
+              :key="category"
+              @click="selectedCategory = category"
+              :class="[
+                category === selectedCategory
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-800',
+                'px-4 py-2.5 rounded-full transition-colors duration-300 hover:bg-gray-300',
+              ]"
+            >
+              {{ category }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Size -->
         <div class="flex flex-col items-center">
           <h3 class="text-lg font-medium mb-2">
             <i class="fas fa-expand-arrows-alt mr-2"></i>Size
@@ -98,32 +149,10 @@
                 size === selectedSize
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-800',
-                'px-4 py-2 rounded-full transition-colors duration-300 hover:bg-gray-300',
+                'px-4 py-2.5 rounded-full transition-colors duration-300 hover:bg-gray-300',
               ]"
             >
               {{ size }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Material -->
-        <div class="mx-auto">
-          <h3 class="text-lg font-medium mb-2 text-center mr-2">
-            <i class="fas fa-paint-brush mr-2"></i>Material
-          </h3>
-          <div class="flex space-x-2">
-            <button
-              v-for="material in materials"
-              :key="material"
-              @click="selectedMaterial = material"
-              :class="[
-                material === selectedMaterial
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-800',
-                'px-4 py-2 rounded-full transition-colors duration-300 hover:bg-gray-300',
-              ]"
-            >
-              {{ material }}
             </button>
           </div>
         </div>
@@ -142,7 +171,7 @@
                 duration === selectedDuration
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-800',
-                'px-4 py-2 rounded-full transition-colors duration-300 hover:bg-gray-300',
+                'px-4 py-2.5 rounded-full transition-colors duration-300 hover:bg-gray-300',
               ]"
             >
               {{ duration }}
@@ -152,9 +181,9 @@
       </div>
 
       <!-- Cost Section -->
-      <div class="mt-8 border-t pt-6 my-4 mx-4 md:w-1/2 md:mx-auto">
+      <div class="my-6 mx-4 flex justify-between">
         <div
-          class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between"
+          class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between w-1/2"
         >
           <div class="flex items-center space-x-3 mb-4 md:mb-0">
             <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
@@ -169,6 +198,15 @@
             <span class="text-sm inline-block ml-1">/ month</span>
           </p>
         </div>
+
+        <!-- Add to Cart Button -->
+        <button
+          @click="$emit('add-to-cart', wallArt)"
+          class="mr-12 md:ml-48 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150"
+        >
+          <i class="fas fa-shopping-cart mr-2"></i>
+          Add to Cart
+        </button>
       </div>
     </div>
     <div
@@ -198,7 +236,12 @@
 </template>
 
 <script>
+import Image from './Image.vue';
+
 export default {
+  components: {
+    Image,
+  },
   props: {
     isMobile: {
       type: Boolean,
@@ -216,21 +259,44 @@ export default {
   data() {
     return {
       mainImage: this.selectedArt.images[0],
-      carouselImages: this.selectedArt.images.slice(0, 4),
       wallArt: {
         title: this.selectedArt.title,
         description:
           'This is a beautiful AI generated art. It brings vibrant colors and intriguing patterns to your living space.',
       },
-      sizes: ['Small', 'Medium', 'Large'],
-      selectedSize: 'medium',
-      materials: ['Poster', 'Canvas'],
-      selectedMaterial: 'canvas',
+      sizes: ['Small', 'Medium', 'Square', 'Large'],
+      selectedSize: 'Medium',
+      categories: ['New', 'Pre-Rented'],
+      selectedCategory: 'New',
       durations: ['3-Months', '6-Months'],
-      selectedDuration: '3-months',
+      selectedDuration: '6-Months',
       approximateCost: 150.0,
       showModal: false,
+      selectedImage: 0,
     };
+  },
+  computed: {
+    carouselImages() {
+      const options = {
+        Canvas: {
+          Small: [0, 1, 3],
+          Medium: [0, 7, 10],
+          Square: [20, 21, 24],
+          Large: [0, 14, 17],
+        },
+        Posters: {
+          Small: [],
+          Medium: [],
+          Square: [],
+          Large: [],
+        },
+      };
+
+      return this.selectedArt.images;
+      return this.selectedArt.images.filter((_, index) =>
+        options[this.selectedCategory][this.selectedSize].includes(index)
+      );
+    },
   },
   methods: {
     toggleExpand() {

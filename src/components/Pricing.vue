@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen px-4 lg:px-12 mt-12">
+  <div class="bg-gray-100 px-4 lg:px-12 my-12">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -17,81 +17,11 @@
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="max-w-3xl mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-        <!-- Size filter -->
-        <div>
-          <label class="block text-sm font-semibold mb-2 text-gray-600">
-            Size:
-          </label>
-          <div class="relative">
-            <select
-              v-model="selectedSize"
-              class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 hover:border-gray-400 cursor-pointer"
-            >
-              <option value="">All Sizes</option>
-              <option v-for="size in sizes" :key="size" :value="size">
-                {{ size }}
-              </option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-            >
-              <svg
-                class="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <!-- Material filter -->
-        <div>
-          <label class="block text-sm font-semibold mb-2 text-gray-600">
-            Material:
-          </label>
-          <div class="relative">
-            <select
-              v-model="selectedMaterial"
-              class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 hover:border-gray-400 cursor-pointer"
-            >
-              <option value="">All Materials</option>
-              <option
-                v-for="material in materials"
-                :key="material"
-                :value="material"
-              >
-                {{ material }}
-              </option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-            >
-              <svg
-                class="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Pricing Data Display -->
     <div
       v-for="category in filteredData"
       :key="category.name"
-      class="bg-white p-4 md:p-6 rounded-lg shadow-md mb-8"
+      class="bg-white p-4 md:p-6 rounded-lg shadow-md mb-8 max-w-6xl mx-auto"
     >
       <h2 class="text-2xl font-bold mb-6 text-gray-700">{{ category.name }}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -114,7 +44,7 @@
 
           <!-- Pricing Table -->
           <table class="min-w-full">
-            <tbody class="relative min-h-[500px]">
+            <tbody class="relative">
               <tr>
                 <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
                   Size
@@ -136,7 +66,7 @@
                 :class="index % 2 ? 'bg-gray-100' : ''"
               >
                 <td
-                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium w-1/3 text-sm text-center"
+                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium w-24 text-sm text-center"
                 >
                   {{ item.size }}
                 </td>
@@ -180,98 +110,57 @@ export default {
         '24" x 24"',
         '40" x 30"',
       ],
-      materials: ['Canvas', 'Posters'],
+      materials: ['New', 'Pre-Rented'],
       durations: ['3 months', '6 months'],
       pricingData: [
         {
-          name: 'Premium',
+          name: 'Canvas',
           items: [
             {
               size: '14" x 11"',
-              type: 'Posters',
-              '3months': '20.00',
-              '6months': '15.00',
-            },
-            {
-              size: '24" x 16"',
-              type: 'Posters',
-              '3months': '30.00',
-              '6months': '20.00',
-            },
-            {
-              size: '30" x 20"',
-              type: 'Posters',
-              '3months': '40.00',
-              '6months': '25.00',
-            },
-            {
-              size: '14" x 11"',
-              type: 'Canvas',
+              type: 'New',
               '3months': '15.00',
               '6months': '10.00',
             },
             {
               size: '24" x 18"',
-              type: 'Canvas',
+              type: 'New',
               '3months': '25.00',
               '6months': '15.00',
             },
             {
               size: '24" x 24"',
-              type: 'Canvas',
+              type: 'New',
               '3months': '30.00',
               '6months': '20.00',
             },
             {
               size: '40" x 30"',
-              type: 'Canvas',
+              type: 'New',
               '3months': '55.00',
               '6months': '35.00',
             },
-          ],
-        },
-        {
-          name: 'Standard',
-          items: [
             {
               size: '14" x 11"',
-              type: 'Posters',
-              '3months': '15.00',
-              '6months': '10.00',
-            },
-            {
-              size: '24" x 16"',
-              type: 'Posters',
-              '3months': '20.00',
-              '6months': '10.00',
-            },
-            {
-              size: '30" x 20"',
-              type: 'Posters',
-              '3months': '20.00',
-              '6months': '15.00',
-            },
-            {
-              size: '14" x 11"',
-              type: 'Canvas',
+              type: 'Pre-Rented',
               '3months': '10.00',
               '6months': '10.00',
             },
             {
               size: '24" x 18"',
-              type: 'Canvas',
+              type: 'Pre-Rented',
               '3months': '15.00',
               '6months': '10.00',
             },
             {
               size: '24" x 24"',
-              type: 'Canvas',
+              type: 'Pre-Rented',
               '3months': '20.00',
               '6months': '15.00',
             },
             {
               size: '40" x 30"',
-              type: 'Canvas',
+              type: 'Pre-Rented',
               '3months': '35.00',
               '6months': '20.00',
             },
