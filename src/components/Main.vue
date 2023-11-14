@@ -56,7 +56,7 @@
             </i>
             <!-- Blue Dot for Unread Notifications -->
             <span
-              v-if="notifications.some((notification) => !notification.read)"
+              v-if="notifications.some((notification) => !notification.is_read)"
               class="absolute bottom-1.5 right-0 w-2.5 h-2.5 bg-blue-500 shadow-lg rounded-full"
             ></span>
           </div>
@@ -72,15 +72,22 @@
               </h3>
             </div>
             <div class="overflow-y-auto max-h-72">
+              <!-- Check if notifications array is empty -->
+              <div
+                v-if="notifications.length === 0"
+                class="text-center text-gray-700"
+              >
+                No Notifications
+              </div>
+              <!-- Notifications List -->
               <div
                 v-for="notification in notifications"
                 :key="notification.id"
                 class="flex items-center space-x-4 mb-4 rounded-lg p-3 transition cursor-pointer"
-                :class="
-                  notification.read
-                    ? 'bg-gray-50 hover:bg-gray-100'
-                    : 'bg-yellow-50 hover:bg-yellow-100'
-                "
+                :class="{
+                  'bg-gray-50 hover:bg-gray-100': notification.is_read,
+                  'bg-yellow-50 hover:bg-yellow-100': !notification.is_read,
+                }"
               >
                 <i
                   :class="{
@@ -97,17 +104,17 @@
                   }}
                 </i>
                 <div class="flex-grow">
-                  <span class="block text-sm font-medium text-gray-700">{{
-                    notification.message
-                  }}</span>
-                  <span class="text-xs text-gray-500">{{
-                    notification.time
-                  }}</span>
+                  <span class="block text-sm font-medium text-gray-700">
+                    {{ notification.message }}
+                  </span>
+                  <span class="text-xs text-gray-500">
+                    {{ notification.created_at }}
+                  </span>
                 </div>
               </div>
             </div>
-            <hr class="my-4" />
-            <div class="flex justify-center">
+            <hr v-if="notifications.length > 0" class="my-4" />
+            <div v-if="notifications.length > 0" class="flex justify-center">
               <a
                 href="#"
                 class="inline-block whitespace-nowrap w-1/2 text-center text-white bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-sm"
@@ -122,6 +129,7 @@
           <i
             class="material-icons text-2xl cursor-pointer hover:text-blue-500"
             @click="openModal = openModal === 'cart' ? null : 'cart'"
+            @mouseenter="resetTimeout"
           >
             shopping_cart
           </i>
@@ -133,16 +141,16 @@
             <div class="border-b-2 border-gray-300 pb-2 mb-6">
               <h3 class="text-2xl font-extrabold text-gray-700">Your Cart</h3>
             </div>
-            <div class="overflow-x-auto max-h-72">
+            <div class="overflow-y-auto pr-4 max-h-72">
               <div
-                v-for="item in cartItems"
+                v-for="item in cart.arts"
                 :key="item.id"
                 class="mb-6 relative"
               >
                 <div class="flex items-center space-x-4">
                   <div class="relative">
                     <img
-                      :src="item.thumbnail"
+                      :src="item.image"
                       alt="thumbnail"
                       class="w-12 h-12 object-cover rounded"
                     />
@@ -154,21 +162,27 @@
                     </span>
                   </div>
                   <div>
-                    <span class="font-medium">{{ item.name }}</span>
+                    <span class="font-medium">{{ item.title }}</span>
                     <span class="text-sm text-gray-500 block">
-                      {{ item.material }}, {{ item.size }} ({{
-                        item.dimensions
+                      {{ item.category }}, {{ item.size }} ({{
+                        dimensions[item.size]
                       }})
                     </span>
                     <!-- Added duration here -->
                     <span class="text-xs text-gray-500 block">
-                      {{ item.duration }}
+                      {{ item.duration }}-Months
                     </span>
                   </div>
                 </div>
                 <div class="text-gray-700 flex justify-between items-end">
-                  <span class="text-xs"># {{ item.id.substring(0, 12) }}</span>
-                  <span>${{ item.cost }}</span>
+                  <span class="text-xs"
+                    ># {{ item.art_id?.substring(0, 12) }}</span
+                  >
+                  <span
+                    >${{
+                      (cost[item.category][item.duration][item.size] * item.quantity)?.toFixed(2)
+                    }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -202,12 +216,30 @@
               class="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-md z-10"
             >
               <a
+                v-if="isLoggedIn && !user.is_admin"
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
               >
                 My Profile
               </a>
               <a
+                v-if="isLoggedIn && user.is_admin"
+                href="#"
+                class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
+                @click="selectedNavItem = 'upload'"
+              >
+                All Arts
+              </a>
+              <a
+                v-if="isLoggedIn && user.is_admin"
+                href="#"
+                class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
+                @click="selectedNavItem = 'all-orders'"
+              >
+                All Orders
+              </a>
+              <a
+                v-else
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
                 @click="selectedNavItem = 'orders'"
@@ -383,7 +415,7 @@
                   :style="isMobile ? 'max-height: 55vh' : 'max-height: 70vh'"
                 >
                   <img
-                    :src="art.images[0]"
+                    :src="art.image"
                     :alt="art.title"
                     class="rounded-3xl object-cover w-full h-full transition-transform duration-300 ease-in-out transform hover:scale-110"
                     :style="{ 'object-position': 'center 20%' }"
@@ -471,16 +503,17 @@
             'bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center mr-8':
               !isMobile,
             'fixed top-20 z-20 p-2': !isMobile && isSidebarHidden,
-            'absolute top-20 z-20 p-4 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center justify-center':
+            'fixed top-16 mt-2 z-20 p-4 left-4 right-4 bg-gray-50 rounded-xl shadow-md transition-transform duration-300 flex flex-col items-center overflow-y-scroll':
               isMobile && !isSidebarHidden,
             'pb-2 p-6': !isMobile && !isSidebarHidden,
           }"
           style="font-family: 'Poppins', sans-serif"
-          :style="
+          :style="[
             !isMobile &&
             !isSidebarHidden &&
-            'width: 25%; min-width: 275px; height: fit-content'
-          "
+            'width: 25%; min-width: 275px; height: fit-content',
+            isMobile && !isSidebarHidden && 'max-height: 88vh',
+        ]"
         >
           <div class="w-full flex justify-between items-baseline">
             <h2
@@ -598,7 +631,7 @@
                 >
                   <!-- Main Image -->
                   <img
-                    :src="art.images[0]"
+                    :src="art.image"
                     :alt="art.title"
                     class="main-image w-full cursor-pointer transform scale-y-90 -mt-12 pb-4"
                   />
@@ -663,7 +696,7 @@
                   <!-- Art Title with Thumbnail and Back Button -->
                   <div class="p-4 pb-0 flex items-center space-x-4">
                     <img
-                      :src="art.images[0]"
+                      :src="art.image"
                       alt="Thumbnail"
                       class="w-10 h-10 object-cover rounded-lg shadow-sm"
                     />
@@ -792,7 +825,7 @@
     <!-- Checkout -->
     <Checkout
       v-if="selectedNavItem === 'checkout'"
-      :cartItems="cartItems"
+      :cart="cart"
       :isMobile="isMobile"
       @goTo="goTo"
     />
@@ -808,7 +841,7 @@
     <Orders
       v-if="selectedNavItem === 'orders'"
       :isMobile="isMobile"
-      :orders="cartItems"
+      :orders="cart"
     />
 
     <!-- Our Story -->
@@ -841,12 +874,12 @@
       :isMobile="isMobile"
       :variants="displayedArts[0].variants"
       :print_areas="displayedArts[0].print_areas"
+      :arts="arts"
     />
 
     <!-- Footer -->
-
     <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
-      <div class="container mx-auto px-4 pt-12 pb-6 space-y-8 md:space-y-0">
+      <div class="container mx-auto px-4 pt-12 pb-4 space-y-8 md:space-y-0">
         <!-- Top Row: Links and Newsletter -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
           <!-- About Us Section -->
@@ -977,7 +1010,7 @@ import TermsOfService from './TermsOfService.vue';
 import PrivacyPolicy from './PrivacyPolicy.vue';
 import Pricing from './Pricing.vue';
 import HowItWorks from './HowItWorks.vue';
-import Upload from './Upload.vue';
+import Upload from './Admin/Arts.vue';
 import service from '../service.js';
 import data from '../data.js';
 
@@ -999,9 +1032,6 @@ export default {
     Upload,
   },
   async mounted() {
-    let slideIndex = 0;
-    let arts = [];
-
     function showSlides() {
       let slides = document.getElementsByClassName('slide');
       for (let i = 0; i < slides.length; i++) {
@@ -1018,13 +1048,21 @@ export default {
       }
     }
 
-    if (import.meta.env.VITE_ENV === 'production') {
-      arts = await service.getProducts();
-    } else {
-      arts = data.arts;
-    }
+    let slideIndex = 0;
+    const notifications = await service.getNotifications();
+    const arts = await service.getProducts();
+    const cart = await service.getCart();
 
-    arts = arts.map((art) => ({
+    this.cart = cart;
+    this.notifications = notifications.map((notification) => {
+      const { created_at } = notification;
+      notification.created_at = new Date(created_at)
+        .toISOString()
+        .split('T')[0];
+
+      return notification;
+    });
+    this.arts = arts.map((art) => ({
       ...art,
       isAdded: false,
       flipped: false,
@@ -1034,20 +1072,8 @@ export default {
         time: '6-Months',
       },
     }));
-
-    arts.reduce((obj, { tags }) => {
-      tags.forEach((tag) => {
-        if (!obj[tag]) {
-          obj[tag] = 1;
-        }
-      });
-
-      return obj;
-    }, {});
-
-    this.arts = arts;
-    this.displayedArts = arts.slice(0, this.itemsToShow);
     this.randomArts = arts.sort(() => Math.random() - 0.5).slice(0, 5);
+    this.displayedArts = arts.slice(0, this.itemsToShow);
     this.categories = Object.keys(this.sidebar).map((category) => ({
       name: category,
       ...this.sidebar[category],
@@ -1066,6 +1092,9 @@ export default {
   },
   data() {
     return {
+      user: {
+        is_admin: true,
+      },
       arts: [],
       selectedNavItem: 'home',
       displayedArts: [],
@@ -1081,204 +1110,8 @@ export default {
       isLoggedIn: false, // Add this data property
       showDropdown: false,
       openModal: null,
-      notifications: [
-        {
-          id: 'n1',
-          message: 'Your order #123456789 has been confirmed',
-          type: 'order',
-          time: '1d',
-          dateOrder: 1,
-          read: false,
-        },
-        {
-          id: 'n2',
-          message: 'Your order #987654321 has been shipped',
-          type: 'order',
-          time: '2d',
-          dateOrder: 2,
-          read: false,
-        },
-        {
-          id: 'n3',
-          message: 'Your wall art is due for return',
-          type: 'reminder',
-          time: '2w',
-          dateOrder: 14,
-          read: false,
-        },
-        {
-          id: 'n4',
-          message: 'Shipping update for order #1122334455',
-          type: 'order',
-          time: '9/20',
-          dateOrder: 80,
-          read: false,
-        },
-        {
-          id: 'n5',
-          message: 'Monthly auto-pay reminder',
-          type: 'reminder',
-          time: '8/23',
-          dateOrder: 75,
-          read: true,
-        },
-        {
-          id: 'n6',
-          message: 'Your wall art is due for return',
-          type: 'reminder',
-          time: '8/05',
-          dateOrder: 21,
-          read: true,
-        },
-        {
-          id: 'n7',
-          message: 'Your order #3344556677 has been delivered',
-          type: 'order',
-          time: '7/30',
-          dateOrder: 70,
-          read: true,
-        },
-        {
-          id: 'n8',
-          message: 'Your subscription has been renewed',
-          type: 'reminder',
-          time: '7/15',
-          dateOrder: 55,
-          read: true,
-        },
-        {
-          id: 'n9',
-          message: 'Your order #1213141516 is on its way',
-          type: 'order',
-          time: '7/10',
-          dateOrder: 50,
-          read: true,
-        },
-        {
-          id: 'n10',
-          message: 'Return window for order #1213141516 closing soon',
-          type: 'reminder',
-          time: '7/05',
-          dateOrder: 45,
-          read: true,
-        },
-        {
-          id: 'n11',
-          message: 'Payment confirmation for order #1718192021',
-          type: 'order',
-          time: '6/15',
-          dateOrder: 30,
-          read: true,
-        },
-        {
-          id: 'n12',
-          message: 'Auto-pay reminder for your subscription',
-          type: 'reminder',
-          time: '6/10',
-          dateOrder: 25,
-          read: true,
-        },
-        {
-          id: 'n13',
-          message: 'Your order #2223242526 has been canceled',
-          type: 'order',
-          time: '6/05',
-          dateOrder: 20,
-          read: true,
-        },
-        {
-          id: 'n14',
-          message: 'Payment failed for order #2627282920',
-          type: 'order',
-          time: '5/30',
-          dateOrder: 15,
-          read: true,
-        },
-        {
-          id: 'n15',
-          message: 'Subscription expiration reminder',
-          type: 'reminder',
-          time: '5/15',
-          dateOrder: 10,
-          read: true,
-        },
-        {
-          id: 'n16',
-          message: 'Your order #3031323334 has been confirmed',
-          type: 'order',
-          time: '5/10',
-          dateOrder: 5,
-          read: true,
-        },
-      ],
-      cartItems: [
-        {
-          id: '1234567890',
-          name: 'Wall Art - Nature',
-          cost: 19.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?art',
-          material: 'Poster',
-          size: 'Small',
-          dimensions: '8"x10"',
-          quantity: 1,
-          duration: '3-Months',
-        },
-        {
-          id: '2345678901',
-          name: 'Wall Art - Abstract',
-          cost: 24.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?painting',
-          material: 'Canvas',
-          size: 'Medium',
-          dimensions: '16"x20"',
-          quantity: 2,
-          duration: '6-Months',
-        },
-        {
-          id: '3456789012',
-          name: 'Wall Art - Modern',
-          cost: 21.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?sculpture',
-          material: 'Poster',
-          size: 'Large',
-          dimensions: '24"x36"',
-          quantity: 1,
-          duration: '3-Months',
-        },
-        {
-          id: '4567890123',
-          name: 'Wall Art - Parenting',
-          cost: 19.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?parents',
-          material: 'Poster',
-          size: 'Small',
-          dimensions: '8"x10"',
-          quantity: 1,
-          duration: '3-Months',
-        },
-        {
-          id: '5678901234',
-          name: 'Wall Art - Puerto Rico',
-          cost: 24.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?puertorico',
-          material: 'Canvas',
-          size: 'Medium',
-          dimensions: '16"x20"',
-          quantity: 2,
-          duration: '6-Months',
-        },
-        {
-          id: '6789012345',
-          name: 'Wall Art - Culture',
-          cost: 21.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?culture',
-          material: 'Poster',
-          size: 'Large',
-          dimensions: '24"x36"',
-          quantity: 1,
-          duration: '3-Months',
-        },
-      ],
+      notifications: [],
+      cart: [],
       sidebar: {
         Popular: { icon: 'star', color: 'blue' },
         New: { icon: 'new_releases', color: 'green' },
@@ -1293,6 +1126,42 @@ export default {
         Jibaro: { icon: 'music_note', color: 'green' },
         'Puerto Rico': { icon: 'beach_access', color: 'yellow' },
         'Tropical Paradise': { icon: 'umbrella', color: 'blue' },
+      },
+      dimensions: {
+        Small: '14" x 11"',
+        Medium: '24" x 18"',
+        Square: '24" x 24"',
+        Large: '40" x 30"',
+      },
+      cost: {
+        New: {
+          3: {
+            Small: 15,
+            Medium: 25,
+            Square: 30,
+            Large: 55,
+          },
+          6: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+        },
+        'Pre-Rented': {
+          3: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+          6: {
+            Small: 10,
+            Medium: 10,
+            Square: 15,
+            Large: 20,
+          },
+        },
       },
       isMobile: false,
       showNavSidebar: false,
@@ -1309,8 +1178,12 @@ export default {
       return data.faq;
     },
     subtotal() {
-      return this.cartItems
-        .reduce((acc, item) => acc + item.cost, 0)
+      return this.cart.arts
+        .reduce(
+          (acc, item) =>
+            acc + this.cost[item.category][item.duration][item.size] * item.quantity,
+          0
+        )
         .toFixed(2);
     },
   },
@@ -1399,9 +1272,7 @@ export default {
         this.openModal = null;
       }, 1000);
       this.notifications = this.notifications.map((notification) => {
-        if (!notification.read) {
-          notification.read = true;
-        }
+        notification.is_read = true;
 
         return notification;
       });
@@ -1425,23 +1296,11 @@ export default {
       this.selectedNavItem = 'home';
     },
     addToCart(art) {
-      const { id, title, selected } = art;
-      const { material, size, time } = selected;
-      const price = cost * (time === '3-Months' ? 1 : 2);
-
-      this.cartItems.push({
-        id,
-        name: title,
-        cost,
-        thumbnail: art.images[0],
-        material,
-        size,
-        dimensions: '16"x20"',
-        quantity: 1,
-        duration: time,
-      });
-
-      this.selectedNavItem = 'checkout';
+      this.cart.arts.push(art);
+    },
+    editWallArt(art) {
+      this.selectedArt = art;
+      this.selectedNavItem = 'upload';
     },
   },
   watch: {

@@ -29,7 +29,7 @@
             style="max-height: 500px"
           >
             <img
-              v-if="mainImage === carouselImages[0]"
+              v-if="mainImage === selectedArt.image"
               :src="mainImage"
               alt="Main Art Image"
               class="rounded-lg object-fill shadow-md transition-transform duration-300 w-full transform md:scale-y-150"
@@ -38,7 +38,7 @@
               v-else
               type="wall"
               subtype="main"
-              :src="carouselImages[2]"
+              :src="mainImage"
               :selectedSize="selectedSize"
             />
           </div>
@@ -49,22 +49,22 @@
           class="hidden md:flex flex-col justify-center space-y-4 bg-white z-10"
         >
           <img
-            :src="carouselImages[0]"
+            :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(carouselImages[0])"
+            @click="setMainImage(mainImage)"
             class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
           />
           <img
-            :src="carouselImages[1]"
+            :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(carouselImages[1])"
+            @click="setMainImage(mainImage)"
             class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
           />
           <Image
             class="w-36 h-36"
             type="wall"
             subtype="thumbnail"
-            :src="carouselImages[0]"
+            :src="mainImage"
             :selectedSize="selectedSize"
             @select-image="setMainImage"
           />
@@ -75,21 +75,21 @@
           class="flex justify-between space-x-4 md:hidden overflow-x-scroll mx-auto bg-white absolute bottom-0"
         >
           <img
-            :src="carouselImages[0]"
+            :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(carouselImages[0])"
+            @click="setMainImage(mainImage)"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <img
-            :src="carouselImages[1]"
+            :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(carouselImages[1])"
+            @click="setMainImage(mainImage)"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <Image
             type="wall"
             subtype="thumbnail"
-            :src="carouselImages[0]"
+            :src="mainImage"
             :selectedSize="selectedSize"
             @select-image="setMainImage"
           />
@@ -103,10 +103,10 @@
     >
       <!-- Title and Description -->
       <h2 class="text-2xl md:text-4xl text-gray-700 font-bold mb-4">
-        {{ wallArt.title }}
+        {{ selectedArt.title }}
       </h2>
       <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-        {{ wallArt.description }}
+        {{ selectedArt.description }}
       </p>
 
       <!-- Filtering Options -->
@@ -174,7 +174,7 @@
                 'px-4 py-2.5 rounded-full transition-colors duration-300 hover:bg-gray-300',
               ]"
             >
-              {{ duration }}
+              {{ duration }}-Months
             </button>
           </div>
         </div>
@@ -201,7 +201,7 @@
 
         <!-- Add to Cart Button -->
         <button
-          @click="$emit('add-to-cart', wallArt)"
+          @click="addToCart(selectedArt)"
           class="mr-12 md:ml-48 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150"
         >
           <i class="fas fa-shopping-cart mr-2"></i>
@@ -258,45 +258,17 @@ export default {
   },
   data() {
     return {
-      mainImage: this.selectedArt.images[0],
-      wallArt: {
-        title: this.selectedArt.title,
-        description:
-          'This is a beautiful AI generated art. It brings vibrant colors and intriguing patterns to your living space.',
-      },
+      mainImage: this.selectedArt.image,
       sizes: ['Small', 'Medium', 'Square', 'Large'],
       selectedSize: 'Medium',
       categories: ['New', 'Pre-Rented'],
       selectedCategory: 'New',
-      durations: ['3-Months', '6-Months'],
-      selectedDuration: '6-Months',
+      durations: [3, 6],
+      selectedDuration: 6,
       approximateCost: 150.0,
       showModal: false,
       selectedImage: 0,
     };
-  },
-  computed: {
-    carouselImages() {
-      const options = {
-        Canvas: {
-          Small: [0, 1, 3],
-          Medium: [0, 7, 10],
-          Square: [20, 21, 24],
-          Large: [0, 14, 17],
-        },
-        Posters: {
-          Small: [],
-          Medium: [],
-          Square: [],
-          Large: [],
-        },
-      };
-
-      return this.selectedArt.images;
-      return this.selectedArt.images.filter((_, index) =>
-        options[this.selectedCategory][this.selectedSize].includes(index)
-      );
-    },
   },
   methods: {
     toggleExpand() {
@@ -321,6 +293,14 @@ export default {
     setMainImage(imageSrc) {
       this.mainImage = imageSrc;
     },
+    addToCart(art) {
+      this.$emit('add-to-cart', {
+        ...art,
+        size: this.selectedSize,
+        category: this.selectedCategory,
+        duration: this.selectedDuration,
+      });
+    }
   },
 };
 </script>

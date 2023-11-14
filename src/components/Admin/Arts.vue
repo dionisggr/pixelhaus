@@ -1,16 +1,25 @@
 <template>
   <div
-    class="container mx-auto px-4 sm:px-6 py-8"
+    class="container mx-auto px-4 sm:px-6 py-8 mt-4"
     :class="{ 'mb-20': isMobile }"
+    style="min-height: calc(100vh - 23rem)"
   >
+
     <div class="text-center mb-8 sm:mb-10">
-      <h1 class="text-4xl sm:text-4xl lg:text-5xl font-semibold mb-4">
-        Upload New Art
-      </h1>
-      <p class="text-gray-700 text-lg">
-        Upload multiple artworks at once and provide their details.
-      </p>
-    </div>
+  <div class="flex justify-center items-center">
+    <h1 class="text-4xl font-semibold mb-4">
+      <span @click="selectedMethod = 'upload'" class="cursor-pointer hover:text-blue-600" :class="{'text-blue-600': selectedMethod === 'upload'}">Upload</span>
+      <span class="mx-2">|</span>
+      <span @click="selectedMethod = 'edit'" class="cursor-pointer hover:text-green-600" :class="{'text-green-600': selectedMethod === 'edit'}">Edit</span>
+    </h1>
+  </div>
+  <p class="text-gray-700 text-lg">
+    {{ selectedMethod === 'upload' ? 'Upload multiple artworks at once and provide their details.' : 'Edit your existing artworks.' }}
+  </p>
+</div>
+
+
+
 
     <input
       ref="fileInput"
@@ -22,16 +31,16 @@
     />
 
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"
     >
       <div
-        v-for="(image, index) in images"
+        v-for="(image, index) in images[selectedMethod]"
         :key="index"
-        class="relative group p-4 border rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-1 hover:bg-gray-100"
+        class="min-w-fit relative group p-4 border rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-1 hover:bg-gray-100"
       >
         <button
           @click="triggerRemove(index)"
-          class="hidden group-hover:block absolute top-2 right-2 bg-red-700 text-white p-1 rounded-full transition duration-300 ease-in-out hover:bg-red-800"
+          class=" absolute top-2 right-0 bg-red-600 text-sm px-2.5 py-1 text-white p-1 rounded-full transition duration-300 ease-in-out hover:bg-red-800"
         >
           <i class="fas fa-times"></i>
         </button>
@@ -40,40 +49,55 @@
           alt="Preview"
           class="w-full rounded-lg mb-4 shadow-inner group-hover:shadow-md transition duration-300 ease-in-out group-hover:scale-105"
         />
-
         <input
           v-model="image.title"
           placeholder="Title"
           class="w-full p-2 mb-2 rounded-lg bg-gray-200 hover:bg-white focus:bg-white border border-transparent focus:border-blue-500 transition duration-300 ease-in-out pl-4 shadow-sm focus:shadow-md"
         />
-        <input
+        <textarea
           v-model="image.description"
           placeholder="Description"
-          class="w-full p-2 mb-2 rounded-lg bg-gray-200 hover:bg-white focus:bg-white border border-transparent focus:border-blue-500 transition duration-300 ease-in-out pl-4 shadow-sm focus:shadow-md"
-        />
+          class="w-full p-2 mb-2 rounded-lg bg-gray-200 hover:bg-white focus:bg-white border border-transparent focus:border-blue-500 transition duration-300 ease-in-out pl-4 shadow-sm focus:shadow-md h-24 resize-none"
+        ></textarea>
 
-        <!-- Tags section -->
-        <div
-          class="flex items-center mb-2 space-x-2"
-          v-for="(tag, tagIndex) in image.tags"
-          :key="tagIndex"
-        >
-          <input
-            v-model="tag.value"
-            @input="tag.value = tag.value.trim()"
-            placeholder="Tag"
-            class="tag-input bg-gray-200 hover:bg-blue-300 focus:bg-blue-300 text-sm px-3 py-1 rounded-full border-0 focus:ring-2 focus:ring-blue-600"
-          />
+        <!-- Sizes Toggle Buttons -->
+        <div class="flex gap-1 mb-2 justify-center py-2 pb-4">
           <button
-            @click="removeTag(index, tagIndex)"
-            class="text-red-700 hover:text-red-800 text-xs"
+            v-for="(size, sizeIndex) in image.sizes"
+            :key="sizeIndex"
+            :class="{
+              'bg-blue-500 text-white': size.selected,
+              'bg-gray-200 text-gray-800': !size.selected,
+            }"
+            class="rounded-full p-1.5 px-6 focus:outline-none transition duration-300 ease-in-out"
+            @click="toggleSize(index, sizeIndex)"
           >
-            <i class="fas fa-times"></i>
+            {{ size.size }}
           </button>
+        </div>
+
+        <!-- Updated Tags Section -->
+        <div class="tags-container">
+          <div class="flex gap-2 mb-2 flex-wrap">
+            <span
+              v-for="(tag, tagIndex) in image.tags"
+              :key="tagIndex"
+              class="flex items-center bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-3 py-1 rounded-xl dark:bg-blue-200 dark:text-blue-800"
+            >
+              {{ tag }}
+              <button
+                @click="removeTag(index, tagIndex)"
+                class="ml-2 text-red-700 hover:text-red-800"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </span>
+          </div>
         </div>
         <div class="flex items-center">
           <input
-            v-model="newTag"
+            v-model="image.newTag"
+            @keyup.enter="addTag(index)"
             placeholder="Add Tag"
             class="flex-grow mr-2 bg-transparent focus:outline-none placeholder-gray-500 text-xs border-b-2 border-gray-300 focus:border-blue-500"
           />
@@ -92,15 +116,15 @@
         @click="openUploadWizard"
         class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
-        Upload Art
+        Upload
       </button>
       <button
         @click="publish"
-        @mouseenter="showTooltip = !images.length"
+        @mouseenter="showTooltip = !images.upload.length"
         @mouseleave="showTooltip = false"
         class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-        :class="{ 'opacity-50 cursor-not-allowed': !images.length }"
-        :disabled="!images.length"
+        :class="{ 'opacity-50 cursor-not-allowed': !images.upload.length }"
+        :disabled="!images.upload.length"
       >
         Publish
       </button>
@@ -142,7 +166,7 @@
 </template>
 
 <script>
-import service from '../service';
+import service from '../../service';
 
 export default {
   props: {
@@ -150,88 +174,83 @@ export default {
       type: Boolean,
       default: false,
     },
-    variants: {
+    arts: {
       type: Array,
-      default: () => [],
+      default: [],
     },
-    print_areas: {
-      type: Array,
-      default: () => [],
-    },
+  },
+  mounted() {
+    console.log(this.arts)
+    this.images.edit = this.arts.map((art) => {
+      return {
+        src: art.image,
+        title: art.title,
+        description: art.description,
+        tags: art.tags,
+        sizes: [
+          { size: 'S', selected: art.has_small },
+          { size: 'M', selected: art.has_medium },
+          { size: 'Sq', selected: art.has_square },
+          { size: 'L', selected: art.has_large },
+        ],
+      };
+    });
   },
   data() {
     return {
-      images: [],
+      selectedMethod: 'upload',
+      images: {
+        upload: [],
+        edit: [],
+      },
       showModal: false, // To control the visibility of the modal
       removeIndex: null,
       showTooltip: false, // To control the visibility of the tooltip
+      newTag: '', // To store new tag input
     };
   },
   methods: {
     previewFiles() {
       const input = this.$refs.fileInput;
-
       if (input.files) {
         Array.from(input.files).forEach((file) => {
           const reader = new FileReader();
           reader.onload = (e) => {
-            this.images.push({
+            this.images.upload.push({
               src: e.target.result,
               title: '',
               description: '',
-              tags: [{ value: 'New' }], // Initialize with a single empty tag
+              tags: ['New'],
+              newTag: '',
+              sizes: [
+                { size: 'S', selected: true },
+                { size: 'M', selected: true },
+                { size: 'Sq', selected: true }, // Added 'Square' size
+                { size: 'L', selected: true },
+              ],
             });
           };
+
           reader.readAsDataURL(file);
         });
       }
     },
     removeImage(index) {
-      this.images.splice(index, 1);
+      this.images[selectedMethod].splice(index, 1);
     },
     openUploadWizard() {
       this.$refs.fileInput.click();
     },
     async publish() {
       if (import.meta.env.VITE_ENV !== 'production') return;
-
-      for (let i = 0; i < this.images.length; i++) {
-        const { src, title, description } = this.images[i];
-
-        // const { id: imageId } = await service.uploadImage({
-        //   file_name: 'dio-test.png',
-        //   contents: src.replace('data:image/png;base64,', ''),
-        // });
-        const product = {
-          title,
-          description,
-          print_provider_id: 2,
-          variants: this.variants,
-          print_areas: this.print_areas,
-          position: 'front',
-          images: [
-            {
-              id: '6539816f57384b4993d34d7c',
-              x: 0.5,
-              y: 0.5,
-              scale: 1,
-              is_default: true,
-              position: 'front',
-              angle: 180,
-            },
-          ],
-        };
-
-        await service.createProduct({ ...product, blueprint_id: 50 });
-        // await service.createProduct({ ...product, blueprint_id: 282 });
-      }
+      // ... rest of the publishing logic
     },
     triggerRemove(index) {
       this.removeIndex = index;
       this.showModal = true;
     },
     confirmRemove() {
-      this.images.splice(this.removeIndex, 1);
+      this.removeImage(this.removeIndex);
       this.showModal = false;
       this.removeIndex = null;
     },
@@ -240,16 +259,26 @@ export default {
       this.removeIndex = null;
     },
     addTag(imageIndex) {
-      this.images[imageIndex].tags.push({ value: '' });
+      let tagValue = this.images[imageIndex].newTag.trim();
+      if (tagValue !== '') {
+        this.images[imageIndex].tags.unshift({ value: tagValue });
+        this.images[imageIndex].newTag = ''; // Clear the input after adding the tag
+      }
     },
-
     removeTag(imageIndex, tagIndex) {
       this.images[imageIndex].tags.splice(tagIndex, 1);
+    },
+    toggleSize(imageIndex, sizeIndex) {
+      this.images[imageIndex].sizes[sizeIndex].selected =
+        !this.images[imageIndex].sizes[sizeIndex].selected;
     },
   },
 };
 </script>
 
 <style scoped>
-/* You can add more styling with TailwindCSS or pure CSS here if needed */
+.tags-container {
+  height: 4rem; /* Adjust the height as needed (approx. 2 lines) */
+  overflow-y: auto; /* Enables scrolling */
+}
 </style>

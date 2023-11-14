@@ -66,7 +66,7 @@
                 :class="index % 2 ? 'bg-gray-100' : ''"
               >
                 <td
-                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium w-24 text-sm text-center"
+                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium min-w-fit text-sm text-center"
                 >
                   {{ item.size }}
                 </td>

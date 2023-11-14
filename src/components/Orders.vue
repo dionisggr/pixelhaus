@@ -1,28 +1,37 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-100 py-8">
+  <div class="min-w-screen min-h-screen max-w-6xl mx-auto bg-gray-100 py-12">
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
-        <h1 class="text-3xl sm:text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-            My Orders
-        </h1>
-        <div class="mt-2 flex justify-center text-gray-500">
-            <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a>
-            <span class="mx-2">/</span>
-            <span class="text-gray-700">My Orders</span>
-        </div>
+      <h1
+        class="text-3xl sm:text-3xl md:text-4xl font-extrabold text-gray-700 text-center"
+      >
+        My Orders
+      </h1>
+      <div class="mt-2 flex justify-start text-gray-500">
+        <a
+          href="#"
+          class="hover:underline text-gray-500"
+          @click="$emit('goTo', 'home')"
+          >Home</a
+        >
+        <span class="mx-2">/</span>
+        <span class="text-gray-700">My Orders</span>
+      </div>
     </div>
 
-    <div class="p-6 mx-auto w-full md:w-11/12 lg:w-9/12">
-      <!-- Main Content -->
+    <!-- Orders -->
+    <div class="p-6 mx-auto w-full md:w-11/12">
       <div class="mx-auto w-full md:w-3/4">
         <div v-if="orders.length === 0" class="text-center py-20">
-          <p class="text-xl md:text-2xl font-semibold text-gray-500">No Orders Yet</p>
+          <p class="text-xl md:text-2xl font-semibold text-gray-500">
+            No Orders Yet
+          </p>
         </div>
         <div v-else>
           <div
-            v-for="item in orders"
-            :key="item.id"
-            @click="item.showTimeline = !item.showTimeline"
+            v-for="order in orders"
+            :key="order.id"
+            @click="order.showTimeline = !order.showTimeline"
             class="flex flex-col space-y-4 mb-6 bg-white p-6 rounded-lg hover:bg-gray-50 transition shadow-lg cursor-pointer w-full"
           >
             <div class="flex items-center space-x-4">
@@ -30,74 +39,114 @@
               <div class="flex-grow">
                 <div class="flex justify-between items-center">
                   <span class="block lg:text-lg font-semibold text-gray-700">
-                    Order #{{ item.id }}
+                    Order #{{ order.id }}
                   </span>
                   <span
                     :class="[
                       'px-2 py-1 rounded-full text-xs font-semibold',
-                      item.deliveredDate
+                      order.shipping.delivered
                         ? 'bg-green-200 text-green-700'
                         : 'bg-yellow-200 text-yellow-700',
                     ]"
                   >
-                    {{ item.deliveredDate ? 'Delivered' : 'In Transit' }}
+                    {{ orderStatus(order) }}
                   </span>
                 </div>
               </div>
             </div>
             <div class="border-t border-gray-300 pt-4">
               <div>
-                <div class="flex items-center space-x-4 mb-6">
+                <div
+                  v-for="orderArt in order.arts"
+                  class="flex items-center space-x-4 mb-6 relative"
+                >
                   <div class="relative">
                     <img
-                      :src="item.thumbnail"
-                      alt="thumbnail"
+                      :src="orderArt.image"
+                      alt="image"
                       class="w-12 h-12 object-cover rounded"
                     />
                     <!-- Badge for Quantity -->
                     <span
                       class="absolute bottom-0 right-0 bg-blue-500 text-white text-xs rounded-full px-1"
                     >
-                      {{ item.quantity > 1 ? 'x' + item.quantity : '' }}
+                      {{ orderArt.quantity > 1 ? 'x' + orderArt.quantity : '' }}
                     </span>
                   </div>
                   <div>
-                    <span class="font-medium">{{ item.name }}</span>
+                    <span class="font-medium">{{ orderArt.title }}</span>
                     <div class="flex flex-col text-sm text-gray-500">
-                      <span>{{ item.material }}, {{ item.size }}</span>
-                      <span>{{ item.dimensions }}</span>
+                      <span
+                        >{{ orderArt.category }}, {{ orderArt.size }} ({{
+                          dimensions[orderArt.size]
+                        }})</span
+                      >
+                      <span>{{ orderArt.duration }}-Months</span>
                     </div>
+                  </div>
+
+                  <!-- Art Cost -->
+                  <div class="absolute right-9 ml-auto">
+                    <span class="font-medium text-gray-800">
+                      ${{ calculateArtCost(orderArt)?.toFixed(2) }}
+                    </span>
                   </div>
                 </div>
               </div>
-              <div v-if="item.showTimeline" class="space-y-4 mt-4">
+
+              <!-- Display total cost for the order -->
+              <div class="mt-4 text-right mr-8">
+                <span class="text-lg font-semibold text-gray-800">
+                  Total: ${{ totalOrderCost(order)?.toFixed(2) }}
+                </span>
+              </div>
+
+              <!-- Shipping Info -->
+              <div v-if="order.showTimeline" class="space-y-4 mt-4">
+                <!-- Shipping Updates Title -->
                 <div
-                  v-for="(update, index) in item.shippingUpdates"
-                  :key="index"
-                  class="flex items-center"
+                  class="text-lg font-bold text-gray-700 mb-2 text-center uppercase"
                 >
-                  <div
-                    :class="`w-2 h-2 rounded-full mt-1 ${
-                      !item.deliveredDate &&
-                      index === item.shippingUpdates.length - 1
-                        ? 'bg-yellow-400'
-                        : 'bg-green-500'
-                    }`"
-                  ></div>
-                  <div class="ml-4">
-                    <div class="text-sm font-semibold">
-                      {{ update.status }}
+                  Shipping Updates
+                </div>
+
+                <!-- Shipping Info Details -->
+                <div class="flex flex-col items-start ml-8">
+                  <!-- Order Confirmed -->
+                  <div class="flex mb-2">
+                    <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500"></div>
+                    <div class="ml-4">
+                      <div class="text-sm font-semibold">Order Confirmed</div>
+                      <div class="text-xs text-gray-500">
+                        {{ formatDate(order.shipping.confirmed) }}
+                      </div>
                     </div>
-                    <div class="text-xs text-gray-500">
-                      {{ formatDate(update.date) }} at
-                      {{ formatTime(update.time) }}
+                  </div>
+                  <!-- In Transit -->
+                  <div class="flex mb-2">
+                    <div class="w-2 h-2 mt-1.5 rounded-full bg-yellow-400"></div>
+                    <div class="ml-4">
+                      <div class="font-semibold text-sm">In Transit</div>
+                      <div class="text-xs text-gray-500">
+                        {{ formatDate(order.shipping.in_transit) }}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Delivered -->
+                  <div class="flex mb-2">
+                    <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500"></div>
+                    <div class="ml-4">
+                      <div class="font-semibold text-sm">Delivered</div>
+                      <div class="text-xs text-gray-500">
+                        {{ formatDate(order.shipping.delivered) }}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- Subtle Hint Section -->
-              <div v-else class="flex justify-end">
+              <div v-else class="flex">
                 <span class="text-xs text-gray-400 italic"
                   >+ {{ isMobile ? 'Tap' : 'Click' }} for shipping info</span
                 >
@@ -112,6 +161,7 @@
 
 <script>
 import dayjs from 'dayjs';
+import service from '../service.js';
 
 export default {
   props: {
@@ -120,104 +170,50 @@ export default {
       default: false,
     },
   },
+  async mounted() {
+    this.orders = await service.getOrders();
+
+    console.log(this.orders);
+  },
   data() {
     return {
-      orders: [
-        {
-          id: '1234567890',
-          name: 'Wall Art - Nature',
-          cost: 19.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?art',
-          material: 'Poster',
-          size: 'Small',
-          dimensions: '8"x10"',
-          quantity: 1,
-          shippingUpdates: [
-            { status: 'Order Received', date: '2023-09-24', time: '15:23' },
-            { status: 'Preparing', date: '2023-09-25', time: '10:43' },
-            { status: 'In Transit', date: '2023-09-26', time: '12:30' },
-          ],
+      orders: [],
+      dimensions: {
+        Small: '14" x 11"',
+        Medium: '24" x 18"',
+        Square: '24" x 24"',
+        Large: '40" x 30"',
+      },
+      cost: {
+        New: {
+          3: {
+            Small: 15,
+            Medium: 25,
+            Square: 30,
+            Large: 55,
+          },
+          6: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
         },
-        {
-          id: '2345678901',
-          name: 'Wall Art - Abstract',
-          cost: 24.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?painting',
-          material: 'Canvas',
-          size: 'Medium',
-          dimensions: '16"x20"',
-          quantity: 2,
-          deliveredDate: '2023-09-28',
-          shippingUpdates: [
-            { status: 'Order Received', date: '2023-09-24', time: '08:30' },
-            { status: 'Preparing', date: '2023-09-25', time: '11:45' },
-            { status: 'In Transit', date: '2023-09-26', time: '13:15' },
-            { status: 'Delivered', date: '2023-09-28', time: '14:55' },
-          ],
+        'Pre-Rented': {
+          3: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+          6: {
+            Small: 10,
+            Medium: 10,
+            Square: 15,
+            Large: 20,
+          },
         },
-        {
-          id: '3456789012',
-          name: 'Wall Art - Modern',
-          cost: 21.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?sculpture',
-          material: 'Poster',
-          size: 'Large',
-          dimensions: '24"x36"',
-          quantity: 1,
-          deliveredDate: '2023-09-28',
-          shippingUpdates: [
-            { status: 'Order Received', date: '2023-09-24', time: '09:20' },
-            { status: 'Preparing', date: '2023-09-25', time: '10:50' },
-            { status: 'In Transit', date: '2023-09-26', time: '14:00' },
-            { status: 'Delivered', date: '2023-09-28', time: '16:05' },
-          ],
-        },
-        {
-          id: '4567890123',
-          name: 'Wall Art - Parenting',
-          cost: 19.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?parents',
-          material: 'Poster',
-          size: 'Small',
-          dimensions: '8"x10"',
-          quantity: 1,
-          deliveredDate: '2023-09-28',
-          shippingUpdates: [
-            { status: 'Order Received', date: '2023-09-24', time: '09:15' },
-            { status: 'Preparing', date: '2023-09-25', time: '11:20' },
-            { status: 'In Transit', date: '2023-09-26', time: '12:45' },
-            { status: 'Delivered', date: '2023-09-28', time: '14:00' },
-          ],
-        },
-        {
-          id: '5678901234',
-          name: 'Wall Art - Puerto Rico',
-          cost: 24.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?puertorico',
-          material: 'Canvas',
-          size: 'Medium',
-          dimensions: '16"x20"',
-          quantity: 2,
-          deliveredDate: '2023-09-28',
-          shippingUpdates: [
-            { status: 'Order Received', date: '2023-09-24', time: '10:30' },
-            { status: 'Preparing', date: '2023-09-25', time: '12:40' },
-            { status: 'In Transit', date: '2023-09-26', time: '14:10' },
-            { status: 'Delivered', date: '2023-09-28', time: '15:30' },
-          ],
-        },
-        {
-          id: '6789012345',
-          name: 'Wall Art - Culture',
-          cost: 21.99,
-          thumbnail: 'https://source.unsplash.com/random/50x50?culture',
-          material: 'Poster',
-          size: 'Large',
-          dimensions: '24"x36"',
-          quantity: 1,
-          deliveredDate: '2023-09-28',
-        },
-      ],
+      },
       shippingUpdates: [
         { status: 'Order Received', date: '2023-09-24', time: '11:05' },
         { status: 'Preparing', date: '2023-09-25', time: '13:25' },
@@ -225,6 +221,15 @@ export default {
         { status: 'Delivered', date: '2023-09-28', time: '17:20' },
       ],
     };
+  },
+  computed: {
+    totalOrderCost() {
+      return (order) => {
+        return order.arts.reduce((total, art) => {
+          return total + this.calculateArtCost(art);
+        }, 0);
+      };
+    },
   },
   methods: {
     formatTime(time) {
@@ -234,8 +239,32 @@ export default {
         .format('h:mm A');
     },
     formatDate(date) {
-    return dayjs(date).format('MMM D, YYYY');
-  },
+      return dayjs(date).format('MMM D, YYYY');
+    },
+    orderStatus(order) {
+      let status;
+
+      console.log(order);
+
+      if (order.shipping.confirmed) {
+        status = 'Confirmed';
+      }
+
+      if (order.shipping.in_transit) {
+        status = 'In Transit';
+      }
+
+      if (order.shipping.delivered) {
+        status = 'Delivered';
+      }
+
+      return status;
+    },
+    calculateArtCost(orderArt) {
+      const artCost =
+        this.cost[orderArt.category][orderArt.duration][orderArt.size];
+      return artCost * orderArt.quantity;
+    },
   },
 };
 </script>

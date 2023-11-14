@@ -37,14 +37,14 @@
             <span>Cart Items</span>
           </h2>
           <div
-            v-for="item in cartItems"
-            :key="item.id"
+            v-for="item in cart.arts"
+            :key="item.cart_id"
             class="mb-6 border-b-2 border-gray-200 pb-4"
           >
             <div class="flex items-center">
               <div class="relative">
                 <img
-                  :src="item.thumbnail"
+                  :src="item.image"
                   alt="item.name"
                   class="w-24 h-24 object-cover rounded-md shadow"
                 />
@@ -55,12 +55,12 @@
                 </span>
               </div>
               <div class="ml-4 flex-1">
-                <h6 class="font-semibold text-gray-700">{{ item.name }}</h6>
+                <h6 class="font-semibold text-gray-700">{{ item.title }}</h6>
                 <p class="text-gray-500">
-                  {{ item.material }}, {{ item.size }} ({{ item.dimensions }})
+                  {{ item.category }}, {{ item.size }} ({{ dimensions[item.size] }})
                 </p>
                 <span class="font-semibold text-gray-700 text-lg"
-                  >${{ item.cost.toFixed(2) }}</span
+                  >${{ (cost[item.category][item.duration][item.size] * item.quantity)?.toFixed(2) }}</span
                 >
               </div>
             </div>
@@ -385,9 +385,11 @@
 </template>
 
 <script>
+import service from '../service.js';
+
 export default {
   props: {
-    cartItems: {
+    cart: {
       type: Array,
       required: true,
     },
@@ -408,6 +410,42 @@ export default {
       discountCode: '',
       shippingSpeed: 'standard',
       paymentMethod: 'card',
+      dimensions: {
+        Small: '14" x 11"',
+        Medium: '24" x 18"',
+        Square: '24" x 24"',
+        Large: '40" x 30"',
+      },
+      cost: {
+        New: {
+          3: {
+            Small: 15,
+            Medium: 25,
+            Square: 30,
+            Large: 55,
+          },
+          6: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+        },
+        'Pre-Rented': {
+          3: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+          6: {
+            Small: 10,
+            Medium: 10,
+            Square: 15,
+            Large: 20,
+          },
+        },
+      },
       shippingCosts: {
         standard: 5.0,
         express: 10.0,
@@ -417,10 +455,12 @@ export default {
   },
   computed: {
     subtotal() {
-      return this.cartItems.reduce(
-        (acc, item) => acc + item.cost * item.quantity,
-        0
-      );
+      return this.cart.arts
+        .reduce(
+          (acc, item) =>
+            acc + this.cost[item.category][item.duration][item.size] * item.quantity,
+          0
+        )
     },
     taxes() {
       return this.subtotal * 0.1; // Assuming a GST of 10%

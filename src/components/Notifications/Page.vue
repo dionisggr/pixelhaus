@@ -46,7 +46,7 @@
       <div
         class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
       >
-        <div class="flex space-x-4" :class="{'py-2': isMobile}">
+        <div class="flex space-x-4" :class="{ 'py-2': isMobile }">
           <button
             class="text-sm px-6 py-2 rounded-full transition duration-300 ease-in-out"
             :class="{
@@ -88,21 +88,22 @@
     </button>
 
     <!-- Main Content -->
-    
+
     <div class="p-6 w-full md:w-4/5 mx-auto">
-          <!-- Informative Message -->
-    <div 
-      class="px-4 py-1 mb-3 w-3/4 mx-auto text-xs text-center bg-blue-100 text-blue-500 rounded-lg shadow-md"
-      v-if="isMobile"
-    >
-      Tap each for more information.
-    </div>
-    <div 
-      class="px-4 py-2 mb-4 text-center bg-blue-200 text-blue-700 rounded-lg shadow-md"
-      v-else
-    >
-      Click each for more information.
-    </div>
+      <!-- Informative Message -->
+      <div
+        class="px-4 py-1 mb-3 w-3/4 mx-auto text-xs text-center bg-blue-100 text-blue-500 rounded-lg shadow-md"
+        v-if="isMobile"
+      >
+        Tap each for more information.
+      </div>
+      <div
+        class="px-4 py-2 mb-4 text-center bg-blue-100 text-blue-700 rounded-lg shadow-md ml-auto mr-4"
+        style="width: fit-content"
+        v-else
+      >
+        Click each for more information.
+      </div>
       <div v-if="notifications.length === 0" class="text-center py-20">
         <p class="text-2xl font-semibold text-gray-500">No Notifications Yet</p>
       </div>
@@ -116,7 +117,7 @@
           :class="{
             'border-l-4 border-blue-400': notification.type === 'order',
             'border-l-4 border-yellow-400': notification.type === 'reminder',
-            'bg-yellow-50': !notification.read,
+            'bg-yellow-50': !notification.is_read,
           }"
         >
           <div class="flex items-center space-x-4">
@@ -129,12 +130,15 @@
                 <span
                   class="bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold text-gray-700"
                 >
-                  {{ notification.time }}
+                  {{ notification.created_at }}
                 </span>
               </div>
             </div>
 
-            <div v-if="!notification.read" class="flex items-center space-x-4">
+            <div
+              v-if="!notification.is_read"
+              class="flex items-center space-x-4"
+            >
               <button
                 @click.stop="markAsRead(notification.id)"
                 class="focus:outline-none"
@@ -215,13 +219,13 @@ export default {
   methods: {
     markAllAsRead() {
       this.notifications.forEach((notification) => {
-        notification.read = true;
+        notification.is_read = true;
       });
     },
     markAsRead(id) {
       const notification = this.notifications.find((n) => n.id === id);
       if (notification) {
-        notification.read = true;
+        notification.is_read = true;
       }
     },
     iconType(type) {

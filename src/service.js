@@ -1,9 +1,10 @@
-const { VITE_API_KEY, VITE_API_URL_DEV, VITE_API_URL_PROD, VITE_ENV } = import.meta.env;
-// const BASE_API_URL = VITE_ENV ? VITE_API_URL_PROD : VITE_API_URL_DEV;
-const BASE_API_URL = VITE_API_URL_DEV;
+const { VITE_API_KEY, VITE_API_URL_DEV, VITE_API_URL_PROD, VITE_ENV } =
+  import.meta.env;
+const BASE_API_URL =
+  VITE_ENV === 'production' ? VITE_API_URL_PROD : VITE_API_URL_DEV;
 
 async function getProducts() {
-  const response = await fetch(`${BASE_API_URL}/products`, {
+  const response = await fetch(`${BASE_API_URL}/arts`, {
     headers: {
       Authorization: 'Bearer' + VITE_API_KEY,
       'Content-Type': 'application/json',
@@ -14,7 +15,7 @@ async function getProducts() {
 }
 
 async function createProduct(data) {
-  const response = await fetch(`${BASE_API_URL}/products`, {
+  const response = await fetch(`${BASE_API_URL}/arts`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer' + VITE_API_KEY,
@@ -25,7 +26,6 @@ async function createProduct(data) {
 
   return await response.json();
 }
-
 
 async function deleteProduct(id) {
   await fetch(`${BASE_API_URL}/products/${id}`, {
@@ -47,4 +47,36 @@ async function uploadImage(data) {
   return await response.json();
 }
 
-export default { getProducts, createProduct, deleteProduct, uploadImage };
+async function getNotifications() {
+  const response = await fetch(`${BASE_API_URL}/notifications`, {
+    headers: { Authorization: 'Bearer' + VITE_API_KEY },
+  });
+
+  return await response.json();
+}
+
+async function getCart() {
+  const response = await fetch(`${BASE_API_URL}/cart`, {
+    headers: { Authorization: 'Bearer' + VITE_API_KEY },
+  });
+
+  return await response.json();
+}
+
+async function getOrders() {
+  const response = await fetch(`${BASE_API_URL}/orders`, {
+    headers: { Authorization: 'Bearer' + VITE_API_KEY },
+  });
+
+  return await response.json();
+}
+
+export default {
+  getProducts,
+  createProduct,
+  deleteProduct,
+  uploadImage,
+  getNotifications,
+  getCart,
+  getOrders,
+};
