@@ -49,7 +49,7 @@
                   class="w-24 h-24 object-cover rounded-md shadow"
                 />
                 <span
-                  class="absolute bottom-0 right-0 bg-indigo-500 text-white text-sm rounded-full h-6 w-6 flex items-center justify-center"
+                  class="absolute bottom-0 right-0 bg-indigo-500 text-white rounded-full h-6 w-6 flex items-center justify-center"
                 >
                   x{{ item.quantity }}
                 </span>
@@ -57,12 +57,23 @@
               <div class="ml-4 flex-1">
                 <h6 class="font-semibold text-gray-700">{{ item.title }}</h6>
                 <p class="text-gray-500">
-                  {{ item.category }}, {{ item.size }} ({{ dimensions[item.size] }})
+                  {{ item.category }}, {{ item.size }} ({{
+                    dimensions[item.size]
+                  }})
                 </p>
                 <span class="font-semibold text-gray-700 text-lg"
-                  >${{ (cost[item.category][item.duration][item.size] * item.quantity)?.toFixed(2) }}</span
+                  >${{
+                    (
+                      cost[item.category][item.duration][item.size] *
+                      item.quantity
+                    )?.toFixed(2)
+                  }}</span
                 >
               </div>
+              <button @click="prepareRemoval(item)" class="text-red-500 hover:text-red-700">
+  <i class="fas fa-times"></i>
+</button>
+
             </div>
           </div>
 
@@ -191,9 +202,7 @@
             </div>
 
             <div class="mt-8">
-              <label
-                for="userAddress"
-                class="block font-semibold text-gray-700"
+              <label for="userAddress" class="block font-semibold text-gray-700"
                 >Billing Address</label
               >
               <textarea
@@ -382,6 +391,17 @@
       </div>
     </div>
   </div>
+
+  <!-- Confirmation Modal -->
+<div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-4 rounded-lg">
+    <p>Are you sure you want to remove this item from your cart?</p>
+    <div class="flex justify-end mt-4">
+      <button @click="showModal = false" class="mr-2 px-4 py-2 rounded text-white bg-gray-500">Cancel</button>
+      <button @click="confirmRemoval" class="px-4 py-2 rounded text-white bg-red-500">Remove</button>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -410,6 +430,8 @@ export default {
       discountCode: '',
       shippingSpeed: 'standard',
       paymentMethod: 'card',
+      showModal: false,
+    itemToRemove: null,
       dimensions: {
         Small: '14" x 11"',
         Medium: '24" x 18"',
@@ -455,12 +477,12 @@ export default {
   },
   computed: {
     subtotal() {
-      return this.cart.arts
-        .reduce(
-          (acc, item) =>
-            acc + this.cost[item.category][item.duration][item.size] * item.quantity,
-          0
-        )
+      return this.cart.arts.reduce(
+        (acc, item) =>
+          acc +
+          this.cost[item.category][item.duration][item.size] * item.quantity,
+        0
+      );
     },
     taxes() {
       return this.subtotal * 0.1; // Assuming a GST of 10%
@@ -491,6 +513,33 @@ export default {
       event.preventDefault();
       event.returnValue = '';
     },
+    prepareRemoval(item) {
+  this.itemToRemove = item;
+  this.showModal = true;
+},
+
+
+confirmRemoval() {
+  if (this.itemToRemove) {
+    const index = this.cart.arts.findIndex(item => 
+      item.cart_id === this.itemToRemove.cart_id &&
+      item.size === this.itemToRemove.size &&
+      item.category === this.itemToRemove.category &&
+      item.duration === this.itemToRemove.duration
+    );
+
+    if (index !== -1) {
+      if (this.cart.arts[index].quantity > 1) {
+        this.cart.arts[index].quantity -= 1;
+      } else {
+        this.cart.arts.splice(index, 1);
+      }
+    }
+
+    this.showModal = false;
+  }
+},
+
   },
 };
 </script>

@@ -38,9 +38,6 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    console.log(this.style, this.selectedSize);
-  },
   computed: {
     style() {
       return {

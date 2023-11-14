@@ -202,7 +202,7 @@
         <!-- Add to Cart Button -->
         <button
           @click="addToCart(selectedArt)"
-          class="mr-12 md:ml-48 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150"
+          class="mr-12 md:ml-48 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150"
         >
           <i class="fas fa-shopping-cart mr-2"></i>
           Add to Cart
@@ -232,6 +232,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Added to Cart Notification -->
+  <div
+    v-if="notification"
+    class="fixed top-12 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-4 py-2 rounded-lg shadow-lg"
+  >
+    {{ notification }}
   </div>
 </template>
 
@@ -265,10 +273,45 @@ export default {
       selectedCategory: 'New',
       durations: [3, 6],
       selectedDuration: 6,
-      approximateCost: 150.0,
       showModal: false,
       selectedImage: 0,
+      notification: null,
+      cost: {
+        New: {
+          3: {
+            Small: 15,
+            Medium: 25,
+            Square: 30,
+            Large: 55,
+          },
+          6: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+        },
+        'Pre-Rented': {
+          3: {
+            Small: 10,
+            Medium: 15,
+            Square: 20,
+            Large: 35,
+          },
+          6: {
+            Small: 10,
+            Medium: 10,
+            Square: 15,
+            Large: 20,
+          },
+        },
+      },
     };
+  },
+  computed: {
+    approximateCost() {
+      return this.cost[this.selectedCategory][this.selectedDuration][this.selectedSize];
+    },
   },
   methods: {
     toggleExpand() {
@@ -299,8 +342,18 @@ export default {
         size: this.selectedSize,
         category: this.selectedCategory,
         duration: this.selectedDuration,
+        isAdded: true,
+        quantity: 1,
       });
-    }
+
+      // Show the added to cart notification
+      this.notification = 'Added to Cart';
+
+      // Hide the notification after 3 seconds
+      setTimeout(() => {
+        this.notification = null;
+      }, 3000);
+    },
   },
 };
 </script>

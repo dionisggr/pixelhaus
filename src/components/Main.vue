@@ -1,4 +1,5 @@
 <template>
+
   <div class="relative">
     <!-- Header -->
     <header
@@ -129,13 +130,11 @@
           <i
             class="material-icons text-2xl cursor-pointer hover:text-blue-500"
             @click="openModal = openModal === 'cart' ? null : 'cart'"
-            @mouseenter="resetTimeout"
           >
             shopping_cart
           </i>
           <div
             v-if="openModal === 'cart'"
-            @mouseleave="openModal = null"
             class="absolute top-16 right-12 w-96 bg-white rounded-lg shadow-md z-20 p-4 border-l border-r border-gray-300"
           >
             <div class="border-b-2 border-gray-300 pb-2 mb-6">
@@ -173,14 +172,19 @@
                       {{ item.duration }}-Months
                     </span>
                   </div>
+
+                  <button @click="prepareRemoval(item)" class="absolute right-0 top-1 text-sm text-red-500 hover:text-red-700">
+    <i class="fas fa-times"></i>
+  </button>
                 </div>
                 <div class="text-gray-700 flex justify-between items-end">
-                  <span class="text-xs"
-                    ># {{ item.art_id?.substring(0, 12) }}</span
-                  >
+                  <span class="text-xs"># {{ item.id?.substring(0, 12) }}</span>
                   <span
                     >${{
-                      (cost[item.category][item.duration][item.size] * item.quantity)?.toFixed(2)
+                      (
+                        cost[item.category][item.duration][item.size] *
+                        item.quantity
+                      )?.toFixed(2)
                     }}</span
                   >
                 </div>
@@ -510,10 +514,10 @@
           style="font-family: 'Poppins', sans-serif"
           :style="[
             !isMobile &&
-            !isSidebarHidden &&
-            'width: 25%; min-width: 275px; height: fit-content',
+              !isSidebarHidden &&
+              'width: 25%; min-width: 275px; height: fit-content',
             isMobile && !isSidebarHidden && 'max-height: 88vh',
-        ]"
+          ]"
         >
           <div class="w-full flex justify-between items-baseline">
             <h2
@@ -877,6 +881,17 @@
       :arts="arts"
     />
 
+            <!-- Confirmation Modal -->
+<div v-if="wallArtToRemove" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white p-4 rounded-lg">
+    <p>Are you sure you want to remove <b>{{ wallArtToRemove.title }}</b> from your cart?</p>
+    <div class="flex justify-end mt-4">
+      <button @click="wallArtToRemove = null" class="mr-2 px-4 py-2 rounded text-white bg-gray-500">Cancel</button>
+      <button @click="confirmWallArtRemoval" class="px-4 py-2 rounded text-white bg-red-500">Remove</button>
+    </div>
+  </div>
+</div>
+
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
       <div class="container mx-auto px-4 pt-12 pb-4 space-y-8 md:space-y-0">
@@ -1066,11 +1081,6 @@ export default {
       ...art,
       isAdded: false,
       flipped: false,
-      selected: {
-        material: 'Canvas',
-        size: 'Large',
-        time: '6-Months',
-      },
     }));
     this.randomArts = arts.sort(() => Math.random() - 0.5).slice(0, 5);
     this.displayedArts = arts.slice(0, this.itemsToShow);
@@ -1181,7 +1191,8 @@ export default {
       return this.cart.arts
         .reduce(
           (acc, item) =>
-            acc + this.cost[item.category][item.duration][item.size] * item.quantity,
+            acc +
+            this.cost[item.category][item.duration][item.size] * item.quantity,
           0
         )
         .toFixed(2);
@@ -1264,13 +1275,7 @@ export default {
 
       this.goTo('home');
     },
-    resetTimeout() {
-      clearTimeout(this.timeout);
-    },
     markNotificationsRead() {
-      this.timeout = setTimeout(() => {
-        this.openModal = null;
-      }, 1000);
       this.notifications = this.notifications.map((notification) => {
         notification.is_read = true;
 
@@ -1296,11 +1301,47 @@ export default {
       this.selectedNavItem = 'home';
     },
     addToCart(art) {
-      this.cart.arts.push(art);
+      // If duplicate in all properties, just increase quantity
+      const duplicate = this.cart.arts.find(
+        (item) =>
+          item.id === art.id &&
+          item.duration === art.duration &&
+          item.size === art.size &&
+          item.category === art.category
+      );
+
+      if (duplicate) {
+        duplicate.quantity += art.quantity;
+      } else {
+        this.cart.arts.push(art);
+      }
     },
     editWallArt(art) {
       this.selectedArt = art;
       this.selectedNavItem = 'upload';
+    },
+    prepareRemoval(art) {
+      this.wallArtToRemove = art;
+
+      this.$forceUpdate();
+    },
+    confirmWallArtRemoval() {
+      const match = this.cart.arts.find(
+        (art, index) => {
+          return art.id === this.wallArtToRemove.id &&
+            art.duration === this.wallArtToRemove.duration &&
+            art.size === this.wallArtToRemove.size &&
+            art.category === this.wallArtToRemove.category
+        }
+      );
+
+      if (match.quantity > 1) {
+        match.quantity--;
+      } else {
+        this.cart.arts.splice(this.cart.arts.indexOf(match), 1);
+      }
+
+      this.wallArtToRemove = null;
     },
   },
   watch: {
