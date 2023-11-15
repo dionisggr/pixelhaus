@@ -14,6 +14,28 @@ async function getProducts() {
   return await response.json();
 }
 
+async function getUserOrders(user_id) {
+  const response = await fetch(`${BASE_API_URL}/${user_id}/orders`, {
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return await response.json();
+}
+
+async function getAllOrders() {
+  const response = await fetch(`${BASE_API_URL}/orders`, {
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return await response.json();
+}
+
 async function createProduct(data) {
   const response = await fetch(`${BASE_API_URL}/arts`, {
     method: 'POST',
@@ -55,16 +77,21 @@ async function getNotifications() {
   return await response.json();
 }
 
-async function getCart() {
-  const response = await fetch(`${BASE_API_URL}/cart`, {
-    headers: { Authorization: 'Bearer' + VITE_API_KEY },
+async function sendNotification(notification) {
+  const response = await fetch(`${BASE_API_URL}/notifications`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(notification),
   });
 
   return await response.json();
 }
 
-async function getOrders() {
-  const response = await fetch(`${BASE_API_URL}/orders`, {
+async function getCart() {
+  const response = await fetch(`${BASE_API_URL}/cart`, {
     headers: { Authorization: 'Bearer' + VITE_API_KEY },
   });
 
@@ -78,5 +105,7 @@ export default {
   uploadImage,
   getNotifications,
   getCart,
-  getOrders,
+  getUserOrders,
+  getAllOrders,
+  sendNotification,
 };

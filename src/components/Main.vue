@@ -1,5 +1,4 @@
 <template>
-
   <div class="relative">
     <!-- Header -->
     <header
@@ -98,18 +97,14 @@
                       notification.type === 'reminder',
                   }"
                 >
-                  {{
-                    notification.type === 'order'
-                      ? 'local_shipping'
-                      : 'calendar_today'
-                  }}
+                  {{ getNotificationIcon(notification.type) }}
                 </i>
                 <div class="flex-grow">
                   <span class="block text-sm font-medium text-gray-700">
                     {{ notification.message }}
                   </span>
                   <span class="text-xs text-gray-500">
-                    {{ notification.created_at }}
+                    {{ formatDate(notification.created_at) }}
                   </span>
                 </div>
               </div>
@@ -173,9 +168,12 @@
                     </span>
                   </div>
 
-                  <button @click="prepareRemoval(item)" class="absolute right-0 top-1 text-sm text-red-500 hover:text-red-700">
-    <i class="fas fa-times"></i>
-  </button>
+                  <button
+                    @click="prepareRemoval(item)"
+                    class="absolute right-0 top-1 text-sm text-red-500 hover:text-red-700"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
                 </div>
                 <div class="text-gray-700 flex justify-between items-end">
                   <span class="text-xs"># {{ item.id?.substring(0, 12) }}</span>
@@ -848,6 +846,9 @@
       :orders="cart"
     />
 
+    <!-- All Orders -->
+    <AllOrders v-if="selectedNavItem === 'all-orders'" />
+
     <!-- Our Story -->
     <OurStory v-if="selectedNavItem === 'our-story'" :isMobile="isMobile" />
 
@@ -881,16 +882,32 @@
       :arts="arts"
     />
 
-            <!-- Confirmation Modal -->
-<div v-if="wallArtToRemove" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-  <div class="bg-white p-4 rounded-lg">
-    <p>Are you sure you want to remove <b>{{ wallArtToRemove.title }}</b> from your cart?</p>
-    <div class="flex justify-end mt-4">
-      <button @click="wallArtToRemove = null" class="mr-2 px-4 py-2 rounded text-white bg-gray-500">Cancel</button>
-      <button @click="confirmWallArtRemoval" class="px-4 py-2 rounded text-white bg-red-500">Remove</button>
+    <!-- Confirmation Modal -->
+    <div
+      v-if="wallArtToRemove"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    >
+      <div class="bg-white p-4 rounded-lg">
+        <p>
+          Are you sure you want to remove
+          <b>{{ wallArtToRemove.title }}</b> from your cart?
+        </p>
+        <div class="flex justify-end mt-4">
+          <button
+            @click="wallArtToRemove = null"
+            class="mr-2 px-4 py-2 rounded text-white bg-gray-500"
+          >
+            Cancel
+          </button>
+          <button
+            @click="confirmWallArtRemoval"
+            class="px-4 py-2 rounded text-white bg-red-500"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <!-- Footer -->
     <footer class="bg-white text-gray-700 mt-4 border-t border-gray-300">
@@ -1012,6 +1029,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import WallArt from './WallArt.vue';
 import WallArtSide from './WallArtSide.vue';
 import Testimonials from './Testimonials.vue';
@@ -1026,6 +1044,7 @@ import PrivacyPolicy from './PrivacyPolicy.vue';
 import Pricing from './Pricing.vue';
 import HowItWorks from './HowItWorks.vue';
 import Upload from './Admin/Arts.vue';
+import AllOrders from './Admin/Orders.vue';
 import service from '../service.js';
 import data from '../data.js';
 
@@ -1045,6 +1064,7 @@ export default {
     Pricing,
     HowItWorks,
     Upload,
+    AllOrders,
   },
   async mounted() {
     function showSlides() {
@@ -1092,13 +1112,31 @@ export default {
     showSlides();
     this.displayedArts.forEach((art) => (art.isAdded = false));
     this.checkShowMoreButton();
+
+    console.log('mounted');
   },
   created() {
     this.checkWindowSize();
     window.addEventListener('resize', this.checkWindowSize);
+
+    this.interval = setInterval(async () => {
+        console.log('runs');
+        const notifications = await service.getNotifications();
+
+        this.notifications = notifications.map((notification) => {
+          const { created_at } = notification;
+          notification.created_at = new Date(created_at)
+            .toISOString()
+            .split('T')[0];
+
+          return notification;
+        });
+      }, 900000);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkWindowSize);
+
+    clearInterval(this.interval);
   },
   data() {
     return {
@@ -1215,7 +1253,6 @@ export default {
         this.toggleSidebar();
       }
 
-      // travel to the id "invetory-selection"
       document.getElementById('search-bar').scrollIntoView();
     },
     filterDisplayedArts() {
@@ -1326,14 +1363,14 @@ export default {
       this.$forceUpdate();
     },
     confirmWallArtRemoval() {
-      const match = this.cart.arts.find(
-        (art, index) => {
-          return art.id === this.wallArtToRemove.id &&
-            art.duration === this.wallArtToRemove.duration &&
-            art.size === this.wallArtToRemove.size &&
-            art.category === this.wallArtToRemove.category
-        }
-      );
+      const match = this.cart.arts.find((art, index) => {
+        return (
+          art.id === this.wallArtToRemove.id &&
+          art.duration === this.wallArtToRemove.duration &&
+          art.size === this.wallArtToRemove.size &&
+          art.category === this.wallArtToRemove.category
+        );
+      });
 
       if (match.quantity > 1) {
         match.quantity--;
@@ -1342,6 +1379,26 @@ export default {
       }
 
       this.wallArtToRemove = null;
+    },
+    getNotificationIcon(type) {
+      switch (type) {
+        case 'order':
+          return 'shopping_cart';
+        case 'payment':
+          return 'payment';
+        case 'message':
+          return 'message';
+        case 'review':
+          return 'star';
+        default:
+          return 'info';
+      }
+    },
+    formatDate(date) {
+      return dayjs(date).format('MMM D, YYYY');
+    },
+    addNotification(notification) {
+      this.notifications.unshift(notification);
     },
   },
   watch: {

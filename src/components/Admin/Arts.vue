@@ -4,22 +4,32 @@
     :class="{ 'mb-20': isMobile }"
     style="min-height: calc(100vh - 23rem)"
   >
-
     <div class="text-center mb-8 sm:mb-10">
-  <div class="flex justify-center items-center">
-    <h1 class="text-4xl font-semibold mb-4">
-      <span @click="selectedMethod = 'upload'" class="cursor-pointer hover:text-blue-600" :class="{'text-blue-600': selectedMethod === 'upload'}">Upload</span>
-      <span class="mx-2">|</span>
-      <span @click="selectedMethod = 'edit'" class="cursor-pointer hover:text-green-600" :class="{'text-green-600': selectedMethod === 'edit'}">Edit</span>
-    </h1>
-  </div>
-  <p class="text-gray-700 text-lg">
-    {{ selectedMethod === 'upload' ? 'Upload multiple artworks at once and provide their details.' : 'Edit your existing artworks.' }}
-  </p>
-</div>
-
-
-
+      <div class="flex justify-center items-center">
+        <h1 class="text-4xl font-semibold mb-4">
+          <span
+            @click="selectedMethod = 'upload'"
+            class="cursor-pointer hover:text-blue-600"
+            :class="{ 'text-blue-600': selectedMethod === 'upload' }"
+            >Upload</span
+          >
+          <span class="mx-2">|</span>
+          <span
+            @click="selectedMethod = 'edit'"
+            class="cursor-pointer hover:text-green-600"
+            :class="{ 'text-green-600': selectedMethod === 'edit' }"
+            >Edit</span
+          >
+        </h1>
+      </div>
+      <p class="text-gray-700 text-lg">
+        {{
+          selectedMethod === 'upload'
+            ? 'Upload multiple artworks at once and provide their details.'
+            : 'Edit your existing artworks.'
+        }}
+      </p>
+    </div>
 
     <input
       ref="fileInput"
@@ -40,7 +50,7 @@
       >
         <button
           @click="triggerRemove(index)"
-          class=" absolute top-2 right-0 bg-red-600 text-sm px-2.5 py-1 text-white p-1 rounded-full transition duration-300 ease-in-out hover:bg-red-800"
+          class="absolute top-2 right-0 bg-red-600 text-sm px-2.5 py-1 text-white p-1 rounded-full transition duration-300 ease-in-out hover:bg-red-800"
         >
           <i class="fas fa-times"></i>
         </button>
@@ -180,7 +190,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.arts)
+    console.log(this.arts);
     this.images.edit = this.arts.map((art) => {
       return {
         src: art.image,
