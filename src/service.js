@@ -98,6 +98,19 @@ async function getCart() {
   return await response.json();
 }
 
+async function authenticate(data) {
+  const response = await fetch(`${BASE_API_URL}/auth`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer' + VITE_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  return await response.json();
+}
+
 export default {
   getProducts,
   createProduct,
@@ -108,4 +121,5 @@ export default {
   getUserOrders,
   getAllOrders,
   sendNotification,
+  authenticate,
 };

@@ -43,8 +43,15 @@
           >
         </div>
         <div v-else class="flex items-center space-x-5">
+          <a
+            v-if="!user?.id"
+            href="#"
+            class="text-gray-700 font-bold hover:text-blue-500"
+            @click="clerk.openSignUp"
+            >Sign Up</a
+          >
           <!-- Notifications -->
-          <div class="relative">
+          <div v-else class="relative">
             <i
               class="material-icons text-2xl cursor-pointer hover:text-blue-500"
               @click="
@@ -123,6 +130,7 @@
 
           <!-- Shopping Cart -->
           <i
+            v-if="user?.id"
             class="material-icons text-2xl cursor-pointer hover:text-blue-500"
             @click="openModal = openModal === 'cart' ? null : 'cart'"
           >
@@ -205,7 +213,7 @@
           <div class="border-l-2 h-6 mx-4"></div>
 
           <!-- Account -->
-          <div v-if="isLoggedIn" class="relative">
+          <div v-if="user?.id" class="relative">
             <img
               src="https://source.unsplash.com/random/50x50?face"
               alt="User Thumbnail"
@@ -218,14 +226,15 @@
               class="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-md z-10"
             >
               <a
-                v-if="isLoggedIn && !user.is_admin"
+                v-if="!isAdmin"
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
+                @click="selectedNavItem = 'profile'"
               >
                 My Profile
               </a>
               <a
-                v-if="isLoggedIn && user.is_admin"
+                v-if="isAdmin"
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
                 @click="selectedNavItem = 'upload'"
@@ -233,7 +242,7 @@
                 All Arts
               </a>
               <a
-                v-if="isLoggedIn && user.is_admin"
+                v-if="isAdmin"
                 href="#"
                 class="block text-gray-700 hover:bg-blue-500 hover:text-white p-3"
                 @click="selectedNavItem = 'all-orders'"
@@ -258,14 +267,13 @@
             </div>
           </div>
 
-          <div v-else class="flex items-center space-x-3">
-            <a
-              href="#"
-              class="text-gray-700 font-bold hover:text-blue-500"
-              @click="isLoggedIn = true"
-              >Sign In</a
-            >
-          </div>
+          <a
+            v-else
+            href="#"
+            class="text-gray-700 font-bold hover:text-blue-500"
+            @click="clerk.openSignIn"
+            >Login</a
+          >
         </div>
       </div>
 
@@ -301,7 +309,10 @@
             <a
               href="#how-it-works"
               class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
-              @click="showNavSidebar = false"
+              @click="
+                selectedNavItem = 'profile';
+                showNavSidebar = false;
+              "
               >My Profile</a
             >
             <a
@@ -882,6 +893,14 @@
       :arts="arts"
     />
 
+    <!-- Profile -->
+    <Profile
+      v-if="selectedNavItem === 'profile'"
+      :user="user"
+      @logout="logout"
+      @go-to="goTo"
+    />
+
     <!-- Confirmation Modal -->
     <div
       v-if="wallArtToRemove"
@@ -1029,6 +1048,7 @@
 </template>
 
 <script>
+import { useClerk } from 'vue-clerk';
 import dayjs from 'dayjs';
 import WallArt from './WallArt.vue';
 import WallArtSide from './WallArtSide.vue';
@@ -1045,6 +1065,7 @@ import Pricing from './Pricing.vue';
 import HowItWorks from './HowItWorks.vue';
 import Upload from './Admin/Arts.vue';
 import AllOrders from './Admin/Orders.vue';
+import Profile from './Profile.vue';
 import service from '../service.js';
 import data from '../data.js';
 
@@ -1065,6 +1086,7 @@ export default {
     HowItWorks,
     Upload,
     AllOrders,
+    Profile,
   },
   async mounted() {
     function showSlides() {
@@ -1113,25 +1135,27 @@ export default {
     this.displayedArts.forEach((art) => (art.isAdded = false));
     this.checkShowMoreButton();
 
-    console.log('mounted');
+    await this.clerk?.load();
+    this.$forceUpdate();
+
+    this.user = { ...this.clerk.user };
   },
   created() {
     this.checkWindowSize();
     window.addEventListener('resize', this.checkWindowSize);
 
     this.interval = setInterval(async () => {
-        console.log('runs');
-        const notifications = await service.getNotifications();
+      const notifications = await service.getNotifications();
 
-        this.notifications = notifications.map((notification) => {
-          const { created_at } = notification;
-          notification.created_at = new Date(created_at)
-            .toISOString()
-            .split('T')[0];
+      this.notifications = notifications.map((notification) => {
+        const { created_at } = notification;
+        notification.created_at = new Date(created_at)
+          .toISOString()
+          .split('T')[0];
 
-          return notification;
-        });
-      }, 900000);
+        return notification;
+      });
+    }, 900000);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkWindowSize);
@@ -1140,9 +1164,7 @@ export default {
   },
   data() {
     return {
-      user: {
-        is_admin: true,
-      },
+      clerk: useClerk(),
       arts: [],
       selectedNavItem: 'home',
       displayedArts: [],
@@ -1235,6 +1257,9 @@ export default {
         )
         .toFixed(2);
     },
+    isAdmin() {
+      return this.user?.publicMetadata?.is_admin;
+    },
   },
   methods: {
     goTo(section) {
@@ -1308,7 +1333,9 @@ export default {
       }, 3000);
     },
     logout() {
-      this.isLoggedIn = false;
+      this.clerk.signOut();
+
+      this.user = null;
 
       this.goTo('home');
     },
@@ -1338,7 +1365,6 @@ export default {
       this.selectedNavItem = 'home';
     },
     addToCart(art) {
-      // If duplicate in all properties, just increase quantity
       const duplicate = this.cart.arts.find(
         (item) =>
           item.id === art.id &&
