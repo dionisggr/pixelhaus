@@ -38,6 +38,9 @@ export default {
       required: true,
     },
   },
+  updated() {
+    console.log(this.src);
+  },
   computed: {
     style() {
       return {

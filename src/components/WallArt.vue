@@ -51,13 +51,13 @@
           <img
             :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(mainImage)"
+            @click="setMainImage(selectedArt.image)"
             class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
           />
           <img
             :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(mainImage)"
+            @click="setMainImage(selectedArt.image)"
             class="rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer w-36"
           />
           <Image
@@ -66,7 +66,7 @@
             subtype="thumbnail"
             :src="mainImage"
             :selectedSize="selectedSize"
-            @select-image="setMainImage"
+            @select-image="setMainImage(mainImage + '?')"
           />
         </div>
 
@@ -77,13 +77,13 @@
           <img
             :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(mainImage)"
+            @click="setMainImage(selectedArt.image)"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <img
             :src="mainImage"
             alt="Secondary Art Image"
-            @click="setMainImage(mainImage)"
+            @click="setMainImage(selectedArt.image)"
             class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <Image
@@ -91,7 +91,7 @@
             subtype="thumbnail"
             :src="mainImage"
             :selectedSize="selectedSize"
-            @select-image="setMainImage"
+            @click="setMainImage(mainImage + '?')"
           />
         </div>
       </div>
@@ -180,34 +180,35 @@
         </div>
       </div>
 
-      <!-- Cost Section -->
-      <div class="my-6 mx-4 flex justify-between">
-        <div
-          class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between w-1/2"
-        >
-          <div class="flex items-center space-x-3 mb-4 md:mb-0">
-            <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
-            <h3 class="text-xl font-medium">Approximate Cost</h3>
-          </div>
-          <p
-            class="text-gray-700 text-2xl md:text-3xl font-semibold flex items-baseline"
-          >
-            ${{ getDollarPortion(approximateCost) }}.<sup class="text-base">{{
-              getCentsPortion(approximateCost)
-            }}</sup>
-            <span class="text-sm inline-block ml-1">/ month</span>
-          </p>
-        </div>
+<!-- Cost Section -->
+<div class="my-6 mx-4 flex flex-col md:flex-row justify-between">
+  <div
+    class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between mb-4 md:mb-0 w-full md:w-1/2"
+  >
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
+      <h3 class="text-xl font-medium">Approximate Cost</h3>
+    </div>
+    <p
+      class="text-gray-700 text-lg md:text-2xl lg:text-3xl font-semibold flex items-baseline mt-2 md:mt-0"
+    >
+      ${{ getDollarPortion(approximateCost) }}.<sup class="text-base">{{
+        getCentsPortion(approximateCost)
+      }}</sup>
+      <span class="text-sm inline-block ml-1">/ month</span>
+    </p>
+  </div>
 
-        <!-- Add to Cart Button -->
-        <button
-          @click="addToCart(selectedArt)"
-          class="mr-12 md:ml-48 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150"
-        >
-          <i class="fas fa-shopping-cart mr-2"></i>
-          Add to Cart
-        </button>
-      </div>
+  <!-- Add to Cart Button -->
+  <button
+    @click="addToCart(selectedArt)"
+    class="inline-flex items-center justify-center px-5 py-3 md:px-6 border border-transparent text-sm md:text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150 w-full md:w-auto mt-4 md:mt-0 md:ml-4"
+  >
+    <i class="fas fa-shopping-cart mr-2"></i>
+    Add to Cart
+  </button>
+</div>
+
     </div>
     <div
       v-if="showModal"
@@ -353,6 +354,11 @@ export default {
       setTimeout(() => {
         this.notification = null;
       }, 3000);
+    },
+    setWallImage(imageSrc) {
+      this.mainImage = imageSrc;
+
+      this.isWallImage = true;
     },
   },
 };

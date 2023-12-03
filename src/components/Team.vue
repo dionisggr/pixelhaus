@@ -3,7 +3,7 @@
         <!-- Breadcrumbs -->
         <div class="mb-8 w-full">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        Our Story
+        Meet The Team
       </h1>
       <div class="text-center mt-2 md:text-left text-gray-500 w-full">
         <a
@@ -13,7 +13,7 @@
           >Home</a
         >
         /
-        <span class="text-gray-700">Our Story</span>
+        <span class="text-gray-700">Team</span>
       </div>
     </div>
     <div
