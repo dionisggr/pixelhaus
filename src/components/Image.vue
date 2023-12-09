@@ -4,7 +4,7 @@
     @click="$emit('select-image', 'wall')"
   >
     <img
-      :src="'./src/assets/wall.png'"
+      :src="wallImageUrl"
       alt="Wall Background"
       class="w-full h-full"
     />
@@ -38,8 +38,10 @@ export default {
       required: true,
     },
   },
-  updated() {
-    console.log(this.src);
+  data() {
+    return {
+      wallImageUrl: '/wall.png',
+    };
   },
   computed: {
     style() {
