@@ -31,7 +31,7 @@
       </p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-16 items-start mt-6">
 
-        <!-- Step 1 -->
+        <!-- Step -->
         <div
           v-for="step in steps"
           class="relative w-full mx-auto cursor-pointer"

@@ -1,7 +1,10 @@
 <template>
-  <div class="bg-gray-100 min-h-screen flex flex-col items-center py-12 mt-4 sm:py-8 px-4 sm:px-8 max-w-6xl mx-auto">
-        <!-- Breadcrumbs -->
-        <div class="mb-8 w-full">
+  <div
+    class="bg-gray-100 min-h-screen flex flex-col items-center py-12 mt-4 sm:py-8 px-4 sm:px-8 max-w-6xl mx-auto"
+  >
+  
+    <!-- Breadcrumbs -->
+    <div class="mb-8 w-full">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         Meet The Team
       </h1>
@@ -31,8 +34,10 @@
       >
         <div
           :class="{
-            'flex items-center animate__animated custom-fadeInLeft duration-700 sm:order-1': selectedMember !== member,
-            'flex flex-col items-center animate__animated custom-fadeInLeftSmall duration-400 sm:order-0': selectedMember === member,
+            'flex items-center animate__animated custom-fadeInLeft duration-700 sm:order-1':
+              selectedMember !== member,
+            'flex flex-col items-center animate__animated custom-fadeInLeftSmall duration-400 sm:order-0':
+              selectedMember === member,
           }"
         >
           <img
@@ -46,11 +51,19 @@
             alt="Member Image"
           />
           <div v-if="selectedMember !== member" class="ml-3 sm:ml-6 md:ml-8">
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold mb-1 sm:mb-2 md:mb-4">{{ member.name }}</h2>
-            <p class="text-sm sm:text-base md:text-lg text-gray-600">{{ member.role }}</p>
+            <h2
+              class="text-xl sm:text-2xl md:text-3xl font-semibold mb-1 sm:mb-2 md:mb-4"
+            >
+              {{ member.name }}
+            </h2>
+            <p class="text-sm sm:text-base md:text-lg text-gray-600">
+              {{ member.role }}
+            </p>
           </div>
           <div v-else>
-            <h2 class="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">{{ member.name }}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
+              {{ member.name }}
+            </h2>
             <p class="text-xs sm:text-sm text-gray-400">{{ member.role }}</p>
           </div>
         </div>
@@ -58,7 +71,10 @@
           v-if="selectedMember === member"
           class="animate__animated custom-fadeInRight duration-700 sm:ml-auto"
         >
-          <div class="rounded-lg p-3 sm:p-6 md:p-8 space-y-2" :class="{'text-sm': isMobile}">
+          <div
+            class="rounded-lg p-3 sm:p-6 md:p-8 space-y-2"
+            :class="{ 'text-sm': isMobile }"
+          >
             <p>{{ member.bio }}</p>
             <p>{{ member.moreBio }}</p>
           </div>

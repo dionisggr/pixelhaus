@@ -27,12 +27,14 @@
       class="max-w-6xl mx-auto bg-white border rounded-xl shadow-md px-4 sm:px-8 py-6"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-        <!-- Left - Cart Summary -->
+
+        <!-- Cart (Left) -->
         <div>
           <h2
             class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2"
           >
             <i class="fas fa-shopping-cart"></i>
+            
             <!-- Cart Icon -->
             <span>Cart Items</span>
           </h2>
@@ -54,7 +56,7 @@
                   x{{ item.quantity }}
                 </span>
               </div>
-              <div class="ml-4 flex-1">
+              <div class="ml-4 flex-1 mt-2">
                 <h6 class="font-semibold text-gray-700">{{ item.title }}</h6>
                 <p class="text-gray-500">
                   {{ item.category }}, {{ item.size }} ({{
@@ -69,11 +71,14 @@
                     )?.toFixed(2)
                   }}</span
                 >
+                <p class="text-xs mt-2"># {{ getRandomId() }}</p>
               </div>
-              <button @click="prepareRemoval(item)" class="text-red-500 hover:text-red-700">
-  <i class="fas fa-times"></i>
-</button>
-
+              <button
+                @click="prepareRemoval(item)"
+                class="text-red-500 hover:text-red-700"
+              >
+                <i class="fas fa-times"></i>
+              </button>
             </div>
           </div>
 
@@ -134,12 +139,14 @@
 
         <!-- Right - Billing & Shipping -->
         <div class="space-y-16">
+          
           <!-- User Information -->
           <div class="mb-6">
             <h2
               class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
             >
               <i class="fas fa-address-card"></i>
+
               <!-- User Info Icon -->
               <span>Billing & Shipping Info</span>
             </h2>
@@ -214,7 +221,7 @@
               ></textarea>
             </div>
 
-            <!-- Shipping Address with Toggle -->
+            <!-- Shipping Address -->
             <div class="my-4">
               <label
                 for="shippingAddress"
@@ -247,6 +254,7 @@
               class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
             >
               <i class="fas fa-shipping-fast"></i>
+              
               <!-- Shipping Icon -->
               <span>Shipping Options</span>
             </h2>
@@ -273,6 +281,7 @@
               class="text-xl font-semibold mb-4 text-gray-700 flex items-center space-x-2 border-b pb-2"
             >
               <i class="fas fa-wallet"></i>
+
               <!-- Payment Icon -->
               <span>Payment Method</span>
             </h2>
@@ -393,15 +402,28 @@
   </div>
 
   <!-- Confirmation Modal -->
-<div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-  <div class="bg-white p-4 rounded-lg">
-    <p>Are you sure you want to remove this item from your cart?</p>
-    <div class="flex justify-end mt-4">
-      <button @click="showModal = false" class="mr-2 px-4 py-2 rounded text-white bg-gray-500">Cancel</button>
-      <button @click="confirmRemoval" class="px-4 py-2 rounded text-white bg-red-500">Remove</button>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+  >
+    <div class="bg-white p-4 rounded-lg">
+      <p>Are you sure you want to remove this item from your cart?</p>
+      <div class="flex justify-end mt-4">
+        <button
+          @click="showModal = false"
+          class="mr-2 px-4 py-2 rounded text-white bg-gray-500"
+        >
+          Cancel
+        </button>
+        <button
+          @click="confirmRemoval"
+          class="px-4 py-2 rounded text-white bg-red-500"
+        >
+          Remove
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -420,10 +442,6 @@ export default {
   },
   data() {
     return {
-      user: {
-        contact: '',
-        address: '',
-      },
       isLoading: false,
       sameAsBilling: false,
       shippingAddress: '',
@@ -431,12 +449,21 @@ export default {
       shippingSpeed: 'standard',
       paymentMethod: 'card',
       showModal: false,
-    itemToRemove: null,
+      itemToRemove: null,
+      user: {
+        contact: '',
+        address: '',
+      },
       dimensions: {
         Small: '14" x 11"',
         Medium: '24" x 18"',
         Square: '24" x 24"',
         Large: '40" x 30"',
+      },
+      shippingCosts: {
+        standard: 5.0,
+        express: 10.0,
+        overnight: 20.0,
       },
       cost: {
         New: {
@@ -468,11 +495,6 @@ export default {
           },
         },
       },
-      shippingCosts: {
-        standard: 5.0,
-        express: 10.0,
-        overnight: 20.0,
-      },
     };
   },
   computed: {
@@ -485,7 +507,7 @@ export default {
       );
     },
     taxes() {
-      return this.subtotal * 0.1; // Assuming a GST of 10%
+      return this.subtotal * 0.1;
     },
     total() {
       return (
@@ -495,11 +517,13 @@ export default {
   },
 
   methods: {
-    applyDiscount() {
-      // Logic for applying discount using the discountCode
+    preventNavigation(event) {
+      event.preventDefault();
+      event.returnValue = '';
     },
-    placeOrder() {
-      // Logic for placing the order
+    prepareRemoval(item) {
+      this.itemToRemove = item;
+      this.showModal = true;
     },
     startTransaction() {
       this.isLoading = true;
@@ -509,37 +533,30 @@ export default {
         window.removeEventListener('beforeunload', this.preventNavigation);
       });
     },
-    preventNavigation(event) {
-      event.preventDefault();
-      event.returnValue = '';
-    },
-    prepareRemoval(item) {
-  this.itemToRemove = item;
-  this.showModal = true;
-},
+    confirmRemoval() {
+      if (this.itemToRemove) {
+        const index = this.cart.arts.findIndex(
+          (item) =>
+            item.cart_id === this.itemToRemove.cart_id &&
+            item.size === this.itemToRemove.size &&
+            item.category === this.itemToRemove.category &&
+            item.duration === this.itemToRemove.duration
+        );
 
+        if (index !== -1) {
+          if (this.cart.arts[index].quantity > 1) {
+            this.cart.arts[index].quantity -= 1;
+          } else {
+            this.cart.arts.splice(index, 1);
+          }
+        }
 
-confirmRemoval() {
-  if (this.itemToRemove) {
-    const index = this.cart.arts.findIndex(item => 
-      item.cart_id === this.itemToRemove.cart_id &&
-      item.size === this.itemToRemove.size &&
-      item.category === this.itemToRemove.category &&
-      item.duration === this.itemToRemove.duration
-    );
-
-    if (index !== -1) {
-      if (this.cart.arts[index].quantity > 1) {
-        this.cart.arts[index].quantity -= 1;
-      } else {
-        this.cart.arts.splice(index, 1);
+        this.showModal = false;
       }
-    }
-
-    this.showModal = false;
-  }
-},
-
+    },
+    getRandomId() {
+      return Math.floor(100000000000 + Math.random() * 900000000000);
+    },
   },
 };
 </script>

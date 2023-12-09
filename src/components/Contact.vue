@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 py-12">
+
     <!-- Header and Breadcrumbs -->
     <div class="px-8 mb-4">
       <h1 class="text-4xl font-extrabold text-gray-700 text-center">
@@ -189,7 +190,6 @@ export default {
   },
   methods: {
     initializeMap() {
-      // Include Google Maps script dynamically
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?v=3.exp&callback=initializeActualMap`;
       script.async = true;
@@ -199,7 +199,7 @@ export default {
       window.initializeActualMap = () => {
         this.map = new google.maps.Map(document.getElementById('map'), {
           zoom: 8,
-          center: { lat: 40.7128, lng: -74.006 }, // New York
+          center: { lat: 40.7128, lng: -74.006 },
         });
       };
     },

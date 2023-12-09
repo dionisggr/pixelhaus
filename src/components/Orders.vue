@@ -1,5 +1,6 @@
 <template>
   <div class="min-w-screen min-h-screen max-w-6xl mx-auto bg-gray-100 py-12">
+    
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
       <h1
@@ -66,6 +67,7 @@
                       alt="image"
                       class="w-12 h-12 object-cover rounded"
                     />
+                    
                     <!-- Badge for Quantity -->
                     <span
                       class="absolute bottom-0 right-0 bg-blue-500 text-white text-xs rounded-full px-1"
@@ -103,6 +105,7 @@
 
               <!-- Shipping Info -->
               <div v-if="order.showTimeline" class="space-y-4 mt-4">
+                
                 <!-- Shipping Updates Title -->
                 <div
                   class="text-lg font-bold text-gray-700 mb-2 text-center uppercase"
@@ -112,6 +115,7 @@
 
                 <!-- Shipping Info Details -->
                 <div class="flex flex-col items-start ml-8">
+                  
                   <!-- Order Confirmed -->
                   <div class="flex mb-2">
                     <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500"></div>
@@ -122,6 +126,7 @@
                       </div>
                     </div>
                   </div>
+                  
                   <!-- In Transit -->
                   <div class="flex mb-2">
                     <div class="w-2 h-2 mt-1.5 rounded-full bg-yellow-400"></div>
@@ -132,6 +137,7 @@
                       </div>
                     </div>
                   </div>
+                  
                   <!-- Delivered -->
                   <div class="flex mb-2">
                     <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500"></div>
@@ -161,7 +167,7 @@
 
 <script>
 import dayjs from 'dayjs';
-import service from '../service.js';
+import data from '../data.js';
 
 export default {
   props: {
@@ -171,9 +177,39 @@ export default {
     },
   },
   async mounted() {
-    this.orders = await service.getOrders();
-
-    console.log(this.orders);
+    this.orders = data.orders.reduce((acc, item) => {
+      console.log('item', item);
+      if (!acc[item.order_id]) {
+        acc[item.order_id] = {
+          id: item.order_id,
+          user_id: item.user_id,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          arts: [],
+          total: Number(item.total),
+          status: item.status,
+          shipping: {
+            tracking_number: item.tracking_number,
+            confirmed: item.shipping.confirmed,
+            in_transit: item.shipping.in_transit,
+            delivered: item.shipping.delivered,
+          },
+        };
+      }
+      acc[item.order_id].arts.push({
+        art_id: item.art_id,
+        title: item.title,
+        image: item.image,
+        description: item.description,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        category: item.category,
+        size: item.size,
+        quantity: item.quantity,
+        duration: item.duration,
+      });
+      return acc;
+    }, {});
   },
   data() {
     return {

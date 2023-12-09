@@ -176,8 +176,6 @@
 </template>
 
 <script>
-import service from '../../service';
-
 export default {
   props: {
     isMobile: {
@@ -213,10 +211,10 @@ export default {
         upload: [],
         edit: [],
       },
-      showModal: false, // To control the visibility of the modal
+      showModal: false,
       removeIndex: null,
-      showTooltip: false, // To control the visibility of the tooltip
-      newTag: '', // To store new tag input
+      showTooltip: false,
+      newTag: '',
     };
   },
   methods: {
@@ -235,7 +233,7 @@ export default {
               sizes: [
                 { size: 'S', selected: true },
                 { size: 'M', selected: true },
-                { size: 'Sq', selected: true }, // Added 'Square' size
+                { size: 'Sq', selected: true },
                 { size: 'L', selected: true },
               ],
             });
@@ -253,7 +251,6 @@ export default {
     },
     async publish() {
       if (import.meta.env.VITE_ENV !== 'production') return;
-      // ... rest of the publishing logic
     },
     triggerRemove(index) {
       this.removeIndex = index;
@@ -272,7 +269,7 @@ export default {
       let tagValue = this.images[imageIndex].newTag.trim();
       if (tagValue !== '') {
         this.images[imageIndex].tags.unshift({ value: tagValue });
-        this.images[imageIndex].newTag = ''; // Clear the input after adding the tag
+        this.images[imageIndex].newTag = '';
       }
     },
     removeTag(imageIndex, tagIndex) {
@@ -288,7 +285,7 @@ export default {
 
 <style scoped>
 .tags-container {
-  height: 4rem; /* Adjust the height as needed (approx. 2 lines) */
-  overflow-y: auto; /* Enables scrolling */
+  height: 4rem;
+  overflow-y: auto;
 }
 </style>

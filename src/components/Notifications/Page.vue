@@ -98,7 +98,7 @@
         Tap each for more information.
       </div>
       <div
-        class="px-4 py-2 mb-4 text-center bg-blue-100 text-blue-700 rounded-lg shadow-md ml-auto mr-4"
+        class="px-4 py-2 mb-4 text-center bg-blue-100 text-blue-700 rounded-lg shadow-md ml-auto mr-4 text-xs"
         style="width: fit-content"
         v-else
       >
@@ -155,7 +155,7 @@
             v-if="openedId === notification.id"
             class="border-t border-gray-300 pt-4"
           >
-            <!-- Details section (For demonstration purposes, displaying static content) -->
+            <!-- Details Section -->
             <div>
               <div class="flex items-center space-x-4 mb-6">
                 <img
@@ -175,9 +175,9 @@
                 <span>$19.99</span>
               </div>
             </div>
+
           </div>
         </div>
-
         <button
           v-if="showMoreButton"
           @click="loadMore"
@@ -236,12 +236,6 @@ export default {
     },
     toggleDetails(id) {
       this.openedId = this.openedId === id ? null : id;
-    },
-    deleteNotification(id) {
-      // Delete Notification Logic
-    },
-    clearAllNotifications() {
-      // Clear All Notifications Logic
     },
     loadMore() {
       this.visibleCount += 10;

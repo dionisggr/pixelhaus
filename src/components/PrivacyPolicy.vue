@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 py-12">
+    
     <!-- Header and Breadcrumbs -->
     <div class="px-8 mb-4">
       <div class="flex justify-between items-center mb-2">

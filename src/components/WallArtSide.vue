@@ -40,7 +40,7 @@ export default {
 <style scoped>
 .canvas-container {
   perspective: 1000px;
-  overflow: hidden; /* Hide the overflow */
+  overflow: hidden;
 }
 
 .canvas {
@@ -58,8 +58,8 @@ export default {
   transform: translateZ(-20px);
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
   position: absolute;
-  left: 9px; /* Align to the left */
-  overflow: hidden; /* Hide the overflow */
+  left: 9px;
+  overflow: hidden;
 }
 
 .canvas-side {
@@ -68,12 +68,12 @@ export default {
   position: absolute;
   width: 20px;
   height: 100%;
-  left: -5.5px; /* Adjust to the end of the .canvas-front */
+  left: -5.5px;
   top: 4.5px;
   transform: rotateY(-90deg);
   opacity: 0.8;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   background-repeat: no-repeat;
-  background-position: bottom center; /* Position the hidden part of the image */
+  background-position: bottom center;
 }
 </style>

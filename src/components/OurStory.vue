@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center py-12 px-4 md:px-6 max-w-6xl mx-auto">
+  <div
+    class="min-h-screen flex flex-col items-center py-12 px-4 md:px-6 max-w-6xl mx-auto"
+  >
     <!-- Breadcrumbs -->
     <div class="mb-8 w-full">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -38,16 +40,31 @@
         />
         <div class="flex-1 flex flex-col justify-between">
           <div>
-            <h2 class="text-xl md:text-2xl font-semibold mb-2">{{ milestone.title }}</h2>
-            <p class="text-base md:text-lg text-gray-600">{{ milestone.description }}</p>
+            <h2 class="text-xl md:text-2xl font-semibold mb-2">
+              {{ milestone.title }}
+            </h2>
+            <p class="text-base md:text-lg text-gray-600">
+              {{ milestone.description }}
+            </p>
           </div>
           <p class="text-sm text-gray-500 mt-4">{{ milestone.date }}</p>
         </div>
       </div>
-      <div v-if="selectedMilestone === milestone" class="animate__animated animate__fadeIn animate__duration-2s">
+      <div
+        v-if="selectedMilestone === milestone"
+        class="animate__animated animate__fadeIn animate__duration-2s"
+      >
         <div class="rounded-lg p-4 md:p-6 mt-4">
-          <h3 class="text-lg md:text-xl font-semibold mb-2 animate__animated animate__slideInUp animate__fadeIn animate__duration-1.5s">More Info</h3>
-          <p class="animate__animated animate__slideInUp animate__fadeIn animate__delay-0.5s animate__duration-1.5s">{{ milestone.moreInfo }}</p>
+          <h3
+            class="text-lg md:text-xl font-semibold mb-2 animate__animated animate__slideInUp animate__fadeIn animate__duration-1.5s"
+          >
+            More Info
+          </h3>
+          <p
+            class="animate__animated animate__slideInUp animate__fadeIn animate__delay-0.5s animate__duration-1.5s"
+          >
+            {{ milestone.moreInfo }}
+          </p>
         </div>
       </div>
     </div>

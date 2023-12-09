@@ -15,6 +15,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+      
       <!-- Image Container -->
       <div
         class="relative min-w-fit flex flex-col items-center md:flex-row space-y-4 md:space-y-0 md:space-x-6 mx-auto"
@@ -70,7 +71,7 @@
           />
         </div>
 
-        <!-- Carousel Images for Mobile - Thumbnails -->
+        <!-- Carousel Images for Mobile (Thumbnails) -->
         <div
           class="flex justify-between space-x-4 md:hidden overflow-x-scroll mx-auto bg-white absolute bottom-0"
         >
@@ -103,6 +104,7 @@
     <div
       class="bg-white p-6 rounded-lg shadow-sm mx-auto hover:shadow-md transition-shadow duration-300 relative"
     >
+
       <!-- Title and Description -->
       <h2 class="text-2xl md:text-4xl text-gray-700 font-bold mb-4">
         {{ selectedArt.title }}
@@ -182,35 +184,34 @@
         </div>
       </div>
 
-<!-- Cost Section -->
-<div class="my-6 mx-4 flex flex-col md:flex-row justify-between">
-  <div
-    class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between mb-4 md:mb-0 w-full md:w-1/2"
-  >
-    <div class="flex items-center space-x-3">
-      <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
-      <h3 class="text-xl font-medium">Approximate Cost</h3>
-    </div>
-    <p
-      class="text-gray-700 text-lg md:text-2xl lg:text-3xl font-semibold flex items-baseline mt-2 md:mt-0"
-    >
-      ${{ getDollarPortion(approximateCost) }}.<sup class="text-base">{{
-        getCentsPortion(approximateCost)
-      }}</sup>
-      <span class="text-sm inline-block ml-1">/ month</span>
-    </p>
-  </div>
+      <!-- Cost Section -->
+      <div class="my-6 mx-4 flex flex-col md:flex-row justify-between">
+        <div
+          class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between mb-4 md:mb-0 w-full md:w-1/2"
+        >
+          <div class="flex items-center space-x-3">
+            <i class="fas fa-dollar-sign text-blue-500 text-3xl"></i>
+            <h3 class="text-xl font-medium">Approximate Cost</h3>
+          </div>
+          <p
+            class="text-gray-700 text-lg md:text-2xl lg:text-3xl font-semibold flex items-baseline mt-2 md:mt-0"
+          >
+            ${{ getDollarPortion(approximateCost) }}.<sup class="text-base">{{
+              getCentsPortion(approximateCost)
+            }}</sup>
+            <span class="text-sm inline-block ml-1">/ month</span>
+          </p>
+        </div>
 
-  <!-- Add to Cart Button -->
-  <button
-    @click="addToCart(selectedArt)"
-    class="inline-flex items-center justify-center px-5 py-3 md:px-6 border border-transparent text-sm md:text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150 w-full md:w-auto mt-4 md:mt-0 md:ml-4"
-  >
-    <i class="fas fa-shopping-cart mr-2"></i>
-    Add to Cart
-  </button>
-</div>
-
+        <!-- Add to Cart Button -->
+        <button
+          @click="addToCart(selectedArt)"
+          class="inline-flex items-center justify-center px-5 py-3 md:px-6 border border-transparent text-sm md:text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-offset-2 focus:ring-blue-500 active:bg-blue-700 transition ease-in-out duration-150 w-full md:w-auto mt-4 md:mt-0 md:ml-4"
+        >
+          <i class="fas fa-shopping-cart mr-2"></i>
+          Add to Cart
+        </button>
+      </div>
     </div>
     <div
       v-if="showModal"
@@ -313,7 +314,9 @@ export default {
   },
   computed: {
     approximateCost() {
-      return this.cost[this.selectedCategory][this.selectedDuration][this.selectedSize];
+      return this.cost[this.selectedCategory][this.selectedDuration][
+        this.selectedSize
+      ];
     },
   },
   methods: {
@@ -321,18 +324,16 @@ export default {
       this.isExpanded = !this.isExpanded;
     },
     getDollarPortion(value) {
-      return Math.floor(value); // Get the whole dollar amount
+      return Math.floor(value);
     },
     getCentsPortion(value) {
       const cents = Math.round((value - Math.floor(value)) * 100);
-      return cents.toString().padStart(2, '0'); // Convert it to a two-digit string
+      return cents.toString().padStart(2, '0');
     },
     openDeleteModal() {
       this.showModal = true;
     },
     confirmDelete() {
-      // Here, you would typically make an API call or some other action to delete the wall art
-      // For now, we'll just close the modal and emit a placeholder event
       this.$emit('delete-wall-art');
       this.showModal = false;
     },
@@ -349,10 +350,8 @@ export default {
         quantity: 1,
       });
 
-      // Show the added to cart notification
       this.notification = 'Added to Cart';
 
-      // Hide the notification after 3 seconds
       setTimeout(() => {
         this.notification = null;
       }, 3000);
