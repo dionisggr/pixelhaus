@@ -1,5 +1,6 @@
 <template>
   <div class="bg-gray-100 px-4 lg:px-12 my-12">
+
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -31,7 +32,6 @@
           class="relative p-4 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-200"
           style="min-height: 175px"
         >
-          <!-- Most Popular badge for Canvas -->
           <div
             class="absolute top-5 right-5 bg-blue-500 text-white text-xs py-1 px-3 rounded-full"
             v-if="material === 'Canvas'"
@@ -102,6 +102,8 @@ export default {
       selectedSize: '',
       selectedMaterial: '',
       selectedDuration: '',
+      materials: ['New', 'Pre-Rented'],
+      durations: ['3 months', '6 months'],
       sizes: [
         '14" x 11"',
         '24" x 16"',
@@ -110,8 +112,6 @@ export default {
         '24" x 24"',
         '40" x 30"',
       ],
-      materials: ['New', 'Pre-Rented'],
-      durations: ['3 months', '6 months'],
       pricingData: [
         {
           name: 'Canvas',

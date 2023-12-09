@@ -71,7 +71,7 @@
             v-if="openModal === 'notifications'"
             @mouseenter="resetTimeout"
             @mouseleave="markNotificationsRead"
-            class="absolute top-12 right-10 w-96 bg-white rounded-lg shadow-md p-4 border-l border-r border-gray-300"
+            class="absolute top-16 right-10 w-96 bg-white rounded-lg shadow-md p-4 border-l border-r border-gray-300"
           >
             <div class="border-b-2 border-gray-200 pb-2 mb-4">
               <h3 class="text-2xl font-extrabold text-gray-800">
@@ -184,7 +184,7 @@
                   </button>
                 </div>
                 <div class="text-gray-700 flex justify-between items-end">
-                  <span class="text-xs"># {{ item.id?.substring(0, 12) }}</span>
+                  <span class="text-xs"># {{ getRandomId() }}</span>
                   <span
                     >${{
                       (
@@ -409,8 +409,7 @@
     <!-- Hero Section -->
     <section
       v-if="selectedNavItem === 'home'"
-      class="relative"
-      :class="isMobile ? 'mt-2' : 'mt-4'"
+      class="relative mt-2"
     >
       <div class="container mx-auto px-4">
         <div
@@ -1490,6 +1489,9 @@ export default {
       if (this.disableWelcomeModal) {
         localStorage.setItem('hidePixelHausModal', true);
       }
+    },
+    getRandomId() {
+      return Math.floor(100000000000 + Math.random() * 900000000000);
     },
   },
   watch: {
