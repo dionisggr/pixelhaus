@@ -57,8 +57,13 @@ The cart feature provides a streamlined and secure process for finalizing your a
 The checkout process is streamlined and secure. Simply add your shipping address and payment details, including credit card information, to complete your rental. This efficient and secure step ensures a quick and safe transaction, bringing your chosen AI-generated art one step closer to adorning your space
 
 ## Screenshots
-![Screenshot 1](link-to-screenshot)
-![Screenshot 2](link-to-screenshot)
+![Screenshot 1](./src/assets/home.png)
+![Screenshot 2](./src/assets/catalog.png)
+![Screenshot 3](./src/assets/wall-art.png)
+![Screenshot 4](./src/assets/how-it-works.png)
+![Screenshot 5](./src/assets/pricing.png)
+![Screenshot 6](./src/assets/notifications.png)
+![Screenshot 8](./src/assets/checkout.png)
 
 ## Challenges and Learnings
 The primary challenge was crafting a seamless user experience, especially integrating a feature to preview art on a manually designed virtual wall. This required meticulous design and image placement to ensure a realistic representation. Additionally, implementing an efficient notification system without real-time updates was a key learning experience, favoring scheduled interval scanning over websockets for user notifications.

@@ -1305,8 +1305,7 @@ export default {
       return data.faq;
     },
     subtotal() {
-      return this.cart.arts
-        .reduce(
+      return this.cart.arts?.reduce(
           (acc, item) =>
             acc +
             this.cost[item.category][item.duration][item.size] * item.quantity,
