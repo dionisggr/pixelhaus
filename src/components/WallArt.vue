@@ -77,18 +77,20 @@
           <img
             :src="mainImage"
             alt="Secondary Art Image"
+            class="w-1/3 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
             @click="setMainImage(selectedArt.image)"
-            class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <img
             :src="mainImage"
             alt="Secondary Art Image"
             @click="setMainImage(selectedArt.image)"
-            class="w-20 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+            class="w-1/3 h-20 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
           <Image
             type="wall"
             subtype="thumbnail"
+            class="w-1/3"
+            style="border: solid red"
             :src="mainImage"
             :selectedSize="selectedSize"
             @click="setMainImage(mainImage + '?')"

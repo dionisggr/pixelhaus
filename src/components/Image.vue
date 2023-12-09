@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative rounded-lg shadow-md transform transition-transform duration-300 cursor-pointer"
+    class="relative rounded-lg shadow-md transform transition-transform duration-300 cursor-pointer w-36"
     @click="$emit('select-image', 'wall')"
   >
     <img
@@ -12,7 +12,7 @@
       :src="src"
       alt="Artwork"
       class="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-sm shadow-md"
-      :class="subtype === 'main' ? 'top-1/3 mt-8 left-1/2 ml-8' : 'top-14 left-16 ml-3'"
+      :class="subtype === 'main' ? 'top-1/3 mt-8 left-1/2 ml-8' : 'top-1/3 mt-2 left-1/2 ml-0.5 md:top-14 md:left-16 md:ml-3'"
       :style="style"
     />
   </div>
