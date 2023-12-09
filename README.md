@@ -33,7 +33,7 @@ To get PixelHaus running locally:
 
 ```bash
 # Clone the repository
-git clone [repository-url]
+git clone https://github.com/dionisggr/pixelhaus.git
 cd pixelhaus
 
 # Install dependencies
