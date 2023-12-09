@@ -1,93 +1,45 @@
 <template>
-  <div class="bg-gray-100 px-4 lg:px-12 my-12">
+  <div class="how-it-works" :class="isMobile ? 'p-4 py-10' : 'p-12'">
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
-        Pricing
+        How It Works
       </h1>
-      <div class="mt-2 text-center md:text-left md:ml-32 text-gray-500">
-        <a
-          href="#"
-          class="hover:underline text-gray-500"
-          @click="$emit('goTo', 'home')"
-          >Home</a
-        >
-        /
-        <span class="text-gray-700">Pricing</span>
+      <div class="mt-2 text-center text-gray-500">
+        <a href="#" class="hover:underline text-gray-500" @click="$emit('goTo', 'home')">Home</a> /
+        <span class="text-gray-700">How It Works</span>
       </div>
     </div>
 
-    <!-- Pricing Data Display -->
-    <div
-      v-for="category in filteredData"
-      :key="category.name"
-      class="bg-white p-4 md:p-6 rounded-lg shadow-md mb-8 max-w-6xl mx-auto"
-    >
-      <h2 class="text-2xl font-bold mb-6 text-gray-700">{{ category.name }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          v-for="material in materials"
-          :key="material"
-          class="relative p-4 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-200"
-          style="min-height: 175px"
-        >
-          <!-- Most Popular badge for Canvas -->
-          <div
-            class="absolute top-5 right-5 bg-blue-500 text-white text-xs py-1 px-3 rounded-full"
-            v-if="material === 'Canvas'"
-          >
-            Most Popular
+    <!-- Section Template -->
+    <div v-for="section in sections" :key="section.key" class="mb-12 relative text-gray-700 rounded-lg shadow-lg p-8 bg-white">
+      <h3 class="text-3xl font-semibold mb-2 text-center border-b-2 pb-2">
+        {{ section.title }}
+      </h3>
+      <p class="text-center text-gray-600 italic pb-4 text-sm">{{ isMobile ? 'Tap' : 'Click' }} on each step to learn more</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-16 items-start mt-6">
+        <div v-for="step in section.steps" :key="step.key" class="relative w-full mx-auto cursor-pointer" style="min-height: 230px" @click="flipCard(step.key)">
+          <!-- Default View -->
+          <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl" v-if="!flipped[step.key]">
+            <div :class="iconSize(step.key)" class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer">
+              <i class="material-icons">{{ step.icon }}</i>
+            </div>
+            <h4 class="font-bold mb-4">{{ step.title }}</h4>
+            <p class="text-center">{{ step.description }}</p>
           </div>
-          <h3 class="text-lg font-semibold mb-4 text-gray-600">
-            {{ material }}
-          </h3>
-
-          <!-- Pricing Table -->
-          <table class="min-w-full">
-            <tbody class="relative">
-              <tr>
-                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
-                  Size
-                </th>
-                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
-                  3-Month
-                </th>
-                <th class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium">
-                  6-Month
-                </th>
-              </tr>
-              <tr
-                v-if="materialCategoryItems(material, category).length"
-                v-for="(item, index) in materialCategoryItems(
-                  material,
-                  category
-                )"
-                :key="item.size"
-                :class="index % 2 ? 'bg-gray-100' : ''"
-              >
-                <td
-                  class="py-2 px-2 md:px-4 border-b border-gray-300 font-medium min-w-fit text-sm text-center"
-                >
-                  {{ item.size }}
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-300 text-center">
-                  ${{ item['3months'] }}
-                  <span class="text-xs text-gray-500">/ month</span>
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-300 text-center">
-                  ${{ item['6months'] }}
-                  <span class="text-xs text-gray-500">/ month</span>
-                </td>
-              </tr>
-
-              <!-- No Results Message -->
-              <div v-else class="p-6 mb-8 text-center absolute w-full">
-                <p class="text-md text-gray-600">
-                  No matching pricing details.
-                </p>
-              </div>
-            </tbody>
-          </table>
+          <!-- Flipped View -->
+          <div class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl" v-if="flipped[step.key]">
+            <div :class="iconSize(step.key)" class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer">
+              <i class="material-icons">{{ step.icon }}</i>
+            </div>
+            <h4 class="font-bold mb-4">{{ step.title }}</h4>
+            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
+              <li v-for="detail in step.details" :key="detail" class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer">
+                <span class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                {{ detail }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

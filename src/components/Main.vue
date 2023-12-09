@@ -2,7 +2,7 @@
   <div class="relative">
     <!-- Header -->
     <header
-      class="bg-white shadow-md text-gray-700"
+      class="bg-white shadow-md text-gray-700 p4 md:p-6 sticky md:"
       :class="[isMobile ? 'p-4' : 'p-6', { 'sticky top-0 z-50': isMobile }]"
     >
       <div class="container mx-auto flex justify-between items-center">

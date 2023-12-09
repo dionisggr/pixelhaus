@@ -1,5 +1,6 @@
 <template>
   <div class="how-it-works" :class="isMobile ? 'p-4 py-10' : 'p-12'">
+    
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
@@ -17,20 +18,26 @@
       </div>
     </div>
 
-    <!-- Renting -->
-    <div class="mb-12 relative text-gray-700 rounded-lg shadow-lg p-8 bg-white">
+    <!-- Category -->
+    <div
+      v-for="steps in [rentingSteps, returningSteps]"
+      class="mb-12 relative text-gray-700 rounded-lg shadow-lg p-8 bg-white"
+    >
       <h3 class="text-3xl font-semibold mb-2 text-center border-b-2 pb-2">
-        Renting
+        {{ category === rentingSteps ? 'Renting' : 'Returning' }}
       </h3>
-      <p class="text-center text-gray-600 italic pb-4 text-sm">{{ isMobile ? 'Tap' : 'Click' }} on each step to learn more</p>
+      <p class="text-center text-gray-600 italic pb-4 text-sm">
+        {{ isMobile ? 'Tap' : 'Click' }} on each step to learn more
+      </p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-16 items-start mt-6">
+
         <!-- Step 1 -->
         <div
+          v-for="step in steps"
           class="relative w-full mx-auto cursor-pointer"
           style="min-height: 230px"
           @click="flipCard('rent1')"
         >
-          <!-- Default content when the card is NOT flipped -->
           <div
             class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="!flipped.rent1"
@@ -42,17 +49,16 @@
               }"
               class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
-              <i class="material-icons">search</i>
+              <i class="material-icons">{{ step.icon }}</i>
             </div>
 
-            <h4 class="font-bold mb-4">Browse & Select</h4>
+            <h4 class="font-bold mb-4">{{ step.title }}</h4>
             <p class="text-center">
-              Explore our wide range of AI-generated art.
-              Choose the material, size, and duration
+              {{ step.description }}
             </p>
           </div>
 
-          <!-- Alternative content when the card IS flipped -->
+          <!-- Flipped -->
           <div
             class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
             v-if="flipped.rent1"
@@ -64,10 +70,10 @@
               }"
               class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
-              <i class="material-icons">search</i>
+              <i class="material-icons">{{ step.icon }}</i>
             </div>
 
-            <h4 class="font-bold mb-4">Browse & Select</h4>
+            <h4 class="font-bold mb-4">{{ step.title }}</h4>
 
             <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
               <li
@@ -96,419 +102,26 @@
               </li>
             </ul>
           </div>
-        </div>
 
-        <!-- Arrow -->
-        <div
-          class="absolute top-1/2 transform md:block hidden"
-          style="left: calc(33% - 10px)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="h-8 w-8 text-gray-700"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-
-        <!-- Step 2 -->
-        <div
-          class="flex flex-col items-center transform hover:scale-105 transition-all duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
-          @click="flipCard('rent2')"
-        >
+          <!-- Arrow -->
           <div
-            :class="{ 'w-10 h-10': flipped.rent2, 'w-16 h-16': !flipped.rent2 }"
-            class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
+            v-if="step.has_arrow"
+            class="absolute top-1/3 -right-12 mt-6 transform md:block hidden"
           >
-            <i class="material-icons">local_shipping</i>
-          </div>
-
-          <h4 class="font-bold mb-4" v-if="!flipped.rent2">Confirm & Ship</h4>
-          <h4 class="font-bold mb-4" v-else>Confirm & Ship</h4>
-
-          <p class="text-center" v-if="!flipped.rent2">
-            Fill in or confirm your Billing and Shipping details, and submit
-            your order
-          </p>
-
-          <!-- Alternative content when the card is flipped -->
-          <ul v-else class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="h-8 w-8 text-gray-700"
             >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Your privacy is our priority
-            </li>
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-            >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Simple transactions with multi-payment options
-            </li>
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-            >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Track your order in real-time
-            </li>
-          </ul>
-        </div>
-
-        <!-- Arrow -->
-        <div
-          class="absolute top-1/2 transform left-2/3 md:block hidden"
-          style="left: calc(66% - 5px)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="h-8 w-8 text-gray-700"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-
-        <!-- Step 3 -->
-        <div
-          class="flex flex-col items-center transform hover:scale-105 transition-all duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
-          @click="flipCard('rent3')"
-        >
-          <div
-            :class="{ 'w-10 h-10': flipped.rent3, 'w-16 h-16': !flipped.rent3 }"
-            class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-          >
-            <i class="material-icons">inbox</i>
-          </div>
-
-          <h4 class="font-bold mb-4" v-if="!flipped.rent3">
-            Anticipation & Arrival
-          </h4>
-          <h4 class="font-bold mb-4" v-else>Anticipation & Arrival</h4>
-
-          <p class="text-center" v-if="!flipped.rent3">
-            Sit back and relax! Remember to keep the shipping box for returns
-          </p>
-
-          <!-- Alternative content when the card is flipped -->
-          <ul v-else class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-            >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Premium packaging to ensure safe arrival
-            </li>
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-            >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Detailed care instructions included
-            </li>
-            <li
-              class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-            >
-              <span
-                class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-              ></span>
-              Support available for any shipping queries
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Returning -->
-    <div class="relative rounded-lg shadow-lg p-8 bg-white mt-10 text-gray-700">
-      <h3 class="text-3xl font-semibold mb-2 text-center border-b-2 pb-2">
-        Returning
-      </h3>
-      <p class="text-center text-gray-600 italic pb-4 text-sm">Click on each step to learn more</p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start mt-6">
-        <!-- Step 1 -->
-        <div
-          class="relative w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
-          @click="flipCard('swap1')"
-        >
-          <!-- Default content when the card is NOT flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="!flipped.swap1"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap1,
-                'w-16 h-16': !flipped.swap1,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">autorenew</i>
-            </div>
-
-            <h4 class="font-bold mb-4">Pack with Care</h4>
-            <p class="text-center">
-              Gently place the wall art back into the original box, ensuring
-              it's secure
-            </p>
-          </div>
-
-          <!-- Alternative content when the card IS flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="flipped.swap1"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap1,
-                'w-16 h-16': !flipped.swap1,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">autorenew</i>
-            </div>
-
-            <h4 class="font-bold mb-4">Pack with Care</h4>
-
-            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Use the protective layers provided
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Ensure the art is free from any external materials
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Seal the box tightly for a safe journey back
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Arrow -->
-        <div
-          class="absolute top-1/2 transform left-1/3 md:block hidden"
-          style="left: calc(33% - 5px)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="h-8 w-8 text-gray-700"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-
-        <!-- Step 2 -->
-        <div
-          class="relative w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
-          @click="flipCard('swap2')"
-        >
-          <!-- Default content when the card is NOT flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="!flipped.swap2"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap2,
-                'w-16 h-16': !flipped.swap2,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">send</i>
-            </div>
-            <h4 class="font-bold mb-4">Label Swap</h4>
-            <p class="text-center">
-              Detach the initial shipping label, revealing the return label
-              beneath.
-            </p>
-          </div>
-
-          <!-- Alternative content when the card IS flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="flipped.swap2"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap2,
-                'w-16 h-16': !flipped.swap2,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">send</i>
-            </div>
-
-            <h4 class="font-bold mb-4">Label Swap</h4>
-
-            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Clear, easy-to-follow return label instructions
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Need a new return label? Contact support
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Make sure the return label is clearly visible
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Arrow -->
-        <div
-          class="absolute top-1/2 transform left-2/3 md:block hidden"
-          style="left: calc(66% - 5px)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="h-8 w-8 text-gray-700"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
-
-        <!-- Step 3 -->
-        <div
-          class="relative w-full mx-auto cursor-pointer"
-          style="min-height: 215px"
-          @click="flipCard('swap3')"
-        >
-          <!-- Default content when the card is NOT flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="!flipped.swap3"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap3,
-                'w-16 h-16': !flipped.swap3,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">done</i>
-            </div>
-            <h4 class="font-bold mb-4">Safe Send-off</h4>
-            <p class="text-center">
-              Drop off the box with our partnered shipping carrier. We'll handle
-              it from there.
-            </p>
-          </div>
-
-          <!-- Alternative content when the card IS flipped -->
-          <div
-            class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="flipped.swap3"
-          >
-            <div
-              :class="{
-                'w-10 h-10': flipped.swap3,
-                'w-16 h-16': !flipped.swap3,
-              }"
-              class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
-            >
-              <i class="material-icons">done</i>
-            </div>
-
-            <h4 class="font-bold mb-4">Safe Send-off</h4>
-
-            <ul class="space-y-2" :class="isMobile ? 'text-xs' : 'text-sm'">
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Locate nearest drop-off point with our locator tool
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Get confirmation once the art reaches us
-              </li>
-              <li
-                class="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
-              >
-                <span
-                  class="w-4 h-4 bg-blue-500 rounded-full mr-3 flex-shrink-0"
-                ></span>
-                Assistance available for shipping-related inquiries
-              </li>
-            </ul>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -534,17 +147,56 @@ export default {
         swap2: false,
         swap3: false,
       },
+      rentingSteps: [
+        {
+          title: 'Browse & Select',
+          description:
+            'Explore our wide range of AI-generated art. Choose the material, size, and duration',
+          icon: 'search',
+          has_arrow: true,
+        },
+        {
+          title: 'Confirm & Ship',
+          description:
+            'Fill in or confirm your Billing and Shipping details, and submit your order',
+          icon: 'local_shipping',
+          has_arrow: true,
+        },
+        {
+          title: 'Anticipation & Arrival',
+          description:
+            'Sit back and relax! Remember to keep the shipping box for returns',
+          icon: 'inbox',
+        },
+      ],
+      returningSteps: [
+        {
+          title: 'Pack with Care',
+          description:
+            "Gently place the wall art back into the original box, ensuring it's secure",
+          icon: 'autorenew',
+          has_arrow: true,
+        },
+        {
+          title: 'Label Swap',
+          description:
+            'Detach the initial shipping label, revealing the return label beneath.',
+          icon: 'send',
+          has_arrow: true,
+        },
+        {
+          title: 'Safe Send-off',
+          description:
+            "Drop off the box with our partnered shipping carrier. We'll handle it from there.",
+          icon: 'done',
+        },
+      ],
     };
   },
   methods: {
     flipCard(id) {
-      console.log(id);
       this.flipped[id] = !this.flipped[id];
     },
   },
 };
 </script>
-
-<style scoped>
-/* Add your preferred styles here for the components */
-</style>
