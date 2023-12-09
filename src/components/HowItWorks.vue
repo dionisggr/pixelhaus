@@ -1,6 +1,6 @@
 <template>
-  <div class="how-it-works" :class="isMobile ? 'p-4 py-10' : 'p-12'">
-    
+  <div class="how-it-works" :class="isMobile ? 'p-4 py-8' : 'p-12'">
+
     <!-- Breadcrumbs -->
     <div class="mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">

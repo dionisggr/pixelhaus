@@ -1,8 +1,8 @@
 <template>
-  <div class="relative">
+  <div class="pt-24">
     <!-- Header -->
     <header
-      class="bg-white shadow-md text-gray-700 p4 md:p-6 sticky md:"
+      class="bg-white shadow-md text-gray-700 p-4 md:p-6 absolute top-0 left-0 right-0 z-10"
       :class="[isMobile ? 'p-4' : 'p-6', { 'sticky top-0 z-50': isMobile }]"
     >
       <div class="container mx-auto flex justify-between items-center">
@@ -71,7 +71,7 @@
             v-if="openModal === 'notifications'"
             @mouseenter="resetTimeout"
             @mouseleave="markNotificationsRead"
-            class="absolute top-12 right-10 w-96 bg-white rounded-lg shadow-md z-20 p-4 border-l border-r border-gray-300"
+            class="absolute top-12 right-10 w-96 bg-white rounded-lg shadow-md p-4 border-l border-r border-gray-300"
           >
             <div class="border-b-2 border-gray-200 pb-2 mb-4">
               <h3 class="text-2xl font-extrabold text-gray-800">
@@ -410,7 +410,7 @@
     <section
       v-if="selectedNavItem === 'home'"
       class="relative"
-      :class="isMobile ? 'mt-2' : 'mt-6'"
+      :class="isMobile ? 'mt-2' : 'mt-4'"
     >
       <div class="container mx-auto px-4">
         <div

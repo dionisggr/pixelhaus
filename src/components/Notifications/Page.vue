@@ -88,8 +88,8 @@
     </button>
 
     <!-- Main Content -->
-
     <div class="p-6 w-full md:w-4/5 mx-auto">
+      
       <!-- Informative Message -->
       <div
         class="px-4 py-1 mb-3 w-3/4 mx-auto text-xs text-center bg-blue-100 text-blue-500 rounded-lg shadow-md"
@@ -107,6 +107,7 @@
       <div v-if="notifications.length === 0" class="text-center py-20">
         <p class="text-2xl font-semibold text-gray-500">No Notifications Yet</p>
       </div>
+      
       <!-- Main Content -->
       <div v-else>
         <div
