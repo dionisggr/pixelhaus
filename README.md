@@ -59,15 +59,19 @@ The checkout process is streamlined and secure. Simply add your shipping address
 ![Screenshot 2](link-to-screenshot)
 
 ## Challenges and Learnings
-The primary challenge was crafting a seamless user experience, especially integrating a feature to preview art on a virtual wall. This required meticulous design and image processing to ensure a realistic representation. Additionally, implementing an efficient notification system without real-time updates was a key learning experience, favoring scheduled scanning over websockets for user notifications.
+The primary challenge was crafting a seamless user experience, especially integrating a feature to preview art on a manually designed virtual wall. This required meticulous design and image placement to ensure a realistic representation. Additionally, implementing an efficient notification system without real-time updates was a key learning experience, favoring scheduled interval scanning over websockets for user notifications.
 
 ## Future Enhancements
 - Introduce more interactive elements in the UI.
 - Expand the art collection with more diverse AI-generated art.
+- Design a side-view for the preview feature.
 - Implement real-time chat support for user assistance.
+- Printify API integration for orders.
+- Payment processing.
 
 ## Contact
 Reach out for more information or collaboration opportunities:
 
-- [LinkedIn](your-linkedin-url)
-- [Email](your-email)
+- [Portfolio](https://www.dioveloper.com/)
+- [LinkedIn](https://www.linkedin.com/in/dionis-gonzalez/)
+- [Email](dionisggr@gmail.com)
