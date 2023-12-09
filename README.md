@@ -24,7 +24,9 @@ The inspiration for PixelHaus stems from the increasing trend of AI-generated im
 - Responsive design for seamless browsing on any device
 
 ## Technologies Used
-PixelHaus is primarily built using: **Vue.js** and **TailwindCSS**. Additional libraries: Animate.css, AOS for animations, Day.js for date handling, and Vue Clerk for auth state management.
+PixelHaus is primarily built using: **Vue.js** and **TailwindCSS**.
+
+Additional libraries: Animate.css, AOS for animations, Day.js for date handling, and Vue Clerk for auth state management.
 
 ## Getting Started
 To get PixelHaus running locally:
@@ -43,7 +45,7 @@ npm start
 
 ## Usage
 ### Catalog
-Navigate to the website to explore the diverse world of AI-generated art. Browse the extensive gallery and select a piece that resonates with your style. Each artwork comes with a choice of rental plans, catering to different preferences and durations.
+Navigate to the website to explore the diverse world of AI-generated art. Browse the extensive gallery and select a piece that resonates with your style. Each artwork comes with a choice of rental plans, catering to different preferences and durations. Check out the How It Works section for more information on the rental process. Read into the Pricing section for more details on the different plans.
 
 ### Notifications
 Notifications are designed to be informative yet unobtrusive, ensuring you're always in the loop without overwhelming your experience. Users receive updates about new art additions, rental renewals, and special promotions
