@@ -1,14 +1,20 @@
 <template>
-  <div class="p-4 md:p-8 max-w-6xl mx-auto text-gray-700 z-10">
+  <div class="p-4 md:p-8 max-w-6xl mx-auto text-gray-700 z-10 relative">
+          <!-- Back button -->
+          <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-10 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
+
     <!-- Breadcrumbs -->
     <div class="mt-4 mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         Wall Art
       </h1>
       <div class="mt-2 text-gray-500" :class="isMobile && 'text-center'">
-        <a href="#" class="hover:underline" @click="$emit('goTo', 'home')">
-          Home
-        </a>
+        <a href="#" class="hover:underline" @click="goTo('home')"> Home </a>
         /
         <span class="text-gray-700">Checkout</span>
       </div>
@@ -32,7 +38,7 @@
               v-if="mainImage === selectedArt.image"
               :src="mainImage"
               alt="Main Art Image"
-              class="rounded-lg object-fill shadow-md transition-transform duration-300 w-full transform"
+              class="rounded-lg object-fill shadow-md transition-transform duration-300 h-60 md:h-full w-full transform"
             />
             <Image
               v-else
@@ -90,7 +96,6 @@
             type="wall"
             subtype="thumbnail"
             class="w-1/3"
-            style="border: solid red"
             :src="mainImage"
             :isMobile="isMobile"
             :selectedSize="selectedSize"
@@ -284,6 +289,10 @@ export default {
     cart: {
       type: Array,
       default: () => [],
+    },
+    goTo: {
+      type: Function,
+      default: () => {},
     },
   },
   updated() {

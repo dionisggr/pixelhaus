@@ -1,6 +1,6 @@
 <template>
   <!-- Hero Section -->
-  <section class="relative mt-2">
+  <section class="relative mt-6 md:mt-24">
     <div class="container mx-auto px-4">
       <div
         class="bg-white rounded-3xl overflow-hidden shadow-lg relative md:p-4"

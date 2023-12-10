@@ -3,6 +3,14 @@
     class="min-w-screen min-h-screen bg-gray-100 py-12"
     :class="{ 'px-4': isMobile }"
   >
+      <!-- Back button -->
+      <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
+    
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">

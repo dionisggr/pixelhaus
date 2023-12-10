@@ -1,8 +1,15 @@
 <template>
-  <div class="bg-gray-100 px-4 lg:px-12 my-12">
+  <div class="bg-gray-100 px-4 lg:px-12 my-12 md:my-12 md:mt-32 relatve">
+    <!-- Back button -->
+    <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
 
     <!-- Breadcrumbs -->
-    <div class="mb-8">
+    <div class="my-8">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">
         Pricing
       </h1>

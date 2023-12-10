@@ -2,6 +2,14 @@
   <div
     class="min-h-screen flex flex-col items-center py-12 px-4 md:px-6 max-w-6xl mx-auto"
   >
+      <!-- Back button -->
+      <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
+    
     <!-- Breadcrumbs -->
     <div class="mb-8 w-full">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">

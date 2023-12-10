@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-24">
+  <main>
     <Welcome />
 
     <Header
@@ -40,6 +40,7 @@
       :user="user"
       :selectedArt="selectedArt"
       :cart="cart.arts"
+      :goTo="goTo"
       @delete-wall-art="deleteWallArt"
       @add-to-cart="addToCart"
       @sign-in="clerk.openSignIn"
@@ -57,29 +58,42 @@
       v-if="selectedNavItem === 'notifications'"
       :notifications="notifications"
       :isMobile="isMobile"
+      @go-to="goTo"
     />
 
     <Orders
       v-if="selectedNavItem === 'orders'"
       :isMobile="isMobile"
       :orders="cart"
+      @go-to="goTo"
     />
 
     <AllOrders v-if="selectedNavItem === 'all-orders'" />
 
-    <OurStory v-if="selectedNavItem === 'our-story'" :isMobile="isMobile" />
+    <OurStory
+      v-if="selectedNavItem === 'our-story'"
+      :isMobile="isMobile"
+      @go-to="goTo"
+    />
 
-    <Team v-if="selectedNavItem === 'team'" />
+    <Team v-if="selectedNavItem === 'team'" @go-to="goTo" />
 
-    <Contact v-if="selectedNavItem === 'contact'" />
+    <Contact v-if="selectedNavItem === 'contact'" @go-to="goTo" />
 
-    <TermsOfService v-if="selectedNavItem === 'terms-of-service'" />
+    <TermsOfService
+      v-if="selectedNavItem === 'terms-of-service'"
+      @go-to="goTo"
+    />
 
-    <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" />
+    <PrivacyPolicy v-if="selectedNavItem === 'privacy-policy'" @go-to="goTo" />
 
-    <HowItWorks v-if="selectedNavItem === 'how-it-works'" :isMobile="isMobile" />
+    <HowItWorks
+      v-if="selectedNavItem === 'how-it-works'"
+      :isMobile="isMobile"
+      @go-to="goTo"
+    />
 
-    <Pricing v-if="selectedNavItem === 'pricing'" />
+    <Pricing v-if="selectedNavItem === 'pricing'" @go-to="goTo" />
 
     <Profile
       v-if="selectedNavItem === 'profile'"
@@ -88,8 +102,8 @@
       @go-to="goTo"
     />
 
-    <Footer />
-  </div>
+    <Footer @go-to="goTo" />
+  </main>
 </template>
 
 <script>
@@ -192,14 +206,15 @@ export default {
     this.$forceUpdate();
 
     this.user = { ...this.clerk?.user };
-
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkWindowSize);
   },
   data() {
     const arts = data.arts.map((art) => ({
-      ...art, isAdded: false, flipped: false
+      ...art,
+      isAdded: false,
+      flipped: false,
     }));
 
     return {
@@ -254,7 +269,7 @@ export default {
     },
   },
   methods: {
-    goTo(section) {
+    async goTo(section, elementId) {
       this.openModal = null;
       this.selectedNavItem = section;
 
@@ -262,12 +277,21 @@ export default {
         this.showNavSidebar = false;
       }
 
-      window.scrollTo(0, 0);
+      if (elementId) {
+        await this.$nextTick(() => {
+          const element = document.getElementById(elementId);
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      } else {
+        window.scrollTo(0, 0);
+      }
     },
     toggleSidebar() {
       this.isSidebarHidden = !this.isSidebarHidden;
     },
-
 
     checkShowMoreButton() {
       this.showMoreButton = this.itemsToShow < this.arts.length;
@@ -311,8 +335,6 @@ export default {
       this.selectedNavItem = 'upload';
     },
 
-
-
     addNotification(notification) {
       this.notifications.unshift(notification);
     },
@@ -325,7 +347,7 @@ export default {
     },
 
     logout() {
-      this.clerk?.signOut();
+      this.clerk.signOut();
 
       this.user = null;
 

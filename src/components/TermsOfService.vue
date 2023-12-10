@@ -1,11 +1,18 @@
 <template>
   <div class="min-h-screen bg-gray-100 py-12">
-    
+        <!-- Back button -->
+        <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
+
     <!-- Header and Breadcrumbs -->
     <div class="px-8 mb-4">
       <div class="flex justify-between items-center mb-2">
         <h1
-          class="text-3xl md:text-4xl font-extrabold text-gray-700 w-full text-center"
+          class="text-3xl md:text-4xl font-extrabold text-gray-700 w-full text-center ml-2 md:ml-0"
         >
           Terms of Service
         </h1>

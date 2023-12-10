@@ -1,8 +1,15 @@
 <template>
   <div
-    class="bg-gray-100 min-h-screen flex flex-col items-center py-12 mt-4 sm:py-8 px-4 sm:px-8 max-w-6xl mx-auto"
+    class="bg-gray-100 min-h-screen flex flex-col items-center py-12 mt-1 sm:py-8 px-4 sm:px-8 max-w-6xl mx-auto"
   >
-  
+      <!-- Back button -->
+      <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
+
     <!-- Breadcrumbs -->
     <div class="mb-8 w-full">
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-700 text-center">

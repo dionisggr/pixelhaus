@@ -1,5 +1,12 @@
 <template>
   <div class="min-w-screen min-h-screen max-w-6xl mx-auto bg-gray-100 py-12">
+          <!-- Back button -->
+          <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
     
     <!-- Breadcrumbs -->
     <div class="px-4 sm:px-8 mb-8">
@@ -8,7 +15,7 @@
       >
         My Orders
       </h1>
-      <div class="mt-2 flex justify-start text-gray-500">
+      <div class="mt-2 flex justify-center md:justify-start text-gray-500">
         <a
           href="#"
           class="hover:underline text-gray-500"

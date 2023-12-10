@@ -1,8 +1,7 @@
 <template>
   <!-- Header -->
   <header
-    class="bg-white shadow-md text-gray-700 p-4 md:p-6 absolute top-0 left-0 right-0 z-20"
-    :class="{ 'sticky top-0 z-50': isMobile }"
+    class="bg-white shadow-md text-gray-700 p-4 md:p-5 sticky md:absolute top-0 left-0 right-0 z-50"
   >
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo and Title -->
@@ -295,7 +294,7 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav v-if="isLoggedIn" class="space-y-3">
+        <nav v-if="user?.id" class="space-y-3">
           <a
             href="#how-it-works"
             class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
@@ -347,8 +346,16 @@
             href="#sign-in"
             class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
             @click="
-              isLoggedIn = true;
-              goTo('home');
+              $emit('demo');
+              showNavSidebar = false;
+            "
+            >Demo</a
+          >
+          <a
+            href="#sign-in"
+            class="block text-gray-700 font-bold hover:text-blue-500 text-center py-3 transition-colors duration-300 rounded-md hover:shadow-md active:shadow-md"
+            @click="
+              $emit('sign-in');
               showNavSidebar = false;
             "
             >Sign In</a
@@ -448,7 +455,6 @@ export default {
   },
   data() {
     return {
-      isMobile: false,
       showNavSidebar: false,
       openModal: null,
       isLoggedIn: false,

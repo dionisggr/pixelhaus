@@ -1,5 +1,12 @@
 <template>
-  <div class="how-it-works" :class="isMobile ? 'p-4 py-8' : 'p-12'">
+  <div class="how-it-works" :class="isMobile ? 'p-4 py-8 pt-12' : 'p-12 mt-20'">
+    <!-- Back button -->
+    <button
+      @click="$emit('go-to', 'home')"
+      class="absolute top-24 mt-2 left-6 bg-gray-200 hover:bg-gray-400 p-3.5 px-5 rounded-full transition-colors duration-300 shadow-sm"
+    >
+      <i class="fas fa-arrow-left text-gray-600 text-sm"></i>
+    </button>
 
     <!-- Breadcrumbs -->
     <div class="mb-8">

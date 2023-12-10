@@ -99,15 +99,15 @@
           class="flex flex-col md:flex-row justify-between items-center pt-8 md:pt-0"
         >
           <div class="flex space-x-4 mb-4 md:mb-0">
-            <a href="#" class="text-gray-700 hover:text-blue-400">
+            <button class="text-gray-700 hover:text-blue-400" @click="openSocialMedia">
               <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" class="text-gray-700 hover:text-blue-400">
+            </button>
+            <button class="text-gray-700 hover:text-blue-400" @click="openSocialMedia">
               <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="text-gray-700 hover:text-blue-400">
+            </button>
+            <button class="text-gray-700 hover:text-blue-400" @click="openSocialMedia">
               <i class="fab fa-instagram"></i>
-            </a>
+            </button>
           </div>
           <div class="text-sm text-gray-700 font-semibold mt-6">
             &copy; 2023 PixelHaus. All rights reserved.
@@ -129,7 +129,10 @@ export default {
       alert('Thanks for subscribing!');
 
       this.email = null;
-    }
+    },
+    openSocialMedia() {
+      alert('Coming Soon!');
+    },
   }
 }
 </script>
