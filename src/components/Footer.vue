@@ -77,8 +77,9 @@
             >
               Newsletter
             </h3>
-            <form class="mt-4">
+            <form class="mt-4" @submit.prevent="subscribe">
               <input
+                v-model="email"
                 type="email"
                 placeholder="Email Address"
                 class="w-full p-2 rounded-md text-gray-700 border border-gray-300"
@@ -115,3 +116,20 @@
       </div>
     </footer>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: null,
+    }
+  },
+  methods: {
+    subscribe() {
+      alert('Thanks for subscribing!');
+
+      this.email = null;
+    }
+  }
+}
+</script>

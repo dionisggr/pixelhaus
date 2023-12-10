@@ -76,7 +76,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.arts)
     this.randomArts = this.arts.sort(() => Math.random() - 0.5).slice(0, 5);
   },
   data() {

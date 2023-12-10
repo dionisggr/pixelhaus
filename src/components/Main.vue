@@ -37,10 +37,13 @@
     <WallArt
       v-if="selectedNavItem === 'wall-art'"
       :isMobile="isMobile"
+      :user="user"
       :selectedArt="selectedArt"
+      :cart="cart.arts"
       @delete-wall-art="deleteWallArt"
       @add-to-cart="addToCart"
-      @select-image="selectImage"
+      @sign-in="clerk.openSignIn"
+      @remove-from-cart="removeFromCart"
     />
 
     <Checkout
@@ -282,6 +285,11 @@ export default {
       this.selectedNavItem = 'home';
     },
     addToCart(art) {
+      if (!this.user?.id) {
+        this.clerk.openSignIn();
+        return;
+      }
+
       const duplicate = this.cart.arts.find(
         (item) =>
           item.id === art.id &&
@@ -289,6 +297,8 @@ export default {
           item.size === art.size &&
           item.category === art.category
       );
+
+      console.log(duplicate);
 
       if (duplicate) {
         duplicate.quantity += art.quantity;
@@ -341,6 +351,11 @@ export default {
     },
     selectArt(art) {
       this.selectedArt = art;
+
+      this.goTo('wall-art');
+    },
+    removeFromCart(art) {
+      this.cart.arts = this.cart.arts.filter((item) => item.id !== art.id);
     },
   },
   watch: {

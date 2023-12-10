@@ -34,10 +34,11 @@
         :selectedCategory="selectedCategory"
         :isMobile="isMobile"
         :itemsToShow="itemsToShow"
-        @select-category="selectCategory"
+        @select-category="selectedCategory = $event"
         @go-to="$emit('go-to', $event)"
         @select-art="$emit('select-art', $event)"
         @add-to-cart="$emit('add-to-cart', $event)"
+        @set-displayed-arts="setDisplayedArts"
         @filter-displayed-arts="filterDisplayedArts"
         @set-items-to-show="setItemsToShow"
       />
@@ -55,30 +56,30 @@
             Stay Updated!
           </h2>
           <div class="flex justify-center space-x-8 md:space-x-12 flex-wrap">
-            <a
-              href="#"
+            <button
               class="text-blue-500 hover:text-blue-600 text-5xl transition duration-300 ease-in-out transform hover:scale-125"
+              @click="openSocialMedia"
             >
               <i class="fab fa-facebook-square"></i>
-            </a>
-            <a
-              href="#"
+          </button>
+            <button
               class="text-red-600 hover:text-red-700 text-5xl transition duration-300 ease-in-out transform hover:scale-125"
+              @click="openSocialMedia"
             >
               <i class="fab fa-instagram-square"></i>
-            </a>
-            <a
-              href="#"
+          </button>
+            <button
               class="text-red-500 hover:text-red-600 text-5xl transition duration-300 ease-in-out transform hover:scale-125"
+              @click="openSocialMedia"
             >
               <i class="fab fa-pinterest-square"></i>
-            </a>
-            <a
-              href="#"
+          </button>
+            <button
               class="text-blue-700 hover:text-blue-800 text-5xl transition duration-300 ease-in-out transform hover:scale-125"
+              @click="openSocialMedia"
             >
               <i class="fab fa-tiktok"></i>
-            </a>
+          </button>
           </div>
         </div>
       </section>
@@ -129,7 +130,9 @@ export default {
     }
   },
   methods: {
-
+    setDisplayedArts(displayedArts) {
+      this.displayedArts = displayedArts;
+    },
     filterDisplayedArts() {
       if (['Popular', 'New'].includes(this.selectedCategory)) {
         this.displayedArts = this.arts.slice(0, this.itemsToShow);
@@ -158,6 +161,9 @@ export default {
       this.itemsToShow = itemsToShow;
       this.filterDisplayedArts();
     },
+    openSocialMedia() {
+      alert('Coming Soon!');
+    }
   },
   watch: {
     searchTerm() {

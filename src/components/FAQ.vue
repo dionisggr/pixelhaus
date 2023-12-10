@@ -33,22 +33,22 @@ export default {
         {
           question: 'What is the refund policy?',
           answer:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
+            "We offer a full refund within 7 days of delivery if you're not satisfied with the art piece. Please ensure the art is returned in its original condition.",
         },
         {
           question: 'Do you offer free shipping?',
           answer:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
+            'Yes, we offer free standard shipping on all orders! Expedited shipping options are available at an additional cost.',
         },
         {
           question: 'What is the return policy?',
           answer:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
+            'Art pieces can be returned within 30 days of delivery. They must be in their original condition and packaging. Return shipping is free.',
         },
         {
           question: 'Do you offer gift cards?',
           answer:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
+            "Absolutely! We offer digital gift cards in various denominations. They're perfect for giving the gift of unique art!",
         },
       ],
     };

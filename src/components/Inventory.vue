@@ -233,11 +233,10 @@
                   <!-- Add to Cart Button -->
                   <div class="px-4 py-2 m-2 mx-auto">
                     <button
-                      @click="$emit('add-to-cart', art)"
+                      @click="$emit('select-art', art)"
                       class="w-fit px-6 bg-blue-500 hover:bg-blue-600 text-white font-medium py-1.5 rounded-md transition-all duration-300 shadow-sm text-sm 2xl:m-2"
                     >
-                      <i class="fas fa-shopping-cart"></i>
-                      <span>Add to Cart</span>
+                      <span>View</span>
                     </button>
                   </div>
                 </div>
@@ -245,7 +244,7 @@
             </div>
           </div>
           <button
-            v-if="arts?.length !== displayedArts.length"
+            v-if="showMoreButton"
             @click="showMore"
             class="mt-8 bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-all mx-auto"
             style="max-width: fit-content"
@@ -294,6 +293,7 @@ export default {
     return {
       isSidebarHidden: false,
       categories: [],
+      showMoreButton: true,
       sidebar: {
         Popular: { icon: 'star', color: 'blue' },
         New: { icon: 'new_releases', color: 'green' },
@@ -316,7 +316,7 @@ export default {
       this.isSidebarHidden = !this.isSidebarHidden;
     },
     selectCategory(category) {
-      this.selectCategory(category);
+      this.$emit('select-category', category)
       this.$emit('filter-displayed-arts');
 
       if (this.isMobile) {
@@ -341,17 +341,12 @@ export default {
       }, 3000);
     },
     showMore() {
-      this.$emit('set-items-to-show', this.itemsToShow + this.step);
-      this.displayedArts = this.arts
-        .slice(0, this.itemsToShow)
-        .filter((art) => {
-          return art.tags.includes(this.selectedCategory);
-        });
-
+      this.$emit('set-items-to-show', this.itemsToShow + 9);
       this.checkShowMoreButton();
     },
     checkShowMoreButton() {
-      this.showMoreButton = this.itemsToShow < this.arts.length;
+      console.log(this.itemsToShow, this.displayedArts.length)
+      this.showMoreButton = this.itemsToShow <= this.displayedArts.length;
     },
   }
 }

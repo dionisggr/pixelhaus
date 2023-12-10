@@ -1,7 +1,7 @@
 <template>
   <!-- Header -->
   <header
-    class="bg-white shadow-md text-gray-700 p-4 md:p-6 absolute top-0 left-0 right-0 z-10"
+    class="bg-white shadow-md text-gray-700 p-4 md:p-6 absolute top-0 left-0 right-0 z-20"
     :class="{ 'sticky top-0 z-50': isMobile }"
   >
     <div class="container mx-auto flex justify-between items-center">
@@ -183,7 +183,7 @@
                 <span
                   >${{
                     (
-                      cost[item.category][item.duration][item.size] *
+                      cost[item.category]?.[item.duration]?.[item.size] *
                       item.quantity
                     )?.toFixed(2)
                   }}</span
@@ -496,7 +496,7 @@ export default {
         ?.reduce(
           (acc, item) =>
             acc +
-            this.cost[item.category][item.duration][item.size] * item.quantity,
+            this.cost[item.category]?.[item.duration]?.[item.size] * item.quantity,
           0
         )
         .toFixed(2);
