@@ -203,28 +203,6 @@ export default {
       tags: ['Popular', 'New', 'Abstract', 'Nature', 'Parenting', 'For Kids', 'Culture', 'Puerto Rico'],
     },
   ],
-  faq: [
-    {
-      question: 'What is the refund policy?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
-    },
-    {
-      question: 'Do you offer free shipping?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
-    },
-    {
-      question: 'What is the return policy?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
-    },
-    {
-      question: 'Do you offer gift cards?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu euismod sem.',
-    },
-  ],
   notifications: [
     {
       message: 'Your order #123456789 has been confirmed',

@@ -56,14 +56,17 @@
                   x{{ item.quantity }}
                 </span>
               </div>
-              <div class="ml-4 flex-1 mt-2">
+              <div class="ml-4 flex-1">
                 <h6 class="font-semibold text-gray-700">{{ item.title }}</h6>
                 <p class="text-gray-500">
                   {{ item.category }}, {{ item.size }} ({{
                     dimensions[item.size]
                   }})
                 </p>
-                <span class="font-semibold text-gray-700 text-lg"
+                <p class="text-gray-500 font-medium text-sm">
+                  {{ item.duration }} Months
+                </p>
+                <span class="font-semibold text-gray-700 text-lg inline-block my-1"
                   >${{
                     (
                       cost[item.category][item.duration][item.size] *
@@ -71,7 +74,7 @@
                     )?.toFixed(2)
                   }}</span
                 >
-                <p class="text-xs mt-2"># {{ getRandomId() }}</p>
+                <p class="text-xs"># {{ getRandomId() }}</p>
               </div>
               <button
                 @click="prepareRemoval(item)"

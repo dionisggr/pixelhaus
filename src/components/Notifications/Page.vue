@@ -172,7 +172,10 @@
               </div>
               <div class="flex justify-between items-end">
                 <span class="text-xs"># 1234567890</span>
-                <span>$19.99</span>
+                <div>
+                  <span class="font-semibold px-3">Total:</span>
+                  <span>$19.99</span>
+                </div>
               </div>
             </div>
 

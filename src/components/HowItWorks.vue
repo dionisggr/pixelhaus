@@ -20,11 +20,11 @@
 
     <!-- Category -->
     <div
-      v-for="steps in [rentingSteps, returningSteps]"
+      v-for="(steps, stepsIndex) in [rentingSteps, returningSteps]"
       class="mb-12 relative text-gray-700 rounded-lg shadow-lg p-8 bg-white"
     >
       <h3 class="text-3xl font-semibold mb-2 text-center border-b-2 pb-2">
-        {{ category === rentingSteps ? 'Renting' : 'Returning' }}
+        {{ !stepsIndex ? 'Renting' : 'Returning' }}
       </h3>
       <p class="text-center text-gray-600 italic pb-4 text-sm">
         {{ isMobile ? 'Tap' : 'Click' }} on each step to learn more
@@ -33,19 +33,19 @@
 
         <!-- Step -->
         <div
-          v-for="step in steps"
+          v-for="(step, stepIndex) in steps"
           class="relative w-full mx-auto cursor-pointer"
           style="min-height: 230px"
-          @click="flipCard('rent1')"
+          @click="flipCard(`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`)"
         >
           <div
             class="absolute top-0 left-0 w-full h-full flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="!flipped.rent1"
+            v-if="!flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`]"
           >
             <div
               :class="{
-                'w-10 h-10': flipped.rent1,
-                'w-16 h-16': !flipped.rent1,
+                'w-10 h-10': flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`],
+                'w-16 h-16': !flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`],
               }"
               class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
@@ -61,12 +61,12 @@
           <!-- Flipped -->
           <div
             class="absolute top-0 left-0 w-full h-fit flex flex-col items-center transform hover:scale-105 transition-transform duration-300 shadow-lg p-4 rounded-lg hover:shadow-xl"
-            v-if="flipped.rent1"
+            v-if="flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`]"
           >
             <div
               :class="{
-                'w-10 h-10': flipped.rent1,
-                'w-16 h-16': !flipped.rent1,
+                'w-10 h-10': flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`],
+                'w-16 h-16': !flipped[`${!stepsIndex ? 'rent' : 'return'}${stepIndex + 1}`],
               }"
               class="bg-blue-500 rounded-full flex items-center justify-center mb-6 text-white cursor-pointer"
             >
@@ -195,6 +195,7 @@ export default {
   },
   methods: {
     flipCard(id) {
+      console.log(id);
       this.flipped[id] = !this.flipped[id];
     },
   },
