@@ -1,7 +1,7 @@
 <template>
   <!-- Header -->
   <header
-    class="bg-white shadow-md text-gray-700 p-4 md:p-5 sticky md:absolute top-0 left-0 right-0 z-50"
+    class="bg-white shadow-md text-gray-700 p-4 md:p-5 sticky md:absolute top-0 left-0 right-0 z-40"
   >
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo and Title -->

@@ -1,6 +1,6 @@
 <template>
       <div
-      class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center pb-32"
+      class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center pb-32 z-50"
       id="welcomeModal"
       v-if="isWelcomeShown"
     >
